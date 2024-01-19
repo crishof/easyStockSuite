@@ -1,7 +1,6 @@
 package com.crishof.productsv.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,10 +11,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@Table(name = "tbl_product")
 public class Product {
 
     @Id
-    private Long product_id;
+    @Column(name = "id_product")
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String id;
     private String code;
     private String model;
     private String description;
