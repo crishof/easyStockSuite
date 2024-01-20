@@ -16,8 +16,8 @@ public class Product {
 
     @Id
     @Column(name = "id_product")
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
     private String code;
     private String model;
     private String description;
