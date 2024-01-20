@@ -15,4 +15,10 @@ public interface BrandService {
     void update(Long id, Brand brand);
 
     void deleteById(Long id);
+
+    Long getBrandIdByName(String brand);
+
+    Brand getBrandByName(String name);
+
+    void saveBrandName(String brand);
 }
