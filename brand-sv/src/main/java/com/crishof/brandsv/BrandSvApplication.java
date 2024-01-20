@@ -1,13 +1,13 @@
-package com.crishof.productsv;
+package com.crishof.brandsv;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class ProductSvApplication {
+public class BrandSvApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(ProductSvApplication.class, args);
-
+        SpringApplication.run(BrandSvApplication.class, args);
     }
+
 }

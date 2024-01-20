@@ -1,4 +1,4 @@
-package com.crishof.productsv.model;
+package com.crishof.brandsv.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -8,17 +8,15 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder
-@Table(name = "tbl_product")
-public class Product {
+@Table(name = "tbl_brand")
+public class Brand {
 
     @Id
-    @Column(name = "id_product")
+    @Column(name = "id_brand")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String code;
-    private String model;
-    private String description;
+    private String name;
 }
