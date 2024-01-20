@@ -46,4 +46,15 @@ public class BrandController {
         brandService.deleteById(id);
         return "Brand deleted successfully";
     }
+
+    @GetMapping("/findByName/{brand}")
+    Long getBrandIdByName(@PathVariable("brand") String brand) {
+        return brandService.getBrandIdByName(brand);
+    }
+
+    @PostMapping("/saveBrandName")
+    void saveBrandName(@RequestBody String brand) {
+
+        brandService.saveBrandName(brand);
+    }
 }

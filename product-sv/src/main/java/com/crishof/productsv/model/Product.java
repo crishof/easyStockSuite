@@ -21,4 +21,12 @@ public class Product {
     private String code;
     private String model;
     private String description;
+    private Long brandId;
+
+    public Product(String code, String model, String description, Long brandId) {
+        this.code = code;
+        this.model = model;
+        this.description = description;
+        this.brandId = brandId;
+    }
 }

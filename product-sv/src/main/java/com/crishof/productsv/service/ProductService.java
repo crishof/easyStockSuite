@@ -15,4 +15,6 @@ public interface ProductService {
     void update(Long id, Product product);
 
     void deleteById(Long id);
+
+    void save(String code, String model, String description, Long brandId);
 }

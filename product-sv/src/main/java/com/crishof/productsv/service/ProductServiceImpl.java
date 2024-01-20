@@ -44,4 +44,12 @@ public class ProductServiceImpl implements ProductService {
     public void deleteById(Long id) {
         producRepository.deleteById(id);
     }
+
+    @Override
+    public void save(String code, String model, String description, Long brandId) {
+
+        Product product = new Product(code, model, description, brandId);
+
+        producRepository.save(product);
+    }
 }

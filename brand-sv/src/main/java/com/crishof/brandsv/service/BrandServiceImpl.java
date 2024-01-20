@@ -43,4 +43,26 @@ public class BrandServiceImpl implements BrandService {
 
         brandRepository.deleteById(id);
     }
+
+    @Override
+    public Long getBrandIdByName(String brand) {
+        return brandRepository.findByNameIgnoreCase(brand).getId();
+    }
+
+    @Override
+    public Brand getBrandByName(String name) {
+        return brandRepository.findByNameIgnoreCase(name);
+    }
+
+    @Override
+    public void saveBrandName(String brandName) {
+
+        Brand brand = new Brand();
+        Brand brand1 = brandRepository.findByNameIgnoreCase(brandName);
+
+        if (brand1 == null) {
+            brand.setName(brandName);
+            this.save(brand);
+        }
+    }
 }
