@@ -8,18 +8,19 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-@FeignClient(name = "brandapi", url = "http://localhost:9002/brand")
+//@FeignClient(name = "brandapi", url = "http://localhost:9002/brand")
+@FeignClient(name = "brand-sv")
 public interface BrandAPIClient {
 
-    @GetMapping("/getById/{brandId}")
+    @GetMapping("/brand/getById/{brandId}")
     BrandDTO getBrandInfo(@PathVariable("brandId") Long id);
 
-    @PostMapping("/save")
+    @PostMapping("/brand/save")
     String save(Brand brand);
 
-    @GetMapping("/findByName/{brand}")
+    @GetMapping("/brand/findByName/{brand}")
     Long getBrandIdByName(@PathVariable("brand") String brand);
 
-    @PostMapping("/saveBrandName")
+    @PostMapping("/brand/saveBrandName")
     void saveBrandName(@RequestBody String brand);
 }

@@ -1,17 +1,17 @@
-package com.crishof.productsv;
+package com.crishof.configserver;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
-import org.springframework.cloud.openfeign.EnableFeignClients;
+import org.springframework.cloud.config.server.EnableConfigServer;
 
 @SpringBootApplication
-@EnableFeignClients
+@EnableConfigServer
 @EnableDiscoveryClient
-public class ProductSvApplication {
+public class ConfigServerApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(ProductSvApplication.class, args);
-
+        SpringApplication.run(ConfigServerApplication.class, args);
     }
+
 }
