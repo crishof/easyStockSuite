@@ -5,6 +5,7 @@ import com.crishof.productsv.model.Product;
 import com.crishof.productsv.repository.BrandAPIClient;
 import com.crishof.productsv.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,6 +19,9 @@ public class ProductController {
 
     @Autowired
     private BrandAPIClient brandAPIClient;
+
+    @Value("${server.port}")
+    private int serverPort;
 
     //    1 - Crear nuevo producto
     @PostMapping("/save")
@@ -35,6 +39,8 @@ public class ProductController {
     //    3 - Obtener todos los productos
     @GetMapping("/getAll")
     public List<Product> getAllProducts() {
+
+        System.out.println("--------- PUERTO: " + serverPort);
         return productService.findAll();
     }
 

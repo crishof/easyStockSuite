@@ -3,6 +3,7 @@ package com.crishof.brandsv.controller;
 import com.crishof.brandsv.model.Brand;
 import com.crishof.brandsv.service.BrandService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,6 +15,9 @@ public class BrandController {
     @Autowired
     BrandService brandService;
 
+    @Value("${server.port}")
+    private int serverPort;
+
     //    1 - Crear nueva marca
     @PostMapping("/save")
     public String saveBrand(@RequestBody Brand brand) {
@@ -24,6 +28,7 @@ public class BrandController {
     //    2 - Obtener una marca
     @GetMapping("/getById/{id}")
     public Brand getById(@PathVariable("id") Long id) {
+        System.out.println("--------- PUERTO: " + serverPort);
         return brandService.findById(id);
     }
 
