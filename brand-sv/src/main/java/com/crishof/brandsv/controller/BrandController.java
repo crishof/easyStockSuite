@@ -49,7 +49,7 @@ public class BrandController {
     @DeleteMapping("/delete/{id}")
     public String deleteById(@PathVariable("id") Long id) {
         brandService.deleteById(id);
-        return "Brand deleted successfully";
+        return "Brand successfully deleted";
     }
 
     @GetMapping("/findByName/{brand}")
