@@ -1,22 +1,22 @@
 eureka:
-    client:
-        service-url:
-            defaultZone: http://localhost:8761/eureka
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
 server:
-    port: 9004
+  port: 9004
 spring:
-    application:
-        name: brand-sv
+  application:
+    name: brand-sv
     datasource:
-        password: ${POSTGRES_PASSWORD}
-        url: jdbc:postgresql://localhost:5432/db_easyStock_brand
-        username: ${POSTGRES_USER}
+      password: ${POSTGRES_PASSWORD}
+      url: jdbc:postgresql://localhost:5432/db_easyStock_brand
+      username: ${POSTGRES_USER}
     jpa:
-        database: POSTGRESQL
-        generate-ddl: true
-        hibernate:
-            ddl-auto: update
-        show-sql: true
+      database: POSTGRESQL
+      generate-ddl: true
+      hibernate:
+        ddl-auto: update
+      show-sql: true
     sql:
-        init:
-            platform: postgres
+      init:
+        platform: postgres
