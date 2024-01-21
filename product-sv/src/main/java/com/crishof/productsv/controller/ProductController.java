@@ -39,8 +39,6 @@ public class ProductController {
     //    3 - Obtener todos los productos
     @GetMapping("/getAll")
     public List<Product> getAllProducts() {
-
-        System.out.println("--------- PUERTO: " + serverPort);
         return productService.findAll();
     }
 
@@ -61,7 +59,7 @@ public class ProductController {
 
     @GetMapping("/brand/{brandId}")
     public BrandDTO getBrandInfo(@PathVariable("brandId") Long brandId) {
-        return brandAPIClient.getBrandInfo(brandId);
+        return productService.getBrandInfo(brandId);
     }
 
 }
