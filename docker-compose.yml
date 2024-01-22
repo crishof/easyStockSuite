@@ -15,13 +15,13 @@ services:
       - "443:443"
     networks:
       - 'stocksuite-network'
-#  config-server:
-#    build: config-server
-#    mem_limit: 512m
-#    ports:
-#      - "8081:8081"
-#    networks:
-#      - 'stocksuite-network'
+  config-server:
+    build: config-server
+    mem_limit: 512m
+    ports:
+      - "8081:8081"
+    networks:
+      - 'stocksuite-network'
 #  product-sv:
 #    build: product-sv
 #    mem_limit: 512m
