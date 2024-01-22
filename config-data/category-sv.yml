@@ -9,16 +9,16 @@ server:
 spring:
   application:
     name: category-sv
-  datasource:
-    password: ${POSTGRES_PASSWORD}
-    url: jdbc:postgresql://localhost:5432/db_easyStock_category
-    username: ${POSTGRES_USER}
-  jpa:
-    database: POSTGRESQL
-    generate-ddl: true
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-  sql:
-    init:
-      platform: postgres
+    datasource:
+      password: ${POSTGRES_PASSWORD}
+      url: jdbc:postgresql://localhost:5432/db_easyStock_category
+      username: ${POSTGRES_USER}
+    jpa:
+      database: POSTGRESQL
+      generate-ddl: true
+      hibernate:
+        ddl-auto: update
+        show-sql: true
+    sql:
+      init:
+        platform: postgres
