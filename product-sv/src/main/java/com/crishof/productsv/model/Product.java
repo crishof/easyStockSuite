@@ -23,11 +23,4 @@ public class Product {
     private String description;
     private Long brandId;
     private Long categoryId;
-
-    public Product(String code, String model, String description, Long brandId) {
-        this.code = code;
-        this.model = model;
-        this.description = description;
-        this.brandId = brandId;
-    }
 }

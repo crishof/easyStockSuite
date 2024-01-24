@@ -1,11 +1,8 @@
 package com.crishof.productsv.controller;
 
-import com.crishof.productsv.dto.BrandDTO;
 import com.crishof.productsv.model.Product;
-import com.crishof.productsv.repository.BrandAPIClient;
 import com.crishof.productsv.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,12 +13,6 @@ public class ProductController {
 
     @Autowired
     ProductService productService;
-
-    @Autowired
-    private BrandAPIClient brandAPIClient;
-
-    @Value("${server.port}")
-    private int serverPort;
 
     //    1 - Crear nuevo producto
     @PostMapping("/save")
@@ -55,11 +46,4 @@ public class ProductController {
         productService.deleteById(id);
         return "Product deleted successfully";
     }
-
-
-    @GetMapping("/brand/{brandId}")
-    public BrandDTO getBrandInfo(@PathVariable("brandId") Long brandId) {
-        return productService.getBrandInfo(brandId);
-    }
-
 }

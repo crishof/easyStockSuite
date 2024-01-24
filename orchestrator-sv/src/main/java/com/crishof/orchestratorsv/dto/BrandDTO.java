@@ -1,4 +1,4 @@
-package com.crishof.productsv.dto;
+package com.crishof.orchestratorsv.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
