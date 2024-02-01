@@ -13,4 +13,6 @@ public class ProductDTO {
     private String brand;
     private String model;
     private String description;
+    private String category;
+    private String supplier;
 }
