@@ -24,5 +24,9 @@ public class Product {
     private String description;
     private Long BrandId;
     private Long CategoryId;
+    @Embedded
+    private Price price;
 
 }
+
+

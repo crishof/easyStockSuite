@@ -22,7 +22,7 @@ public class BrandController {
 
     @GetMapping("/findById/{id}")
     public Brand findById(@PathVariable("id") Long id) {
-        return brandService.findtById(id);
+        return brandService.findById(id);
     }
 
     @PostMapping("/save")
@@ -35,7 +35,7 @@ public class BrandController {
     @PutMapping("/edit/{id}")
     public Brand editBrand(@RequestParam("id") Long id, @RequestBody Brand brand) {
         brandService.update(id, brand);
-        return brandService.findtById(id);
+        return brandService.findById(id);
     }
 
     @DeleteMapping("/delete/{id}")

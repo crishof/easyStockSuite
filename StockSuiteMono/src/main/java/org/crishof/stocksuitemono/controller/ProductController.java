@@ -1,6 +1,8 @@
 package org.crishof.stocksuitemono.controller;
 
+import org.crishof.stocksuitemono.dto.ProductRequest;
 import org.crishof.stocksuitemono.model.Product;
+import org.crishof.stocksuitemono.service.BrandService;
 import org.crishof.stocksuitemono.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +16,9 @@ public class ProductController {
     @Autowired
     ProductService productService;
 
+    @Autowired
+    BrandService brandService;
+
     @GetMapping("/findAll")
     public List<Product> findAll() {
         return productService.findAll();
@@ -25,8 +30,9 @@ public class ProductController {
     }
 
     @PostMapping("/save")
-    public String save(@RequestBody Product product) {
-        productService.save(product);
+    public String save(@RequestBody ProductRequest productRequest) {
+
+        productService.save(productRequest);
 
         return "Product successfully saved";
     }

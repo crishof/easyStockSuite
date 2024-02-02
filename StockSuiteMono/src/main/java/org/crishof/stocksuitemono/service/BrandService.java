@@ -8,7 +8,7 @@ public interface BrandService {
 
     List<Brand> findAll();
 
-    Brand findtById(Long id);
+    Brand findById(Long id);
 
     void save(Brand brand);
 
@@ -16,4 +16,7 @@ public interface BrandService {
 
     void deleteById(Long id);
 
+    Brand getBrandByName(String name);
+
+    Brand saveByName(String brandName);
 }

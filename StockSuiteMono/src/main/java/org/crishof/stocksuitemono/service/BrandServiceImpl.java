@@ -19,7 +19,7 @@ public class BrandServiceImpl implements BrandService {
     }
 
     @Override
-    public Brand findtById(Long id) {
+    public Brand findById(Long id) {
         return brandRepository.findById(id).orElse(null);
     }
 
@@ -32,7 +32,7 @@ public class BrandServiceImpl implements BrandService {
     @Override
     public Brand update(Long id, Brand brand) {
 
-        Brand brand1 = this.findtById(id);
+        Brand brand1 = this.findById(id);
 
         brand1.setName(brand.getName());
 
@@ -42,6 +42,22 @@ public class BrandServiceImpl implements BrandService {
     @Override
     public void deleteById(Long id) {
         brandRepository.deleteById(id);
+    }
+
+    @Override
+    public Brand getBrandByName(String name) {
+        return brandRepository.findByNameIgnoreCase(name).orElse(null);
+    }
+
+    @Override
+    public Brand saveByName(String brandName) {
+        if (brandRepository.findByNameIgnoreCase(brandName).isEmpty()) {
+            Brand brand = new Brand();
+            brand.setName(brandName);
+            return brandRepository.save(brand);
+        } else {
+            return this.getBrandByName(brandName);
+        }
     }
 }
 
