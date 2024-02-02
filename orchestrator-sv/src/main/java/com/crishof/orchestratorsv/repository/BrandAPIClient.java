@@ -1,7 +1,8 @@
-package com.crishof.productsv.repository;
+package com.crishof.orchestratorsv.repository;
 
-import com.crishof.productsv.dto.BrandDTO;
-import com.crishof.productsv.model.Brand;
+
+import com.crishof.orchestratorsv.dto.BrandDTO;
+import com.crishof.orchestratorsv.model.Brand;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

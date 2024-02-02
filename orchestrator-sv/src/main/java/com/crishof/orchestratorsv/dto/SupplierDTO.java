@@ -1,13 +1,13 @@
-package com.crishof.productsv.dto;
+package com.crishof.orchestratorsv.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class BrandDTO {
+@AllArgsConstructor
+public class SupplierDTO {
 
     private String name;
 }

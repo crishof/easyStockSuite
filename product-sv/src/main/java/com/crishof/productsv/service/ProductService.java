@@ -1,6 +1,5 @@
 package com.crishof.productsv.service;
 
-import com.crishof.productsv.dto.BrandDTO;
 import com.crishof.productsv.model.Product;
 
 import java.util.List;
@@ -16,8 +15,4 @@ public interface ProductService {
     void update(Long id, Product product);
 
     void deleteById(Long id);
-
-    void save(String code, String model, String description, Long brandId);
-
-    BrandDTO getBrandInfo(Long brandId);
 }

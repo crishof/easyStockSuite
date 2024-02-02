@@ -1,4 +1,4 @@
-package com.crishof.productsv.model;
+package org.crishof.stocksuitemono.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -6,21 +6,27 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Entity
 @Builder
 @Table(name = "tbl_product")
 public class Product {
 
     @Id
-    @Column(name = "id_product")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "product_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     private Long id;
     private String code;
     private String model;
     private String description;
-    private Long brandId;
-    private Long categoryId;
+    private Long BrandId;
+    private Long CategoryId;
+    @Embedded
+    private Price price;
+
 }
+
+
