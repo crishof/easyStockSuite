@@ -2,6 +2,7 @@ package org.crishof.stocksuitemono.controller;
 
 
 import org.crishof.stocksuitemono.model.Category;
+import org.crishof.stocksuitemono.repository.CategoryRepository;
 import org.crishof.stocksuitemono.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +15,8 @@ public class CategoryController {
 
     @Autowired
     CategoryService categoryService;
+    @Autowired
+    CategoryRepository categoryRepository;
 
     @GetMapping("/findAll")
     public List<Category> findAll() {
@@ -22,20 +25,18 @@ public class CategoryController {
 
     @GetMapping("/findById/{id}")
     public Category findById(@PathVariable("id") Long id) {
-        return categoryService.findtById(id);
+        return categoryService.findById(id);
     }
 
     @PostMapping("/save")
-    public String save(@RequestBody Category category) {
-        categoryService.save(category);
-
-        return "Category successfully saved";
+    public Category save(@RequestBody Category category) {
+        return categoryRepository.save(category);
     }
 
     @PutMapping("/edit/{id}")
-    public Category editCategory(@RequestParam("id") Long id, @RequestBody Category category) {
-        categoryService.update(id, category);
-        return categoryService.findtById(id);
+    public Category editCategory(@PathVariable("id") Long id, @RequestBody Category category) {
+        category.setId(id);
+        return categoryRepository.save(category);
     }
 
     @DeleteMapping("/delete/{id}")

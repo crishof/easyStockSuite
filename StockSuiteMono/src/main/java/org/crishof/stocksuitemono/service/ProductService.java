@@ -1,19 +1,19 @@
 package org.crishof.stocksuitemono.service;
 
 import org.crishof.stocksuitemono.dto.ProductRequest;
-import org.crishof.stocksuitemono.model.Product;
+import org.crishof.stocksuitemono.dto.ProductResponse;
 
 import java.util.List;
 
 public interface ProductService {
 
-    List<Product> findAll();
+    List<ProductResponse> findAll();
 
-    Product findtById(Long id);
+    ProductResponse findById(Long id);
 
-    void save(ProductRequest product);
+    ProductResponse save(ProductRequest productRequest);
 
-    Product update(Long id, Product product);
+    ProductResponse update(Long id, ProductRequest productRequest);
 
     void deleteById(Long id);
 }

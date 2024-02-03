@@ -1,12 +1,14 @@
 package org.crishof.stocksuitemono.controller;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.crishof.stocksuitemono.dto.ProductRequest;
-import org.crishof.stocksuitemono.model.Product;
+import org.crishof.stocksuitemono.dto.ProductResponse;
 import org.crishof.stocksuitemono.service.BrandService;
 import org.crishof.stocksuitemono.service.ImportFileService;
 import org.crishof.stocksuitemono.service.ProductService;
 import org.crishof.stocksuitemono.service.SupplierService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -40,13 +42,19 @@ public class ProductController {
     }
 
     @GetMapping("/findAll")
-    public List<Product> findAll() {
+    public List<ProductResponse> findAll() {
         return productService.findAll();
     }
 
+
     @GetMapping("/findById/{id}")
-    public Product findById(@PathVariable("id") Long id) {
-        return productService.findtById(id);
+    public ResponseEntity<ProductResponse> findById(@PathVariable("id") Long id) {
+        try {
+            ProductResponse productResponse = productService.findById(id);
+            return ResponseEntity.ok(productResponse);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PostMapping("/save")
@@ -58,9 +66,9 @@ public class ProductController {
     }
 
     @PutMapping("/edit/{id}")
-    public Product editProduct(@RequestParam("id") Long id, @RequestBody Product product) {
-        productService.update(id, product);
-        return productService.findtById(id);
+    public ProductResponse editProduct(@RequestParam("id") Long id, @RequestBody ProductRequest productRequest) {
+        productService.update(id, productRequest);
+        return productService.findById(id);
     }
 
     @DeleteMapping("/delete/{id}")
