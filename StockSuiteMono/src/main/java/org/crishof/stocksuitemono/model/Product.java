@@ -26,6 +26,7 @@ public class Product {
     private Long CategoryId;
     @Embedded
     private Price price;
+    private Long supplierId;
 
 }
 

@@ -8,7 +8,9 @@ public interface SupplierService {
 
     List<Supplier> findAll();
 
-    Supplier findtById(Long id);
+    Supplier findById(Long id);
+
+    Supplier findByName(String name);
 
     void save(Supplier supplier);
 

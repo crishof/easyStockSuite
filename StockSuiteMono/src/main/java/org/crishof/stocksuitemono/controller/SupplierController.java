@@ -22,7 +22,7 @@ public class SupplierController {
 
     @GetMapping("/findById/{id}")
     public Supplier findById(@PathVariable("id") Long id) {
-        return supplierService.findtById(id);
+        return supplierService.findById(id);
     }
 
     @PostMapping("/save")
@@ -36,7 +36,7 @@ public class SupplierController {
     @PutMapping("/edit/{id}")
     public Supplier editSupplier(@RequestParam("id") Long id, @RequestBody Supplier supplier) {
         supplierService.update(id, supplier);
-        return supplierService.findtById(id);
+        return supplierService.findById(id);
     }
 
     @DeleteMapping("/delete/{id}")

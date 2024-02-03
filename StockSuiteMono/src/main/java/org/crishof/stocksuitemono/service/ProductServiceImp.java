@@ -2,7 +2,9 @@ package org.crishof.stocksuitemono.service;
 
 import org.crishof.stocksuitemono.dto.ProductRequest;
 import org.crishof.stocksuitemono.model.Brand;
+import org.crishof.stocksuitemono.model.Price;
 import org.crishof.stocksuitemono.model.Product;
+import org.crishof.stocksuitemono.model.Supplier;
 import org.crishof.stocksuitemono.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,8 @@ public class ProductServiceImp implements ProductService {
     BrandService brandService;
     @Autowired
     CategoryService categoryService;
+    @Autowired
+    SupplierService supplierService;
 
     @Override
     public List<Product> findAll() {
@@ -33,10 +37,16 @@ public class ProductServiceImp implements ProductService {
     public void save(ProductRequest productRequest) {
 
         Product product = new Product();
+        product.setPrice(new Price());
+        Supplier supplier = supplierService.findByName(productRequest.getSupplier());
+        product.setSupplierId(supplier.getId());
 
         product.setCode(productRequest.getCode());
         product.setModel(productRequest.getModel());
         product.setDescription(productRequest.getDescription());
+        product.getPrice().setPurchasePrice(productRequest.getPurchasePrice());
+        product.getPrice().setSellingPrice(productRequest.getSellingPrice());
+        product.getPrice().setTaxRate(productRequest.getTaxRate());
 
         Brand brand = brandService.saveByName(productRequest.getBrandName());
 
