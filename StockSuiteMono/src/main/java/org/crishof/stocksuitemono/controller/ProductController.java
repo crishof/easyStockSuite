@@ -3,7 +3,9 @@ package org.crishof.stocksuitemono.controller;
 import org.crishof.stocksuitemono.dto.ProductRequest;
 import org.crishof.stocksuitemono.model.Product;
 import org.crishof.stocksuitemono.service.BrandService;
+import org.crishof.stocksuitemono.service.ImportFileService;
 import org.crishof.stocksuitemono.service.ProductService;
+import org.crishof.stocksuitemono.service.SupplierService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,9 +17,27 @@ public class ProductController {
 
     @Autowired
     ProductService productService;
-
     @Autowired
     BrandService brandService;
+    @Autowired
+    ImportFileService importFileService;
+    @Autowired
+    SupplierService supplierService;
+
+    @PostMapping("/importList")
+    public String importFile(@RequestParam String filePath, @RequestParam String supplierName) {
+
+        List<ProductRequest> products = importFileService.readExcel(filePath);
+
+        for (ProductRequest product : products) {
+
+            product.setSupplier(supplierName);
+
+            productService.save(product);
+        }
+
+        return "All products imported";
+    }
 
     @GetMapping("/findAll")
     public List<Product> findAll() {

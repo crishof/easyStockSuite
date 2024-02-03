@@ -19,8 +19,13 @@ public class SupplierServiceImpl implements SupplierService {
     }
 
     @Override
-    public Supplier findtById(Long id) {
+    public Supplier findById(Long id) {
         return supplierRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public Supplier findByName(String name) {
+        return supplierRepository.findByName(name);
     }
 
 
@@ -32,7 +37,7 @@ public class SupplierServiceImpl implements SupplierService {
     @Override
     public Supplier update(Long id, Supplier supplier) {
 
-        Supplier supplier1 = this.findtById(id);
+        Supplier supplier1 = this.findById(id);
 
         supplier1.setName(supplier.getName());
         supplier1.setTaxId(supplier1.getTaxId());
