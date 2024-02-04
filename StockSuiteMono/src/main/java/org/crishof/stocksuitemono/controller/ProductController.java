@@ -41,16 +41,16 @@ public class ProductController {
         return "All products imported";
     }
 
-    @GetMapping("/findAll")
-    public List<ProductResponse> findAll() {
-        return productService.findAll();
+    @GetMapping("/getAll")
+    public List<ProductResponse> getAll() {
+        return productService.getAll();
     }
 
 
-    @GetMapping("/findById/{id}")
-    public ResponseEntity<ProductResponse> findById(@PathVariable("id") Long id) {
+    @GetMapping("/getById/{id}")
+    public ResponseEntity<ProductResponse> getById(@PathVariable("id") Long id) {
         try {
-            ProductResponse productResponse = productService.findById(id);
+            ProductResponse productResponse = productService.getById(id);
             return ResponseEntity.ok(productResponse);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();
@@ -65,10 +65,9 @@ public class ProductController {
         return "Product successfully saved";
     }
 
-    @PutMapping("/edit/{id}")
-    public ProductResponse editProduct(@RequestParam("id") Long id, @RequestBody ProductRequest productRequest) {
-        productService.update(id, productRequest);
-        return productService.findById(id);
+    @PutMapping("/update/{id}")
+    public ProductResponse updateProduct(@PathVariable("id") Long id, @RequestBody ProductRequest productRequest) {
+        return productService.update(id, productRequest);
     }
 
     @DeleteMapping("/delete/{id}")

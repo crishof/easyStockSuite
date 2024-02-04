@@ -7,9 +7,9 @@ import java.util.List;
 
 public interface ProductService {
 
-    List<ProductResponse> findAll();
+    List<ProductResponse> getAll();
 
-    ProductResponse findById(Long id);
+    ProductResponse getById(Long id);
 
     ProductResponse save(ProductRequest productRequest);
 

@@ -6,11 +6,11 @@ import java.util.List;
 
 public interface BrandService {
 
-    List<Brand> findAll();
+    List<Brand> getAll();
 
-    Brand findById(Long id);
+    Brand getById(Long id);
 
-    void save(Brand brand);
+    Brand save(Brand brand);
 
     Brand update(Long id, Brand brand);
 

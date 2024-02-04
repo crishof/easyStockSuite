@@ -27,13 +27,13 @@ public class ProductServiceImp implements ProductService {
     SupplierService supplierService;
 
     @Override
-    public List<ProductResponse> findAll() {
+    public List<ProductResponse> getAll() {
         List<Product> products = this.productRepository.findAll();
         return products.stream().map(ProductResponse::new).toList();
     }
 
     @Override
-    public ProductResponse findById(Long id) {
+    public ProductResponse getById(Long id) {
         Product product = this.productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException(id));
         return new ProductResponse(product);
     }

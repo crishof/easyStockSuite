@@ -18,18 +18,18 @@ public class CategoryServiceImpl implements CategoryService {
     CategoryRepository categoryRepository;
 
     @Override
-    public List<Category> findAll() {
+    public List<Category> getAll() {
         return categoryRepository.findAll();
     }
 
     @Override
-    public Category findById(Long id) {
+    public Category getById(Long id) {
 
         return categoryRepository.findById(id).orElseThrow(() -> new CategoryNotFoundException(id));
     }
 
     @Override
-    public Category findByName(String name) {
+    public Category getByName(String name) {
         return categoryRepository.findByName(name).orElseThrow(EntityNotFoundException::new);
     }
 
@@ -43,7 +43,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryResponse update(Long id, CategoryRequest categoryRequest) {
 
-        Category category = this.findById(id);
+        Category category = this.getById(id);
 
         category.setName(categoryRequest.getName());
 

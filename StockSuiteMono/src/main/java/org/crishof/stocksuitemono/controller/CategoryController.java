@@ -18,14 +18,14 @@ public class CategoryController {
     @Autowired
     CategoryRepository categoryRepository;
 
-    @GetMapping("/findAll")
-    public List<Category> findAll() {
-        return categoryService.findAll();
+    @GetMapping("/getAll")
+    public List<Category> getAll() {
+        return categoryService.getAll();
     }
 
-    @GetMapping("/findById/{id}")
-    public Category findById(@PathVariable("id") Long id) {
-        return categoryService.findById(id);
+    @GetMapping("/getById/{id}")
+    public Category getById(@PathVariable("id") Long id) {
+        return categoryService.getById(id);
     }
 
     @PostMapping("/save")
@@ -33,8 +33,8 @@ public class CategoryController {
         return categoryRepository.save(category);
     }
 
-    @PutMapping("/edit/{id}")
-    public Category editCategory(@PathVariable("id") Long id, @RequestBody Category category) {
+    @PutMapping("/update/{id}")
+    public Category update(@PathVariable("id") Long id, @RequestBody Category category) {
         category.setId(id);
         return categoryRepository.save(category);
     }
