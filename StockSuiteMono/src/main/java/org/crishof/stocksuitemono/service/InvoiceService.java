@@ -1,18 +1,20 @@
 package org.crishof.stocksuitemono.service;
 
+import org.crishof.stocksuitemono.dto.InvoiceRequest;
+import org.crishof.stocksuitemono.dto.InvoiceResponse;
 import org.crishof.stocksuitemono.model.Invoice;
 
 import java.util.List;
 
 public interface InvoiceService {
 
-    List<Invoice> findAll();
+    List<Invoice> getAll();
 
-    Invoice findtById(Long id);
+    Invoice getById(Long id);
 
-    void save(Invoice invoice);
+    void save(InvoiceRequest invoiceRequest);
 
-    Invoice update(Long id, Invoice invoice);
+    InvoiceResponse update(Long id, InvoiceRequest invoiceRequest);
 
     void deleteById(Long id);
 }

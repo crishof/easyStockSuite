@@ -15,27 +15,24 @@ public class BrandController {
     @Autowired
     BrandService brandService;
 
-    @GetMapping("/findAll")
-    public List<Brand> findAll() {
-        return brandService.findAll();
+    @GetMapping("/getAll")
+    public List<Brand> getAll() {
+        return brandService.getAll();
     }
 
-    @GetMapping("/findById/{id}")
-    public Brand findById(@PathVariable("id") Long id) {
-        return brandService.findById(id);
+    @GetMapping("/getById/{id}")
+    public Brand getById(@PathVariable("id") Long id) {
+        return brandService.getById(id);
     }
 
     @PostMapping("/save")
-    public String save(@RequestBody Brand brand) {
-        brandService.save(brand);
-
-        return "Brand successfully saved";
+    public Brand save(@RequestBody Brand brand) {
+        return brandService.save(brand);
     }
 
-    @PutMapping("/edit/{id}")
-    public Brand editBrand(@RequestParam("id") Long id, @RequestBody Brand brand) {
-        brandService.update(id, brand);
-        return brandService.findById(id);
+    @PutMapping("/update/{id}")
+    public Brand updateBrand(@PathVariable("id") Long id, @RequestBody Brand brand) {
+        return brandService.update(id, brand);
     }
 
     @DeleteMapping("/delete/{id}")

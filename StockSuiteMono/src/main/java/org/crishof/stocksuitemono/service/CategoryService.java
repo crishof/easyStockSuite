@@ -1,18 +1,22 @@
 package org.crishof.stocksuitemono.service;
 
+import org.crishof.stocksuitemono.dto.CategoryRequest;
+import org.crishof.stocksuitemono.dto.CategoryResponse;
 import org.crishof.stocksuitemono.model.Category;
 
 import java.util.List;
 
 public interface CategoryService {
 
-    List<Category> findAll();
+    List<Category> getAll();
 
-    Category findtById(Long id);
+    Category getById(Long id);
 
-    void save(Category category);
+    Category getByName(String name);
 
-    Category update(Long id, Category category);
+    CategoryResponse save(CategoryRequest categoryRequest);
+
+    CategoryResponse update(Long id, CategoryRequest categoryRequest);
 
     void deleteById(Long id);
 }

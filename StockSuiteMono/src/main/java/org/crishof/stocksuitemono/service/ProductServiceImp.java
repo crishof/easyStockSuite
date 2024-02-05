@@ -1,6 +1,9 @@
 package org.crishof.stocksuitemono.service;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.crishof.stocksuitemono.dto.ProductRequest;
+import org.crishof.stocksuitemono.dto.ProductResponse;
+import org.crishof.stocksuitemono.exception.notFound.ProductNotFoundException;
 import org.crishof.stocksuitemono.model.Brand;
 import org.crishof.stocksuitemono.model.Price;
 import org.crishof.stocksuitemono.model.Product;
@@ -24,22 +27,24 @@ public class ProductServiceImp implements ProductService {
     SupplierService supplierService;
 
     @Override
-    public List<Product> findAll() {
-        return productRepository.findAll();
+    public List<ProductResponse> getAll() {
+        List<Product> products = this.productRepository.findAll();
+        return products.stream().map(ProductResponse::new).toList();
     }
 
     @Override
-    public Product findtById(Long id) {
-        return productRepository.findById(id).orElse(null);
+    public ProductResponse getById(Long id) {
+        Product product = this.productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException(id));
+        return new ProductResponse(product);
     }
 
     @Override
-    public void save(ProductRequest productRequest) {
+    public ProductResponse save(ProductRequest productRequest) throws NullPointerException {
 
-        Product product = new Product();
+        Product product = new Product(productRequest);
         product.setPrice(new Price());
         Supplier supplier = supplierService.findByName(productRequest.getSupplier());
-        product.setSupplierId(supplier.getId());
+//        product.setSupplierId(supplier.getId());
 
         product.setCode(productRequest.getCode());
         product.setModel(productRequest.getModel());
@@ -49,27 +54,19 @@ public class ProductServiceImp implements ProductService {
         product.getPrice().setTaxRate(productRequest.getTaxRate());
 
         Brand brand = brandService.saveByName(productRequest.getBrandName());
+        product.setBrand(brand);
 
-        product.setBrandId(brand.getId());
-
-        productRepository.save(product);
+        Product saved = productRepository.save(product);
+        return new ProductResponse(saved);
     }
 
     @Override
-    public Product update(Long id, Product product) {
+    public ProductResponse update(Long id, ProductRequest productRequest) throws NullPointerException {
 
-        Product product1 = this.findtById(id);
-
-        product1.setCode(product.getCode());
-        product1.setModel(product.getModel());
-        product1.setDescription(product.getDescription());
-        product1.setBrandId(product.getBrandId());
-        product1.setCategoryId(product.getCategoryId());
-        product1.getPrice().setSellingPrice(product.getPrice().getSellingPrice());
-        product1.getPrice().setPurchasePrice(product.getPrice().getPurchasePrice());
-        product1.getPrice().setTaxRate(product.getPrice().getTaxRate());
-
-        return productRepository.save(product1);
+        Product product = productRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        product.setModel(productRequest.getModel());
+        product.setDescription(productRequest.getDescription());
+        return new ProductResponse(productRepository.save(product));
     }
 
     @Override

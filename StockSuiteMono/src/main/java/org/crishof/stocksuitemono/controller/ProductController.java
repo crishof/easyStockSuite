@@ -1,13 +1,17 @@
 package org.crishof.stocksuitemono.controller;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.crishof.stocksuitemono.dto.ProductRequest;
-import org.crishof.stocksuitemono.model.Product;
+import org.crishof.stocksuitemono.dto.ProductResponse;
+import org.crishof.stocksuitemono.exception.IOException.ImportFileException;
 import org.crishof.stocksuitemono.service.BrandService;
 import org.crishof.stocksuitemono.service.ImportFileService;
 import org.crishof.stocksuitemono.service.ProductService;
 import org.crishof.stocksuitemono.service.SupplierService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -25,28 +29,37 @@ public class ProductController {
     SupplierService supplierService;
 
     @PostMapping("/importList")
-    public String importFile(@RequestParam String filePath, @RequestParam String supplierName) {
+    public String importFile(@RequestParam MultipartFile file, @RequestParam String supplierName) {
 
-        List<ProductRequest> products = importFileService.readExcel(filePath);
+        try {
 
-        for (ProductRequest product : products) {
+            List<ProductRequest> products = importFileService.readExcel(file);
 
-            product.setSupplier(supplierName);
+            for (ProductRequest product : products) {
+                product.setSupplier(supplierName);
+                productService.save(product);
+            }
 
-            productService.save(product);
+            return "All products imported";
+        } catch (ImportFileException e) {
+            return "Error during import: " + e.getMessage();
         }
-
-        return "All products imported";
     }
 
-    @GetMapping("/findAll")
-    public List<Product> findAll() {
-        return productService.findAll();
+    @GetMapping("/getAll")
+    public List<ProductResponse> getAll() {
+        return productService.getAll();
     }
 
-    @GetMapping("/findById/{id}")
-    public Product findById(@PathVariable("id") Long id) {
-        return productService.findtById(id);
+
+    @GetMapping("/getById/{id}")
+    public ResponseEntity<ProductResponse> getById(@PathVariable("id") Long id) {
+        try {
+            ProductResponse productResponse = productService.getById(id);
+            return ResponseEntity.ok(productResponse);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PostMapping("/save")
@@ -57,10 +70,9 @@ public class ProductController {
         return "Product successfully saved";
     }
 
-    @PutMapping("/edit/{id}")
-    public Product editProduct(@RequestParam("id") Long id, @RequestBody Product product) {
-        productService.update(id, product);
-        return productService.findtById(id);
+    @PutMapping("/update/{id}")
+    public ProductResponse updateProduct(@PathVariable("id") Long id, @RequestBody ProductRequest productRequest) {
+        return productService.update(id, productRequest);
     }
 
     @DeleteMapping("/delete/{id}")

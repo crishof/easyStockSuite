@@ -1,5 +1,7 @@
 package org.crishof.stocksuitemono.service;
 
+import org.crishof.stocksuitemono.dto.InvoiceRequest;
+import org.crishof.stocksuitemono.dto.InvoiceResponse;
 import org.crishof.stocksuitemono.model.Invoice;
 import org.crishof.stocksuitemono.repository.InvoiceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,34 +16,35 @@ public class InvoiceServiceImpl implements InvoiceService {
     InvoiceRepository invoiceRepository;
 
     @Override
-    public List<Invoice> findAll() {
+    public List<Invoice> getAll() {
         return invoiceRepository.findAll();
     }
 
     @Override
-    public Invoice findtById(Long id) {
+    public Invoice getById(Long id) {
         return invoiceRepository.findById(id).orElse(null);
     }
 
 
     @Override
-    public void save(Invoice invoice) {
+    public void save(InvoiceRequest invoiceRequest) {
+        Invoice invoice = new Invoice(invoiceRequest);
         invoiceRepository.save(invoice);
     }
 
     @Override
-    public Invoice update(Long id, Invoice invoice) {
+    public InvoiceResponse update(Long id, InvoiceRequest invoiceRequest) {
 
-        Invoice invoice1 = this.findtById(id);
+        Invoice invoice = this.getById(id);
 
-        invoice1.setInvoiceNumber(invoice.getInvoiceNumber());
-        invoice1.setDueDate(invoice.getDueDate());
-        invoice1.setReceptionDate(invoice.getReceptionDate());
-        invoice1.setIssueDate(invoice.getIssueDate());
-        invoice1.setProductList(invoice.getProductList());
-        invoice1.setSupplierId(invoice.getSupplierId());
+        invoice.setInvoiceNumber(invoiceRequest.getInvoiceNumber());
+        invoice.setDueDate(invoiceRequest.getDueDate());
+        invoice.setReceptionDate(invoiceRequest.getReceptionDate());
+        invoice.setIssueDate(invoiceRequest.getIssueDate());
+        invoice.setProductList(invoiceRequest.getProductList());
+        invoice.setSupplierId(invoiceRequest.getSupplierId());
 
-        return invoiceRepository.save(invoice1);
+        return new InvoiceResponse(invoiceRepository.save(invoice));
     }
 
     @Override

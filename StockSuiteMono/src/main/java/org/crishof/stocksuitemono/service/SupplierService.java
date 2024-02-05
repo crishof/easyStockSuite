@@ -6,9 +6,9 @@ import java.util.List;
 
 public interface SupplierService {
 
-    List<Supplier> findAll();
+    List<Supplier> getAll();
 
-    Supplier findById(Long id);
+    Supplier getById(Long id);
 
     Supplier findByName(String name);
 

@@ -15,14 +15,14 @@ public class SupplierController {
     @Autowired
     SupplierService supplierService;
 
-    @GetMapping("/findAll")
-    public List<Supplier> findAll() {
-        return supplierService.findAll();
+    @GetMapping("/getAll")
+    public List<Supplier> getAll() {
+        return supplierService.getAll();
     }
 
-    @GetMapping("/findById/{id}")
-    public Supplier findById(@PathVariable("id") Long id) {
-        return supplierService.findById(id);
+    @GetMapping("/getById/{id}")
+    public Supplier getById(@PathVariable("id") Long id) {
+        return supplierService.getById(id);
     }
 
     @PostMapping("/save")
@@ -33,10 +33,9 @@ public class SupplierController {
     }
 
 
-    @PutMapping("/edit/{id}")
-    public Supplier editSupplier(@RequestParam("id") Long id, @RequestBody Supplier supplier) {
-        supplierService.update(id, supplier);
-        return supplierService.findById(id);
+    @PutMapping("/update/{id}")
+    public Supplier updateSupplier(@RequestParam("id") Long id, @RequestBody Supplier supplier) {
+        return supplierService.update(id, supplier);
     }
 
     @DeleteMapping("/delete/{id}")

@@ -1,5 +1,9 @@
 package org.crishof.stocksuitemono.service;
 
+import jakarta.persistence.EntityNotFoundException;
+import org.crishof.stocksuitemono.dto.CategoryRequest;
+import org.crishof.stocksuitemono.dto.CategoryResponse;
+import org.crishof.stocksuitemono.exception.notFound.CategoryNotFoundException;
 import org.crishof.stocksuitemono.model.Category;
 import org.crishof.stocksuitemono.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,29 +18,36 @@ public class CategoryServiceImpl implements CategoryService {
     CategoryRepository categoryRepository;
 
     @Override
-    public List<Category> findAll() {
+    public List<Category> getAll() {
         return categoryRepository.findAll();
     }
 
     @Override
-    public Category findtById(Long id) {
-        return categoryRepository.findById(id).orElse(null);
+    public Category getById(Long id) {
+
+        return categoryRepository.findById(id).orElseThrow(() -> new CategoryNotFoundException(id));
+    }
+
+    @Override
+    public Category getByName(String name) {
+        return categoryRepository.findByName(name).orElseThrow(EntityNotFoundException::new);
     }
 
 
     @Override
-    public void save(Category category) {
-        categoryRepository.save(category);
+    public CategoryResponse save(CategoryRequest categoryRequest) {
+        Category category = new Category(categoryRequest);
+        return new CategoryResponse(categoryRepository.save(category));
     }
 
     @Override
-    public Category update(Long id, Category category) {
+    public CategoryResponse update(Long id, CategoryRequest categoryRequest) {
 
-        Category category1 = this.findtById(id);
+        Category category = this.getById(id);
 
-        category1.setName(category.getName());
+        category.setName(categoryRequest.getName());
 
-        return categoryRepository.save(category1);
+        return new CategoryResponse(categoryRepository.save(category));
     }
 
     @Override
