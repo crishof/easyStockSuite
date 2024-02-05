@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class SupplierServiceImpl implements SupplierService {
@@ -19,7 +20,7 @@ public class SupplierServiceImpl implements SupplierService {
     }
 
     @Override
-    public Supplier getById(Long id) {
+    public Supplier getById(UUID id) {
         return supplierRepository.findById(id).orElse(null);
     }
 
@@ -35,7 +36,7 @@ public class SupplierServiceImpl implements SupplierService {
     }
 
     @Override
-    public Supplier update(Long id, Supplier supplier) {
+    public Supplier update(UUID id, Supplier supplier) {
 
         Supplier supplier1 = this.getById(id);
 
@@ -47,7 +48,7 @@ public class SupplierServiceImpl implements SupplierService {
     }
 
     @Override
-    public void deleteById(Long id) {
+    public void deleteById(UUID id) {
         supplierRepository.deleteById(id);
     }
 }

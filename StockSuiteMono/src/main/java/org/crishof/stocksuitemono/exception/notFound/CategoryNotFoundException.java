@@ -1,6 +1,7 @@
 package org.crishof.stocksuitemono.exception.notFound;
 
 import java.io.Serial;
+import java.util.UUID;
 
 public class CategoryNotFoundException extends RuntimeException {
 
@@ -15,7 +16,7 @@ public class CategoryNotFoundException extends RuntimeException {
         super(message);
     }
 
-    public CategoryNotFoundException(Long id) {
+    public CategoryNotFoundException(UUID id) {
         super("Category with id: " + id + " not found");
     }
 }

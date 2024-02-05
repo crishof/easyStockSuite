@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class ProductServiceImp implements ProductService {
@@ -33,7 +34,7 @@ public class ProductServiceImp implements ProductService {
     }
 
     @Override
-    public ProductResponse getById(Long id) {
+    public ProductResponse getById(UUID id) {
         Product product = this.productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException(id));
         return new ProductResponse(product);
     }
@@ -61,7 +62,7 @@ public class ProductServiceImp implements ProductService {
     }
 
     @Override
-    public ProductResponse update(Long id, ProductRequest productRequest) throws NullPointerException {
+    public ProductResponse update(UUID id, ProductRequest productRequest) throws NullPointerException {
 
         Product product = productRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         product.setModel(productRequest.getModel());
@@ -70,7 +71,7 @@ public class ProductServiceImp implements ProductService {
     }
 
     @Override
-    public void deleteById(Long id) {
+    public void deleteById(UUID id) {
         productRepository.deleteById(id);
     }
 }

@@ -25,7 +25,7 @@ public class CategoryController {
     }
 
     @GetMapping("/getById/{id}")
-    public Category getById(@PathVariable("id") Long id) {
+    public Category getById(@PathVariable("id") UUID id) {
         return categoryService.getById(id);
     }
 
@@ -41,7 +41,7 @@ public class CategoryController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public String delete(@PathVariable("id") Long id) {
+    public String delete(@PathVariable("id") UUID id) {
         categoryService.deleteById(id);
         return "Category successfully deleted";
     }

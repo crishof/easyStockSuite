@@ -26,4 +26,9 @@ public class Stock {
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
+
+    public Stock(int quantity, Product product) {
+        this.quantity = quantity;
+        this.product = product;
+    }
 }
