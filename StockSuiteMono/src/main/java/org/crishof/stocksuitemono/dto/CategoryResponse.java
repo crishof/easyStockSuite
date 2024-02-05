@@ -5,12 +5,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.crishof.stocksuitemono.model.Category;
 
+import java.util.UUID;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class CategoryResponse {
 
-    private Long id;
+    private UUID id;
     private String name;
 
     public CategoryResponse(Category category) {

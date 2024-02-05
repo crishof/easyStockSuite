@@ -1,9 +1,10 @@
 package org.crishof.stocksuitemono.service;
 
 import org.crishof.stocksuitemono.dto.ProductRequest;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 public interface ImportFileService {
-    public List<ProductRequest> readExcel(String filePath);
+    List<ProductRequest> readExcel(MultipartFile file);
 }

@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @Entity
 @Data
 @AllArgsConstructor
@@ -16,9 +18,8 @@ public class Stock {
 
     @Id
     @Column(name = "stock_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String location;
+    @GeneratedValue
+    private UUID id;
     private int quantity;
     private int max;
     private int min;

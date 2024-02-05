@@ -9,6 +9,7 @@ import org.crishof.stocksuitemono.dto.ProductRequest;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Data
 @AllArgsConstructor
@@ -19,9 +20,9 @@ import java.util.List;
 public class Product {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     @Column(name = "product_id", nullable = false)
-    private Long id;
+    private UUID id;
     @ManyToOne(targetEntity = Brand.class)
     @JoinColumn(name = "brand_id")
     private Brand brand;
@@ -39,7 +40,7 @@ public class Product {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Stock> stocks = new ArrayList<>();
 
-    public Product(ProductRequest productRequest){
+    public Product(ProductRequest productRequest) {
         this.code = productRequest.getCode();
         this.model = productRequest.getModel();
         this.description = productRequest.getDescription();

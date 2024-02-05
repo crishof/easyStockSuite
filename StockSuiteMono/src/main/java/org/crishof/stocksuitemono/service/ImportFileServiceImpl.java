@@ -3,10 +3,12 @@ package org.crishof.stocksuitemono.service;
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.ss.usermodel.*;
 import org.crishof.stocksuitemono.dto.ProductRequest;
+import org.crishof.stocksuitemono.exception.IOException.ImportFileException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -14,11 +16,11 @@ import java.util.List;
 @Service
 public class ImportFileServiceImpl implements ImportFileService {
 
-    public List<ProductRequest> readExcel(String filePath) {
+    public List<ProductRequest> readExcel(MultipartFile file) {
         List<ProductRequest> products = new ArrayList<>();
 
-        try (FileInputStream fileInputStream = new FileInputStream(filePath)) {
-            Workbook workbook = WorkbookFactory.create(fileInputStream);
+        try (InputStream inputStream = file.getInputStream()) {
+            Workbook workbook = WorkbookFactory.create(inputStream);
             Sheet sheet = workbook.getSheetAt(0); // Obtén la primera hoja del archivo
 
             // Verifica si hay al menos dos filas en la hoja
@@ -84,7 +86,7 @@ public class ImportFileServiceImpl implements ImportFileService {
                                 case "purchaseprice", "taxrate", "sellingprice":
 
                                     // Elimina caracteres no deseados, como comas
-                                    cellContent = cellContent.replaceAll(",", "");
+                                    cellContent = cellContent.replaceAll(",", "").replaceAll(" ", "");
 
                                     // Asigna el valor convertido a double
                                     double numericValue = Double.parseDouble(cellContent);
@@ -116,8 +118,8 @@ public class ImportFileServiceImpl implements ImportFileService {
 
             workbook.close();
 
-        } catch (IOException | EncryptedDocumentException e) {
-            e.printStackTrace();
+        } catch (IOException | EncryptedDocumentException | NumberFormatException e) {
+            throw new ImportFileException("Error during Excel file processing. Import canceled");
         }
 
         return products;

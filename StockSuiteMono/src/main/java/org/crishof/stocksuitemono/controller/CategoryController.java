@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/category")
@@ -34,7 +35,7 @@ public class CategoryController {
     }
 
     @PutMapping("/update/{id}")
-    public Category update(@PathVariable("id") Long id, @RequestBody Category category) {
+    public Category update(@PathVariable("id") UUID id, @RequestBody Category category) {
         category.setId(id);
         return categoryRepository.save(category);
     }

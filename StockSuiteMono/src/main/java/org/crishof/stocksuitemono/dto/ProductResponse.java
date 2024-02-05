@@ -5,12 +5,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.crishof.stocksuitemono.model.Product;
 
+import java.util.UUID;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProductResponse {
 
-    private Long id;
+    private UUID id;
     private String brandName;
     private String code;
     private String model;
