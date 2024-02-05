@@ -41,6 +41,8 @@ public class InvoiceServiceImpl implements InvoiceService {
             product.getStocks().add(stock);
             count++;
         }
+
+        invoiceRepository.save(invoice);
     }
 
     @Override

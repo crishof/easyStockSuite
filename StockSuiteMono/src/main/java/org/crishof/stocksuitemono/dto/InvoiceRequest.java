@@ -7,6 +7,7 @@ import org.crishof.stocksuitemono.model.Product;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 @Data
 @AllArgsConstructor
@@ -17,7 +18,7 @@ public class InvoiceRequest {
     private LocalDate issueDate;
     private LocalDate receptionDate;
     private LocalDate dueDate;
-    private Long supplierId;
+    private UUID supplierId;
     private List<Product> productList;
     private List<Integer> quantities;
 }

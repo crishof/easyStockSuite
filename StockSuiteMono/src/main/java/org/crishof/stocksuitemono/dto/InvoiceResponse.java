@@ -20,7 +20,7 @@ public class InvoiceResponse {
     private LocalDate issueDate;
     private LocalDate receptionDate;
     private LocalDate dueDate;
-    private Long supplierId;
+    private UUID supplierId;
     private List<Product> productList;
     private List<Integer> quantities;
 

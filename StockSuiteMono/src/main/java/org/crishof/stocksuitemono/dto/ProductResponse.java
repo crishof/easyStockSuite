@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.crishof.stocksuitemono.model.Product;
+import org.crishof.stocksuitemono.model.Stock;
 
 import java.util.UUID;
 
@@ -31,5 +32,8 @@ public class ProductResponse {
         this.purchasePrice = product.getPrice().getPurchasePrice();
         this.taxRate = product.getPrice().getTaxRate();
         this.sellingPrice = product.getPrice().getSellingPrice();
+        this.stock = (int) product.getStocks().stream()
+                .mapToDouble(Stock::getQuantity)
+                .sum();
     }
 }
