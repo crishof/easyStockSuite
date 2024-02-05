@@ -12,8 +12,10 @@ import org.crishof.stocksuitemono.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductServiceImp implements ProductService {
@@ -73,5 +75,22 @@ public class ProductServiceImp implements ProductService {
     @Override
     public void deleteById(UUID id) {
         productRepository.deleteById(id);
+    }
+
+    @Override
+    public List<ProductResponse> getAllByFilter(String filter) {
+        List<Product> products = new ArrayList<>();
+        products.addAll(productRepository.findAllByBrandName(filter));
+        products.addAll(productRepository.findAllByModelContainingIgnoreCase(filter));
+        products.addAll(productRepository.findAllByDescriptionContainingIgnoreCase(filter));
+
+        return products.stream().map(ProductResponse::new).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ProductResponse> getAllByFilterWithStock(String filter) {
+
+        List<ProductResponse> productResponses = this.getAllByFilter(filter);
+        return null;
     }
 }

@@ -17,4 +17,8 @@ public interface ProductService {
     ProductResponse update(UUID id, ProductRequest productRequest);
 
     void deleteById(UUID id);
+
+    List<ProductResponse> getAllByFilter(String filter);
+
+    List<ProductResponse> getAllByFilterWithStock(String filter);
 }

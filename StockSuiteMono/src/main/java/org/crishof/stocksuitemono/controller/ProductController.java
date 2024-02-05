@@ -63,6 +63,16 @@ public class ProductController {
         }
     }
 
+    @GetMapping("/getAllByFilter")
+    public List<ProductResponse> getAllByFilter(@RequestParam String filter) {
+        return productService.getAllByFilter(filter);
+    }
+
+    @GetMapping("/getAllByFilterWithStock")
+    public List<ProductResponse> getAllByFilterWithStock(@RequestParam String filter) {
+        return productService.getAllByFilterWithStock(filter);
+    }
+
     @PostMapping("/save")
     public String save(@RequestBody ProductRequest productRequest) {
 
