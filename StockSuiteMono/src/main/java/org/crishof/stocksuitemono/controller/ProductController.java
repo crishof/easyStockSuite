@@ -52,7 +52,6 @@ public class ProductController {
         return productService.getAll();
     }
 
-
     @GetMapping("/getById/{id}")
     public ResponseEntity<ProductResponse> getById(@PathVariable("id") UUID id) {
         try {

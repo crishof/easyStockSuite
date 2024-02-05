@@ -32,8 +32,6 @@ public class ProductResponse {
         this.purchasePrice = product.getPrice().getPurchasePrice();
         this.taxRate = product.getPrice().getTaxRate();
         this.sellingPrice = product.getPrice().getSellingPrice();
-        this.stock = (int) product.getStocks().stream()
-                .mapToDouble(Stock::getQuantity)
-                .sum();
+        this.stock = (int) product.getStocks().stream().mapToDouble(Stock::getQuantity).sum();
     }
 }

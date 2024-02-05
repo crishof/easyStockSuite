@@ -39,6 +39,8 @@ public class Product {
     private Supplier supplier;
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Stock> stocks = new ArrayList<>();
+    @OneToMany
+    private List<Image> images;
 
     public Product(ProductRequest productRequest) {
         this.code = productRequest.getCode();

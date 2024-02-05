@@ -2,7 +2,6 @@ package org.crishof.stocksuitemono.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,16 +11,16 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Builder
-@Table(name = "tbl_brand")
-public class Brand {
+@Table(name = "tbl_image")
+public class Image {
 
     @Id
-    @Column(name = "brand_id")
     @GeneratedValue
+    @Column(name = "image_id")
     private UUID id;
+    private String mime;
     private String name;
-    @OneToOne
-    private Image logo;
-
+    @Lob
+    @Basic(fetch = FetchType.LAZY)
+    private byte[] content;
 }
