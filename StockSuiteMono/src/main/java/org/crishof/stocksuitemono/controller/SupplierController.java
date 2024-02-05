@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/supplier")
@@ -21,7 +22,7 @@ public class SupplierController {
     }
 
     @GetMapping("/getById/{id}")
-    public Supplier getById(@PathVariable("id") Long id) {
+    public Supplier getById(@PathVariable("id") UUID id) {
         return supplierService.getById(id);
     }
 
@@ -34,12 +35,12 @@ public class SupplierController {
 
 
     @PutMapping("/update/{id}")
-    public Supplier updateSupplier(@RequestParam("id") Long id, @RequestBody Supplier supplier) {
+    public Supplier updateSupplier(@RequestParam("id") UUID id, @RequestBody Supplier supplier) {
         return supplierService.update(id, supplier);
     }
 
     @DeleteMapping("/delete/{id}")
-    public String delete(@PathVariable("id") Long id) {
+    public String delete(@PathVariable("id") UUID id) {
         supplierService.deleteById(id);
         return "Supplier successfully deleted";
     }

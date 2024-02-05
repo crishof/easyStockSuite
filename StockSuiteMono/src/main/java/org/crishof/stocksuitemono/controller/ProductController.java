@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/product")
@@ -51,15 +52,24 @@ public class ProductController {
         return productService.getAll();
     }
 
-
     @GetMapping("/getById/{id}")
-    public ResponseEntity<ProductResponse> getById(@PathVariable("id") Long id) {
+    public ResponseEntity<ProductResponse> getById(@PathVariable("id") UUID id) {
         try {
             ProductResponse productResponse = productService.getById(id);
             return ResponseEntity.ok(productResponse);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @GetMapping("/getAllByFilter")
+    public List<ProductResponse> getAllByFilter(@RequestParam String filter) {
+        return productService.getAllByFilter(filter);
+    }
+
+    @GetMapping("/getAllByFilterAndStock")
+    public List<ProductResponse> getAllByFilterAndStock(@RequestParam String filter) {
+        return productService.getAllByFilterAndStock(filter);
     }
 
     @PostMapping("/save")
@@ -71,12 +81,12 @@ public class ProductController {
     }
 
     @PutMapping("/update/{id}")
-    public ProductResponse updateProduct(@PathVariable("id") Long id, @RequestBody ProductRequest productRequest) {
+    public ProductResponse updateProduct(@PathVariable("id") UUID id, @RequestBody ProductRequest productRequest) {
         return productService.update(id, productRequest);
     }
 
     @DeleteMapping("/delete/{id}")
-    public String delete(@PathVariable("id") Long id) {
+    public String delete(@PathVariable("id") UUID id) {
         productService.deleteById(id);
         return "Product successfully deleted";
     }

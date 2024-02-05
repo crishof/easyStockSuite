@@ -23,6 +23,10 @@ public class Category {
     private UUID id;
     @Column(nullable = false, unique = true)
     private String name;
+    @OneToOne
+    private Image image;
+    @Embedded
+    private Dimensions dimensions;
 
     public Category(CategoryRequest categoryRequest) {
         this.name = categoryRequest.getName();

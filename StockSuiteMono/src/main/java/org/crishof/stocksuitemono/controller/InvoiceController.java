@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/invoice")
+
 public class InvoiceController {
 
     @Autowired
@@ -18,9 +19,14 @@ public class InvoiceController {
     @PostMapping("/save")
     public String saveInvoice(@RequestBody InvoiceRequest invoiceRequest) {
 
-        invoiceService.save(invoiceRequest);
+        try {
 
-        return "Invoice successfully saved";
+            invoiceService.save(invoiceRequest);
+            return "Invoice successfully saved";
 
+        } catch (Exception e) {
+            return "Error saving invoice: " + e.getMessage();
+        }
     }
 }
+

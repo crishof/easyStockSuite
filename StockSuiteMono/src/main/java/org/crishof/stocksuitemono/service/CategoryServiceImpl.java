@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
@@ -23,7 +24,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Category getById(Long id) {
+    public Category getById(UUID id) {
 
         return categoryRepository.findById(id).orElseThrow(() -> new CategoryNotFoundException(id));
     }
@@ -41,7 +42,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryResponse update(Long id, CategoryRequest categoryRequest) {
+    public CategoryResponse update(UUID id, CategoryRequest categoryRequest) {
 
         Category category = this.getById(id);
 
@@ -51,7 +52,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public void deleteById(Long id) {
+    public void deleteById(UUID id) {
         categoryRepository.deleteById(id);
     }
 }

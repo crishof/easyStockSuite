@@ -1,6 +1,7 @@
 package org.crishof.stocksuitemono.exception.notFound;
 
 import java.io.Serial;
+import java.util.UUID;
 
 public class BrandNotFoundException extends RuntimeException {
 
@@ -15,7 +16,7 @@ public class BrandNotFoundException extends RuntimeException {
         super(message);
     }
 
-    public BrandNotFoundException(Long id) {
+    public BrandNotFoundException(UUID id) {
         super("Brand with id: " + id + "not found");
     }
 }

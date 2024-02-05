@@ -1,6 +1,7 @@
 package org.crishof.stocksuitemono.exception.notFound;
 
 import java.io.Serial;
+import java.util.UUID;
 
 public class SupplierNotFoundException extends RuntimeException {
 
@@ -15,7 +16,7 @@ public class SupplierNotFoundException extends RuntimeException {
         super(message);
     }
 
-    public SupplierNotFoundException(Long id) {
+    public SupplierNotFoundException(UUID id) {
         super("Supplier with id: " + id + " not found");
     }
 }

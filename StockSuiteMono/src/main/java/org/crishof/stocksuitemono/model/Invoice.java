@@ -27,7 +27,7 @@ public class Invoice {
     private LocalDate issueDate;
     private LocalDate receptionDate;
     private LocalDate dueDate;
-    private Long supplierId;
+    private UUID supplierId;
     @OneToMany
     @JoinColumn(name = "invoice_id")
     private List<Product> productList;

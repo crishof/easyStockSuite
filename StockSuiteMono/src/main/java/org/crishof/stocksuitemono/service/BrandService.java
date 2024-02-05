@@ -3,18 +3,19 @@ package org.crishof.stocksuitemono.service;
 import org.crishof.stocksuitemono.model.Brand;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface BrandService {
 
     List<Brand> getAll();
 
-    Brand getById(Long id);
+    Brand getById(UUID id);
 
     Brand save(Brand brand);
 
-    Brand update(Long id, Brand brand);
+    Brand update(UUID id, Brand brand);
 
-    void deleteById(Long id);
+    void deleteById(UUID id);
 
     Brand getBrandByName(String name);
 

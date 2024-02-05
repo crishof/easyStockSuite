@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class BrandServiceImpl implements BrandService {
@@ -19,7 +20,7 @@ public class BrandServiceImpl implements BrandService {
     }
 
     @Override
-    public Brand getById(Long id) {
+    public Brand getById(UUID id) {
         return brandRepository.findById(id).orElse(null);
     }
 
@@ -30,7 +31,7 @@ public class BrandServiceImpl implements BrandService {
     }
 
     @Override
-    public Brand update(Long id, Brand brand) {
+    public Brand update(UUID id, Brand brand) {
 
         Brand brand1 = this.getById(id);
 
@@ -40,7 +41,7 @@ public class BrandServiceImpl implements BrandService {
     }
 
     @Override
-    public void deleteById(Long id) {
+    public void deleteById(UUID id) {
         brandRepository.deleteById(id);
     }
 
