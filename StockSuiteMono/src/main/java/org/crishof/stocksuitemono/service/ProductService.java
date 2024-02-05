@@ -20,5 +20,5 @@ public interface ProductService {
 
     List<ProductResponse> getAllByFilter(String filter);
 
-    List<ProductResponse> getAllByFilterWithStock(String filter);
+    List<ProductResponse> getAllByFilterAndStock(String filter);
 }

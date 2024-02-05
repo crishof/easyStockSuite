@@ -17,6 +17,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import static org.hibernate.Hibernate.map;
+
 @Service
 public class ProductServiceImp implements ProductService {
 
@@ -88,9 +90,10 @@ public class ProductServiceImp implements ProductService {
     }
 
     @Override
-    public List<ProductResponse> getAllByFilterWithStock(String filter) {
+    public List<ProductResponse> getAllByFilterAndStock(String filter) {
 
-        List<ProductResponse> productResponses = this.getAllByFilter(filter);
-        return null;
+        return this.getAllByFilter(filter).stream()
+                .filter(productResponse -> productResponse.getStock() > 0)
+                .collect(Collectors.toList());
     }
 }

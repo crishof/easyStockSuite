@@ -68,9 +68,9 @@ public class ProductController {
         return productService.getAllByFilter(filter);
     }
 
-    @GetMapping("/getAllByFilterWithStock")
-    public List<ProductResponse> getAllByFilterWithStock(@RequestParam String filter) {
-        return productService.getAllByFilterWithStock(filter);
+    @GetMapping("/getAllByFilterAndStock")
+    public List<ProductResponse> getAllByFilterAndStock(@RequestParam String filter) {
+        return productService.getAllByFilterAndStock(filter);
     }
 
     @PostMapping("/save")
