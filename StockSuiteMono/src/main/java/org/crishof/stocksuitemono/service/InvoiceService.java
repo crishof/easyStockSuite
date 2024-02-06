@@ -9,7 +9,7 @@ import java.util.UUID;
 
 public interface InvoiceService {
 
-    List<Invoice> getAll();
+    List<InvoiceResponse> getAll();
 
     Invoice getById(UUID id);
 

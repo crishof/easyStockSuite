@@ -9,6 +9,7 @@ import org.crishof.stocksuitemono.model.Product;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Data
 @AllArgsConstructor
@@ -21,7 +22,7 @@ public class InvoiceResponse {
     private LocalDate receptionDate;
     private LocalDate dueDate;
     private UUID supplierId;
-    private List<Product> productList;
+    private List<ProductResponse> productList;
     private List<Integer> quantities;
 
     public InvoiceResponse(Invoice invoice) {
@@ -31,7 +32,8 @@ public class InvoiceResponse {
         this.receptionDate = invoice.getReceptionDate();
         this.dueDate = invoice.getDueDate();
         this.supplierId = invoice.getSupplierId();
-        this.productList = invoice.getProductList();
+        this.productList = invoice.getProductList().stream()
+                .map(ProductResponse::new).collect(Collectors.toList());
         this.quantities = invoice.getQuantities();
     }
 }
