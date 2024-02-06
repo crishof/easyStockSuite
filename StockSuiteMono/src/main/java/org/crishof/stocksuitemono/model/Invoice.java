@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.crishof.stocksuitemono.dto.InvoiceRequest;
+import org.crishof.stocksuitemono.enums.TransactionType;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -33,6 +34,9 @@ public class Invoice {
     private List<Product> productList;
     @ElementCollection
     private List<Integer> quantities;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "transaction_type")
+    private TransactionType transactionType;
 
     public Invoice(InvoiceRequest invoiceRequest) {
         this.invoiceNumber = invoiceRequest.getInvoiceNumber();

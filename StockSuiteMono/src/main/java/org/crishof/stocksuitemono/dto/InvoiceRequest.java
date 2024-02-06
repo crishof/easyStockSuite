@@ -3,6 +3,7 @@ package org.crishof.stocksuitemono.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.crishof.stocksuitemono.enums.TransactionType;
 import org.crishof.stocksuitemono.model.Product;
 
 import java.time.LocalDate;
@@ -21,4 +22,5 @@ public class InvoiceRequest {
     private UUID supplierId;
     private List<Product> productList;
     private List<Integer> quantities;
+    private TransactionType transactionType;
 }

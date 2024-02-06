@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 public class InvoiceServiceImpl implements InvoiceService {
@@ -29,7 +28,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         List<Invoice> invoices = invoiceRepository.findAll();
         List<InvoiceResponse> responses = new ArrayList<>();
 
-        for (Invoice i : invoices){
+        for (Invoice i : invoices) {
             InvoiceResponse r = new InvoiceResponse();
             r.setId(i.getId());
             r.setReceptionDate(i.getReceptionDate());
@@ -37,9 +36,10 @@ public class InvoiceServiceImpl implements InvoiceService {
             r.setSupplierId(i.getSupplierId());
             r.setInvoiceNumber(i.getInvoiceNumber());
             r.setIssueDate(i.getIssueDate());
+            r.setTransactionType(i.getTransactionType());
             r.setProductList(new ArrayList<>());
 
-            for(Product product : i.getProductList()){
+            for (Product product : i.getProductList()) {
                 ProductResponse pr = new ProductResponse(product);
                 r.getProductList().add(pr);
             }
@@ -61,16 +61,28 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Override
     public void save(InvoiceRequest invoiceRequest) {
+
         Invoice invoice = new Invoice(invoiceRequest);
+        switch (invoiceRequest.getTransactionType()) {
 
-        int count = 0;
-        for (Product product : invoiceRequest.getProductList()) {
-            Stock stock = stockService.save(product, invoiceRequest.getQuantities().get(count));
-            product.getStocks().add(stock);
-            count++;
+            case SALE -> {
+            }
+            case PURCHASE -> {
+                int count = 0;
+                for (Product product : invoiceRequest.getProductList()) {
+                    Stock stock = stockService.save(product, invoiceRequest.getQuantities().get(count));
+                    product.getStocks().add(stock);
+                    count++;
+                }
+            }
+            case RETURN -> {
+            }
+            case TRANSFER -> {
+            }
+            default -> throw new IllegalStateException("Unexpected value: " + invoiceRequest.getTransactionType());
         }
-
         invoiceRepository.save(invoice);
+
     }
 
     @Override

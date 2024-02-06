@@ -3,6 +3,7 @@ package org.crishof.stocksuitemono.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.crishof.stocksuitemono.enums.TransactionType;
 import org.crishof.stocksuitemono.model.Invoice;
 import org.crishof.stocksuitemono.model.Product;
 
@@ -24,6 +25,7 @@ public class InvoiceResponse {
     private UUID supplierId;
     private List<ProductResponse> productList;
     private List<Integer> quantities;
+    private TransactionType transactionType;
 
     public InvoiceResponse(Invoice invoice) {
         this.id = invoice.getId();
@@ -35,5 +37,6 @@ public class InvoiceResponse {
         this.productList = invoice.getProductList().stream()
                 .map(ProductResponse::new).collect(Collectors.toList());
         this.quantities = invoice.getQuantities();
+        this.transactionType = invoice.getTransactionType();
     }
 }
