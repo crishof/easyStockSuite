@@ -28,7 +28,7 @@ public class Invoice {
     private LocalDate issueDate;
     private LocalDate receptionDate;
     private LocalDate dueDate;
-    private UUID supplierId;
+    private UUID entityId;
     @OneToMany
     @JoinColumn(name = "invoice_id")
     private List<Product> productList;
@@ -43,9 +43,10 @@ public class Invoice {
         this.issueDate = invoiceRequest.getIssueDate();
         this.receptionDate = invoiceRequest.getReceptionDate();
         this.dueDate = invoiceRequest.getReceptionDate();
-        this.supplierId = invoiceRequest.getSupplierId();
+        this.entityId = invoiceRequest.getEntityId();
         this.productList = invoiceRequest.getProductList();
         this.quantities = invoiceRequest.getQuantities();
+        this.transactionType = invoiceRequest.getTransactionType();
     }
 
 }

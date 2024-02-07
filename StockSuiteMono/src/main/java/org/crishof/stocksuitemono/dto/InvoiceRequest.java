@@ -19,7 +19,7 @@ public class InvoiceRequest {
     private LocalDate issueDate;
     private LocalDate receptionDate;
     private LocalDate dueDate;
-    private UUID supplierId;
+    private UUID entityId;
     private List<Product> productList;
     private List<Integer> quantities;
     private TransactionType transactionType;

@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.crishof.stocksuitemono.enums.TransactionType;
 import org.crishof.stocksuitemono.model.Invoice;
-import org.crishof.stocksuitemono.model.Product;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -22,7 +21,7 @@ public class InvoiceResponse {
     private LocalDate issueDate;
     private LocalDate receptionDate;
     private LocalDate dueDate;
-    private UUID supplierId;
+    private UUID entityId;
     private List<ProductResponse> productList;
     private List<Integer> quantities;
     private TransactionType transactionType;
@@ -33,7 +32,7 @@ public class InvoiceResponse {
         this.issueDate = invoice.getIssueDate();
         this.receptionDate = invoice.getReceptionDate();
         this.dueDate = invoice.getDueDate();
-        this.supplierId = invoice.getSupplierId();
+        this.entityId = invoice.getEntityId();
         this.productList = invoice.getProductList().stream()
                 .map(ProductResponse::new).collect(Collectors.toList());
         this.quantities = invoice.getQuantities();

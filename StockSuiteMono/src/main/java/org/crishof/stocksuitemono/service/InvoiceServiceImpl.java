@@ -33,7 +33,7 @@ public class InvoiceServiceImpl implements InvoiceService {
             r.setId(i.getId());
             r.setReceptionDate(i.getReceptionDate());
             r.setDueDate(i.getDueDate());
-            r.setSupplierId(i.getSupplierId());
+            r.setEntityId(i.getEntityId());
             r.setInvoiceNumber(i.getInvoiceNumber());
             r.setIssueDate(i.getIssueDate());
             r.setTransactionType(i.getTransactionType());
@@ -65,9 +65,19 @@ public class InvoiceServiceImpl implements InvoiceService {
         Invoice invoice = new Invoice(invoiceRequest);
         switch (invoiceRequest.getTransactionType()) {
 
-            case SALE -> {
+            case SALE, TRANSFER -> {
+
+                System.out.println("INGRESO A CASO SALE");
+                System.out.println("invoiceRequest = " + invoiceRequest.getTransactionType());
+                System.out.println("invoice.getTransactionType() = " + invoice.getTransactionType());
+                int count = 0;
+                for (Product product : invoiceRequest.getProductList()) {
+                    Stock stock = stockService.save(product, invoiceRequest.getQuantities().get(count) * -1);
+                    product.getStocks().add(stock);
+                    count++;
+                }
             }
-            case PURCHASE -> {
+            case PURCHASE, RETURN -> {
                 int count = 0;
                 for (Product product : invoiceRequest.getProductList()) {
                     Stock stock = stockService.save(product, invoiceRequest.getQuantities().get(count));
@@ -75,10 +85,7 @@ public class InvoiceServiceImpl implements InvoiceService {
                     count++;
                 }
             }
-            case RETURN -> {
-            }
-            case TRANSFER -> {
-            }
+
             default -> throw new IllegalStateException("Unexpected value: " + invoiceRequest.getTransactionType());
         }
         invoiceRepository.save(invoice);
@@ -95,7 +102,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         invoice.setReceptionDate(invoiceRequest.getReceptionDate());
         invoice.setIssueDate(invoiceRequest.getIssueDate());
         invoice.setProductList(invoiceRequest.getProductList());
-        invoice.setSupplierId(invoiceRequest.getSupplierId());
+        invoice.setEntityId(invoiceRequest.getEntityId());
 
         return new InvoiceResponse(invoiceRepository.save(invoice));
     }
