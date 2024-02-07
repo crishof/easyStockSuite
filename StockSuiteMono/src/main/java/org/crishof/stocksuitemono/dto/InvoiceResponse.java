@@ -33,8 +33,7 @@ public class InvoiceResponse {
         this.receptionDate = invoice.getReceptionDate();
         this.dueDate = invoice.getDueDate();
         this.entityId = invoice.getEntityId();
-        this.productList = invoice.getProductList().stream()
-                .map(ProductResponse::new).collect(Collectors.toList());
+        this.productList = invoice.getProductList().stream().map(ProductResponse::new).collect(Collectors.toList());
         this.quantities = invoice.getQuantities();
         this.transactionType = invoice.getTransactionType();
     }

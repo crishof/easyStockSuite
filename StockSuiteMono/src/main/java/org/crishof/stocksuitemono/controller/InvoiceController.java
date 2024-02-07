@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/invoice")
@@ -34,13 +35,11 @@ public class InvoiceController {
     }
 
     @PostMapping("/save/sale")
-    public String saveSaleInvoice(@RequestBody InvoiceRequest invoiceRequest,
-                                  @RequestParam String customerName,@RequestParam String customerLastName,
-                                  @RequestParam String customerDni) {
+    public String saveSaleInvoice(@RequestBody InvoiceRequest invoiceRequest, @RequestParam String customerName, @RequestParam String customerLastName, @RequestParam String customerDni) {
 
         try {
 
-            Customer customer = customerService.save(customerName,customerLastName,customerDni);
+            Customer customer = customerService.save(customerName, customerLastName, customerDni);
 
             invoiceRequest.setEntityId(customer.getId());
 
@@ -55,6 +54,17 @@ public class InvoiceController {
     @GetMapping("/getAll")
     public List<InvoiceResponse> getAll() {
         return invoiceService.getAll();
+    }
+
+    @GetMapping("/getById/{id}")
+    public InvoiceResponse getById(@PathVariable("id") UUID id) {
+        return invoiceService.getById(id);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public String deleteById(@PathVariable("id") UUID id) {
+        invoiceService.deleteById(id);
+        return "Invoice successfully deleted";
     }
 }
 
