@@ -2,7 +2,7 @@ package org.crishof.stocksuitemono.service;
 
 import org.crishof.stocksuitemono.dto.InvoiceRequest;
 import org.crishof.stocksuitemono.dto.InvoiceResponse;
-import org.crishof.stocksuitemono.dto.ProductResponse;
+import org.crishof.stocksuitemono.exception.notFound.InvoiceNotFoundException;
 import org.crishof.stocksuitemono.model.Invoice;
 import org.crishof.stocksuitemono.model.Product;
 import org.crishof.stocksuitemono.model.Stock;
@@ -11,11 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
-@Service
+@Service("invoiceService")
 public class InvoiceServiceImpl implements InvoiceService {
 
     @Autowired
@@ -25,28 +23,17 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Override
     public List<InvoiceResponse> getAll() {
-        List<Invoice> invoices = invoiceRepository.findAll();
-
-        return invoices.stream().map(i -> {
-            InvoiceResponse r = new InvoiceResponse();
-            r.setId(i.getId());
-            r.setReceptionDate(i.getReceptionDate());
-            r.setDueDate(i.getDueDate());
-            r.setEntityId(i.getEntityId());
-            r.setInvoiceNumber(i.getInvoiceNumber());
-            r.setIssueDate(i.getIssueDate());
-            r.setTransactionType(i.getTransactionType());
-            r.setProductList(i.getProductList().stream().map(ProductResponse::new).collect(Collectors.toList()));
-            r.setQuantities(i.getQuantities());
-            return r;
-        }).collect(Collectors.toList());
+        List<Invoice> invoiceList = invoiceRepository.findAll();
+        return invoiceList.stream().map(InvoiceResponse::new).toList();
     }
 
     @Override
     public InvoiceResponse getById(UUID id) {
-        Optional<Invoice> invoiceOptional = invoiceRepository.findById(id);
-
-        return invoiceOptional.map(InvoiceResponse::new).orElse(null);
+        Invoice invoice = invoiceRepository.getReferenceById(id);
+        if (invoice != null) {
+            return new InvoiceResponse(invoice);
+        }else
+            throw new InvoiceNotFoundException(id);
     }
 
     @Override
@@ -84,16 +71,8 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Override
     public InvoiceResponse update(UUID id, InvoiceRequest invoiceRequest) {
-
         Invoice invoice = invoiceRepository.getReferenceById(id);
-
-        invoice.setInvoiceNumber(invoiceRequest.getInvoiceNumber());
-        invoice.setDueDate(invoiceRequest.getDueDate());
-        invoice.setReceptionDate(invoiceRequest.getReceptionDate());
-        invoice.setIssueDate(invoiceRequest.getIssueDate());
-        invoice.setProductList(invoiceRequest.getProductList());
-        invoice.setEntityId(invoiceRequest.getEntityId());
-
+        invoice.updateFromRequest(invoiceRequest);
         return new InvoiceResponse(invoiceRepository.save(invoice));
     }
 

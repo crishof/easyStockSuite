@@ -49,4 +49,14 @@ public class Invoice {
         this.transactionType = invoiceRequest.getTransactionType();
     }
 
+    public void updateFromRequest(InvoiceRequest invoiceRequest) {
+        this.setInvoiceNumber(invoiceRequest.getInvoiceNumber());
+        this.setDueDate(invoiceRequest.getDueDate());
+        this.setReceptionDate(invoiceRequest.getReceptionDate());
+        this.setIssueDate(invoiceRequest.getIssueDate());
+        this.setProductList(invoiceRequest.getProductList());
+        this.setEntityId(invoiceRequest.getEntityId());
+    }
+
+
 }
