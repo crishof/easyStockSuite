@@ -1,5 +1,6 @@
 package org.crishof.stocksuitemono.service;
 
+import jakarta.transaction.Transactional;
 import org.crishof.stocksuitemono.dto.InvoiceRequest;
 import org.crishof.stocksuitemono.dto.InvoiceResponse;
 import org.crishof.stocksuitemono.exception.notFound.InvoiceNotFoundException;
@@ -37,6 +38,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
+    @Transactional
     public void save(InvoiceRequest invoiceRequest) {
 
         Invoice invoice = new Invoice(invoiceRequest);
@@ -44,9 +46,6 @@ public class InvoiceServiceImpl implements InvoiceService {
 
             case SALE, TRANSFER -> {
 
-                System.out.println("INGRESO A CASO SALE");
-                System.out.println("invoiceRequest = " + invoiceRequest.getTransactionType());
-                System.out.println("invoice.getTransactionType() = " + invoice.getTransactionType());
                 int count = 0;
                 for (Product product : invoiceRequest.getProductList()) {
                     Stock stock = stockService.save(product, invoiceRequest.getQuantities().get(count) * -1);
@@ -70,6 +69,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
+    @Transactional
     public InvoiceResponse update(UUID id, InvoiceRequest invoiceRequest) {
         Invoice invoice = invoiceRepository.getReferenceById(id);
         invoice.updateFromRequest(invoiceRequest);
@@ -77,6 +77,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
+    @Transactional
     public void deleteById(UUID id) {
         invoiceRepository.deleteById(id);
     }

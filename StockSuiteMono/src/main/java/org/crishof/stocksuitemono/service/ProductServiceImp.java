@@ -1,13 +1,12 @@
 package org.crishof.stocksuitemono.service;
 
-import jakarta.persistence.EntityNotFoundException;
 import org.crishof.stocksuitemono.dto.ProductRequest;
 import org.crishof.stocksuitemono.dto.ProductResponse;
 import org.crishof.stocksuitemono.exception.notFound.ProductNotFoundException;
+import org.crishof.stocksuitemono.exception.notFound.SupplierNotFoundException;
 import org.crishof.stocksuitemono.model.Brand;
 import org.crishof.stocksuitemono.model.Price;
 import org.crishof.stocksuitemono.model.Product;
-import org.crishof.stocksuitemono.model.Supplier;
 import org.crishof.stocksuitemono.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,12 +41,10 @@ public class ProductServiceImp implements ProductService {
     }
 
     @Override
-    public ProductResponse save(ProductRequest productRequest) throws NullPointerException {
+    public ProductResponse save(ProductRequest productRequest) throws SupplierNotFoundException {
 
         Product product = new Product(productRequest);
         product.setPrice(new Price());
-        Supplier supplier = supplierService.findByName(productRequest.getSupplier());
-//        product.setSupplierId(supplier.getId());
 
         product.setCode(productRequest.getCode());
         product.setModel(productRequest.getModel());
@@ -64,9 +61,9 @@ public class ProductServiceImp implements ProductService {
     }
 
     @Override
-    public ProductResponse update(UUID id, ProductRequest productRequest) throws NullPointerException {
+    public ProductResponse update(UUID id, ProductRequest productRequest) {
 
-        Product product = productRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        Product product = productRepository.findById(id).orElseThrow(ProductNotFoundException::new);
         product.setModel(productRequest.getModel());
         product.setDescription(productRequest.getDescription());
         return new ProductResponse(productRepository.save(product));
