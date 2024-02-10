@@ -33,8 +33,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         Invoice invoice = invoiceRepository.getReferenceById(id);
         if (invoice != null) {
             return new InvoiceResponse(invoice);
-        }else
-            throw new InvoiceNotFoundException(id);
+        } else throw new InvoiceNotFoundException(id);
     }
 
     @Override
@@ -48,6 +47,12 @@ public class InvoiceServiceImpl implements InvoiceService {
 
                 int count = 0;
                 for (Product product : invoiceRequest.getProductList()) {
+
+                    int requiredUnits = invoiceRequest.getQuantities().get(count);
+                    int existingUnits = stockService.getStockForProduct(product);
+                    if (existingUnits < requiredUnits) {
+                        throw new IllegalStateException("Not enough units in stock for product id: " + product.getId() + " - STOCK = " + existingUnits);
+                    }
                     Stock stock = stockService.save(product, invoiceRequest.getQuantities().get(count) * -1);
                     product.getStocks().add(stock);
                     count++;
