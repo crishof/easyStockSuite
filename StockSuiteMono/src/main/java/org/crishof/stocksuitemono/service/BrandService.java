@@ -17,7 +17,7 @@ public interface BrandService {
 
     void deleteById(UUID id);
 
-    Brand getBrandByName(String name);
+    Brand getByName(String name);
 
     Brand saveByName(String brandName);
 }

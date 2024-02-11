@@ -29,9 +29,12 @@ public class BrandController {
     }
 
     @Operation(summary = "Get Brand by ID")
-    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Brand found", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = Brand.class))}), @ApiResponse(responseCode = "500", description = "Invalid Id", content = @Content)})
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Brand found",
+            content = {@Content(mediaType = "application/json", schema = @Schema(implementation = Brand.class))}),
+            @ApiResponse(responseCode = "500", description = "Invalid Id", content = @Content)})
     @GetMapping("/getById/{id}")
-    public Brand getById(@Parameter(description = "Brand id", example = "87194fd9-de0b-44de-8fcc-b5819c7c94aa") @PathVariable("id") UUID id) {
+    public Brand getById(@Parameter(description = "Brand id", example = "87194fd9-de0b-44de-8fcc-b5819c7c94aa")
+                             @PathVariable("id") UUID id) {
         return brandService.getById(id);
     }
 

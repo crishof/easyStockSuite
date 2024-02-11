@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -34,6 +35,9 @@ public class BrandServiceImpl implements BrandService {
     @Override
     public Brand save(Brand brand) {
 
+        if (Objects.equals(brand.getName(), "")) {
+            throw new IllegalArgumentException("Brand name cannot be empty");
+        }
         if (brandRepository.findByNameIgnoreCase(brand.getName()).isPresent()) {
             throw new DuplicateNameException("Brand with name " + brand.getName() + " already exist");
         }
@@ -45,6 +49,9 @@ public class BrandServiceImpl implements BrandService {
 
         Brand brand1 = this.getById(id);
         if (brand1 != null) {
+            if (Objects.equals(brand.getName(), "")) {
+                throw new IllegalArgumentException("Brand name cannot be empty");
+            }
             brand1.setName(brand.getName());
             return brandRepository.save(brand1);
         } else {
@@ -64,8 +71,10 @@ public class BrandServiceImpl implements BrandService {
     }
 
     @Override
-    public Brand getBrandByName(String name) {
-        return brandRepository.findByNameIgnoreCase(name).orElse(null);
+    public Brand getByName(String name) {
+
+        return brandRepository.findByNameIgnoreCase(name)
+                .orElseThrow(() -> new BrandNotFoundException("Brand with name " + name + " not found"));
     }
 
     @Override
@@ -73,7 +82,7 @@ public class BrandServiceImpl implements BrandService {
 
         return brandRepository.findByNameIgnoreCase(brandName).orElseGet(() -> {
             Brand brand = new Brand();
-            brand.setName(brandName);
+            brand.setName(brandName.toUpperCase());
             return brandRepository.save(brand);
         });
     }

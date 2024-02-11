@@ -43,6 +43,7 @@ public class Product {
     private List<Image> images;
     @Embedded
     private Dimensions dimensions;
+    private boolean hidden = false;
 
     public Product(ProductRequest productRequest) {
         this.code = productRequest.getCode();
