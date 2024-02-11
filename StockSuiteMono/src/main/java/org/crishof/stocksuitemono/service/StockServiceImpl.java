@@ -22,4 +22,13 @@ public class StockServiceImpl implements StockService {
 
         return stockRepository.save(new Stock(quantity, product));
     }
+
+    @Override
+    public int getStockForProduct(Product product) {
+        int total = 0;
+        for (Stock stock : product.getStocks()) {
+            total += stock.getQuantity();
+        }
+        return total;
+    }
 }

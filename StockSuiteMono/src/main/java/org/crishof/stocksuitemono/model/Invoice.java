@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.crishof.stocksuitemono.dto.InvoiceRequest;
+import org.crishof.stocksuitemono.enums.TransactionType;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -27,21 +28,35 @@ public class Invoice {
     private LocalDate issueDate;
     private LocalDate receptionDate;
     private LocalDate dueDate;
-    private UUID supplierId;
+    private UUID entityId;
     @OneToMany
     @JoinColumn(name = "invoice_id")
     private List<Product> productList;
     @ElementCollection
     private List<Integer> quantities;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "transaction_type")
+    private TransactionType transactionType;
 
     public Invoice(InvoiceRequest invoiceRequest) {
         this.invoiceNumber = invoiceRequest.getInvoiceNumber();
         this.issueDate = invoiceRequest.getIssueDate();
         this.receptionDate = invoiceRequest.getReceptionDate();
         this.dueDate = invoiceRequest.getReceptionDate();
-        this.supplierId = invoiceRequest.getSupplierId();
+        this.entityId = invoiceRequest.getEntityId();
         this.productList = invoiceRequest.getProductList();
         this.quantities = invoiceRequest.getQuantities();
+        this.transactionType = invoiceRequest.getTransactionType();
     }
+
+    public void updateFromRequest(InvoiceRequest invoiceRequest) {
+        this.setInvoiceNumber(invoiceRequest.getInvoiceNumber());
+        this.setDueDate(invoiceRequest.getDueDate());
+        this.setReceptionDate(invoiceRequest.getReceptionDate());
+        this.setIssueDate(invoiceRequest.getIssueDate());
+        this.setProductList(invoiceRequest.getProductList());
+        this.setEntityId(invoiceRequest.getEntityId());
+    }
+
 
 }

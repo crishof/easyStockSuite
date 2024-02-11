@@ -3,12 +3,13 @@ package org.crishof.stocksuitemono.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.crishof.stocksuitemono.enums.TransactionType;
 import org.crishof.stocksuitemono.model.Invoice;
-import org.crishof.stocksuitemono.model.Product;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Data
 @AllArgsConstructor
@@ -20,9 +21,10 @@ public class InvoiceResponse {
     private LocalDate issueDate;
     private LocalDate receptionDate;
     private LocalDate dueDate;
-    private UUID supplierId;
-    private List<Product> productList;
+    private UUID entityId;
+    private List<ProductResponse> productList;
     private List<Integer> quantities;
+    private TransactionType transactionType;
 
     public InvoiceResponse(Invoice invoice) {
         this.id = invoice.getId();
@@ -30,8 +32,9 @@ public class InvoiceResponse {
         this.issueDate = invoice.getIssueDate();
         this.receptionDate = invoice.getReceptionDate();
         this.dueDate = invoice.getDueDate();
-        this.supplierId = invoice.getSupplierId();
-        this.productList = invoice.getProductList();
+        this.entityId = invoice.getEntityId();
+        this.productList = invoice.getProductList().stream().map(ProductResponse::new).collect(Collectors.toList());
         this.quantities = invoice.getQuantities();
+        this.transactionType = invoice.getTransactionType();
     }
 }

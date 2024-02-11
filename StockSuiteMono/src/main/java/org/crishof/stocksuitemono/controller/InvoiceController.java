@@ -1,12 +1,15 @@
 package org.crishof.stocksuitemono.controller;
 
 import org.crishof.stocksuitemono.dto.InvoiceRequest;
+import org.crishof.stocksuitemono.dto.InvoiceResponse;
+import org.crishof.stocksuitemono.model.Customer;
+import org.crishof.stocksuitemono.service.CustomerService;
 import org.crishof.stocksuitemono.service.InvoiceService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/invoice")
@@ -15,9 +18,11 @@ public class InvoiceController {
 
     @Autowired
     InvoiceService invoiceService;
+    @Autowired
+    CustomerService customerService;
 
-    @PostMapping("/save")
-    public String saveInvoice(@RequestBody InvoiceRequest invoiceRequest) {
+    @PostMapping("/save/purchase")
+    public String savePurchaseInvoice(@RequestBody InvoiceRequest invoiceRequest) {
 
         try {
 
@@ -27,6 +32,39 @@ public class InvoiceController {
         } catch (Exception e) {
             return "Error saving invoice: " + e.getMessage();
         }
+    }
+
+    @PostMapping("/save/sale")
+    public String saveSaleInvoice(@RequestBody InvoiceRequest invoiceRequest, @RequestParam String customerName, @RequestParam String customerLastName, @RequestParam String customerDni) {
+
+        try {
+
+            Customer customer = customerService.save(customerName, customerLastName, customerDni);
+
+            invoiceRequest.setEntityId(customer.getId());
+
+            invoiceService.save(invoiceRequest);
+            return "Invoice successfully saved";
+
+        } catch (Exception e) {
+            return "Error saving invoice: " + e.getMessage();
+        }
+    }
+
+    @GetMapping("/getAll")
+    public List<InvoiceResponse> getAll() {
+        return invoiceService.getAll();
+    }
+
+    @GetMapping("/getById/{id}")
+    public InvoiceResponse getById(@PathVariable("id") UUID id) {
+        return invoiceService.getById(id);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public String deleteById(@PathVariable("id") UUID id) {
+        invoiceService.deleteById(id);
+        return "Invoice successfully deleted";
     }
 }
 
