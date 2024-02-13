@@ -41,6 +41,11 @@ public class ProductServiceImp implements ProductService {
     }
 
     @Override
+    public Product getProductById(UUID id) {
+        return this.productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException(id));
+    }
+
+    @Override
     public ProductResponse save(ProductRequest productRequest) throws SupplierNotFoundException {
 
         Product product = new Product(productRequest);

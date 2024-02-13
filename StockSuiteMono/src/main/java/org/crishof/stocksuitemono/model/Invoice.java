@@ -9,7 +9,7 @@ import org.crishof.stocksuitemono.dto.InvoiceRequest;
 import org.crishof.stocksuitemono.enums.TransactionType;
 
 import java.time.LocalDate;
-import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Data
@@ -29,14 +29,13 @@ public class Invoice {
     private LocalDate receptionDate;
     private LocalDate dueDate;
     private UUID entityId;
-    @OneToMany
-    @JoinColumn(name = "invoice_id")
-    private List<Product> productList;
-    @ElementCollection
-    private List<Integer> quantities;
     @Enumerated(EnumType.STRING)
     @Column(name = "transaction_type")
     private TransactionType transactionType;
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "tbl_invoice_product", joinColumns = @JoinColumn(name = "invoice_id"))
+    @MapKeyColumn(name = "product_id")
+    Map<UUID, Integer> productList;
 
     public Invoice(InvoiceRequest invoiceRequest) {
         this.invoiceNumber = invoiceRequest.getInvoiceNumber();
@@ -44,8 +43,6 @@ public class Invoice {
         this.receptionDate = invoiceRequest.getReceptionDate();
         this.dueDate = invoiceRequest.getReceptionDate();
         this.entityId = invoiceRequest.getEntityId();
-        this.productList = invoiceRequest.getProductList();
-        this.quantities = invoiceRequest.getQuantities();
         this.transactionType = invoiceRequest.getTransactionType();
     }
 

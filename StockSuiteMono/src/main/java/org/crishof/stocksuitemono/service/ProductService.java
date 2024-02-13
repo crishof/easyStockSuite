@@ -2,6 +2,7 @@ package org.crishof.stocksuitemono.service;
 
 import org.crishof.stocksuitemono.dto.ProductRequest;
 import org.crishof.stocksuitemono.dto.ProductResponse;
+import org.crishof.stocksuitemono.model.Product;
 
 import java.util.List;
 import java.util.UUID;
@@ -21,4 +22,6 @@ public interface ProductService {
     List<ProductResponse> getAllByFilter(String filter);
 
     List<ProductResponse> getAllByFilterAndStock(String filter);
+
+    Product getProductById(UUID id);
 }
