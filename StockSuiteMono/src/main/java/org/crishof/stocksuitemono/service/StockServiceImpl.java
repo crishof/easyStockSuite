@@ -6,11 +6,15 @@ import org.crishof.stocksuitemono.repository.StockRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 public class StockServiceImpl implements StockService {
 
     @Autowired
     StockRepository stockRepository;
+    @Autowired
+    ProductService productService;
 
     @Override
     public void save(Stock stock) {
@@ -24,8 +28,9 @@ public class StockServiceImpl implements StockService {
     }
 
     @Override
-    public int getStockForProduct(Product product) {
+    public int getStockForProduct(UUID id) {
         int total = 0;
+        Product product = productService.getProductById(id);
         for (Stock stock : product.getStocks()) {
             total += stock.getQuantity();
         }

@@ -22,8 +22,6 @@ public class InvoiceResponse {
     private LocalDate receptionDate;
     private LocalDate dueDate;
     private UUID entityId;
-    private List<ProductResponse> productList;
-    private List<Integer> quantities;
     private TransactionType transactionType;
 
     public InvoiceResponse(Invoice invoice) {
@@ -33,8 +31,6 @@ public class InvoiceResponse {
         this.receptionDate = invoice.getReceptionDate();
         this.dueDate = invoice.getDueDate();
         this.entityId = invoice.getEntityId();
-        this.productList = invoice.getProductList().stream().map(ProductResponse::new).collect(Collectors.toList());
-        this.quantities = invoice.getQuantities();
         this.transactionType = invoice.getTransactionType();
     }
 }

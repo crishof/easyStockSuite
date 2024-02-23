@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Service("invoiceService")
@@ -21,6 +22,8 @@ public class InvoiceServiceImpl implements InvoiceService {
     InvoiceRepository invoiceRepository;
     @Autowired
     StockService stockService;
+    @Autowired
+    ProductService productService;
 
     @Override
     public List<InvoiceResponse> getAll() {
@@ -45,33 +48,36 @@ public class InvoiceServiceImpl implements InvoiceService {
 
             case SALE, TRANSFER -> {
 
-                int count = 0;
-                for (Product product : invoiceRequest.getProductList()) {
+                for (Map.Entry<UUID, Integer> entry : invoiceRequest.getProductList().entrySet()) {
 
-                    int requiredUnits = invoiceRequest.getQuantities().get(count);
-                    int existingUnits = stockService.getStockForProduct(product);
+                    UUID productId = entry.getKey();
+                    int requiredUnits = entry.getValue();
+
+                    Product product = productService.getProductById(productId);
+                    int existingUnits = stockService.getStockForProduct(productId);
                     if (existingUnits < requiredUnits) {
                         throw new IllegalStateException("Not enough units in stock for product id: " + product.getId() + " - STOCK = " + existingUnits);
                     }
-                    Stock stock = stockService.save(product, invoiceRequest.getQuantities().get(count) * -1);
+
+                    Stock stock = stockService.save(product, entry.getValue() * -1);
                     product.getStocks().add(stock);
-                    count++;
                 }
             }
             case PURCHASE, RETURN -> {
-                int count = 0;
-                for (Product product : invoiceRequest.getProductList()) {
-                    Stock stock = stockService.save(product, invoiceRequest.getQuantities().get(count));
+
+                for (Map.Entry<UUID, Integer> entry : invoiceRequest.getProductList().entrySet()) {
+                    UUID productId = entry.getKey();
+                    Product product = productService.getProductById(productId);
+                    Stock stock = stockService.save(product, entry.getValue());
                     product.getStocks().add(stock);
-                    count++;
                 }
             }
-
             default -> throw new IllegalStateException("Unexpected value: " + invoiceRequest.getTransactionType());
         }
-        invoiceRepository.save(invoice);
 
+        invoiceRepository.save(invoice);
     }
+
 
     @Override
     @Transactional

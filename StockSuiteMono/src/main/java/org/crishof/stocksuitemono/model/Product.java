@@ -53,4 +53,48 @@ public class Product {
 
 }
 
+/*
+    private String name;
+    private String description;
+    private double price;
+    private int quantity;
+    private String category;
+    private String image;
+    private String brand;
+    private String color;
+    private String size;
+    private String condition;
+    private String material;
+    private String model;
+    private String warranty;
+    private String sku;
+    private String ean;
+    private String upc;
+    private String mpn;
+    private String gtin;
+    private String isbn;
+    private String asin;
+    private String ean13;
+    private String ean8;
+    private String upc12;
+    private String upc14;
+    private String mfg;
+    private String mfgDate;
+    private String expDate;
+
+    private String country;
+    private String state;
+    private String city;
+    private String zip;
+    private String address;
+    private String phone;
+    private String email;
+    private String website;
+
+    private String notes;
+    private String status;
+    private String createdBy;
+    private String updatedBy;
+*/
+
 
