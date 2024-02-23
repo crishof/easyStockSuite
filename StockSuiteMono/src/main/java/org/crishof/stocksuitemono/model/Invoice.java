@@ -20,6 +20,10 @@ import java.util.UUID;
 @Table(name = "tbl_invoice")
 public class Invoice {
 
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "tbl_invoice_product", joinColumns = @JoinColumn(name = "invoice_id"))
+    @MapKeyColumn(name = "product_id")
+    Map<UUID, Integer> productList;
     @Id
     @GeneratedValue
     @Column(name = "invoice_id")
@@ -32,10 +36,6 @@ public class Invoice {
     @Enumerated(EnumType.STRING)
     @Column(name = "transaction_type")
     private TransactionType transactionType;
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "tbl_invoice_product", joinColumns = @JoinColumn(name = "invoice_id"))
-    @MapKeyColumn(name = "product_id")
-    Map<UUID, Integer> productList;
 
     public Invoice(InvoiceRequest invoiceRequest) {
         this.invoiceNumber = invoiceRequest.getInvoiceNumber();

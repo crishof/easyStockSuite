@@ -81,6 +81,7 @@ public class Product {
     private String mfg;
     private String mfgDate;
     private String expDate;
+
     private String country;
     private String state;
     private String city;
@@ -89,6 +90,7 @@ public class Product {
     private String phone;
     private String email;
     private String website;
+
     private String notes;
     private String status;
     private String createdBy;
