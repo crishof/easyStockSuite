@@ -1,32 +1,49 @@
 <div class="container">
-    <h1>Products</h1>
-    <table class="table table-dark table-striped">
-      <thead>
-        <tr>
-          <th scope="col">#</th>
-          <th scope="col">Code</th>
-          <th scope="col">Model</th>
-          <th scope="col">Description</th>
-          <th scope="col">Details</th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (product of productList; track $index) {
-        <tr>
-          <th scope="row">{{ product.id }}</th>
-          <td>{{ product.code }}</td>
-          <td>{{ product.model }}</td>
-          <td>{{ product.description }}</td>
-          <td>
-            <button
-              class="btn btn-outline-primary"
-              (click)="navegate(product.id)"
-            >
-              Details
-            </button>
-          </td>
-        </tr>
-        }
-      </tbody>
-    </table>
-  </div>
+  <h1>Products</h1>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col">#Id</th>
+        <th scope="col">Code</th>
+        <th scope="col">Brand</th>
+        <th scope="col">Model</th>
+        <th scope="col">Description</th>
+        <th scope="col">Tax Rate</th>
+        <th scope="col">Selling Price</th>
+        <th scope="col">Stock</th>
+        <th scope="col">Details</th>
+      </tr>
+    </thead>
+    <!-- 
+        {"id":"4b719a46-7c66-47e3-8914-ecc77928670c","
+        brandName":"PHONIC","
+        code":"AM105FXU","
+        model":"AM105FXU","
+        description":"Mixer   |  Analogico  |  6 canales (2 XLR/TRS + 8 TRS) | Salida L&R TRS  | Vivo |  Eq 3b +  Multiefecto","purchasePrice":97749.88,"taxRate":0.105,"
+        sellingPrice":156619.75,"
+        stock":0}
+      -->
+    <tbody>
+      @for (product of productList; track $index) {
+      <tr>
+        <th scope="row" id="id">{{ product.id }}</th>
+        <td>{{ product.code }}</td>
+        <td>{{ product.brandName }}</td>
+        <td>{{ product.model }}</td>
+        <td>{{ product.description }}</td>
+        <td>{{ product.taxRate * 100 }}%</td>
+        <td>{{ product.sellingPrice | currency }}</td>
+        <td>{{ product.stock }}</td>
+        <td>
+          <button
+            class="btn btn-outline-primary"
+            (click)="navegate(product.id)"
+          >
+            Details
+          </button>
+        </td>
+      </tr>
+      }
+    </tbody>
+  </table>
+</div>
