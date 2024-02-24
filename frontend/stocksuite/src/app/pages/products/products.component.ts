@@ -1,5 +1,5 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { ProductService } from '../../services/product-service.service';
+import { ProductService } from '../../services/product.service';
 import { CommonModule } from '@angular/common';
 import { IProduct } from '../../model/product.model';
 import { Router } from '@angular/router';
@@ -13,11 +13,11 @@ import { Router } from '@angular/router';
 })
 export class ProductsComponent implements OnInit {
   productList: IProduct[] = [];
-  private _apiService = inject(ProductService);
+  private _productService = inject(ProductService);
   private _router = inject(Router);
 
   ngOnInit(): void {
-    this._apiService.getProducts().subscribe((data: IProduct[]) => {
+    this._productService.getProducts().subscribe((data: IProduct[]) => {
       this.productList = data;
     });
   }
