@@ -22,7 +22,7 @@ export class ProductsComponent implements OnInit {
     });
   }
 
-  navegate(id: number): void {
+  navegate(id: string): void {
     this._router.navigate(['/products', id]);
   }
 }

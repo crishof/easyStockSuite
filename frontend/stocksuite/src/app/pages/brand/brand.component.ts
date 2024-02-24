@@ -9,23 +9,20 @@ import { Router } from '@angular/router';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './brand.component.html',
-  styleUrl: './brand.component.css'
+  styleUrl: './brand.component.css',
 })
 export class BrandComponent implements OnInit {
-
   brandList: IBrand[] = [];
   private _brandService = inject(BrandService);
   private _router = inject(Router);
 
   ngOnInit(): void {
-    this._brandService.getBrands().subscribe((data: IBrand[]) => 
-    {
+    this._brandService.getBrands().subscribe((data: IBrand[]) => {
       this.brandList = data;
     });
   }
 
-  navegate(id: string):void{
+  navegate(id: string): void {
     this._router.navigate(['/brand', id]);
   }
-
 }
