@@ -1,19 +1,31 @@
 <table class="table">
-  <thead>
-    <tr>
-      <th scope="col">#</th>
-      <th scope="col">First</th>
-      <th scope="col">Last</th>
-      <th scope="col">Handle</th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <tr>
-      <th scope="row">1</th>
-      <td>Mark</td>
-      <td>Otto</td>
-      <td>mdo</td>
-    </tr>
-  </tbody>
-</table>
+    <thead>
+      <tr>
+        <th scope="col">#Id</th>
+        <th scope="col">Name</th>
+        <th scope="col">Tax Id</th>
+        <th scope="col">Legal Name</th>
+        <th scope="col">Details</th>
+      </tr>
+    </thead>
+  
+    <tbody>
+      @for ( supplier of supplierList; track $index){
+  
+      <tr>
+        <th scope="row">{{ supplier.id }}</th>
+        <td>{{ supplier.name }}</td>
+        <td>{{ supplier.taxId }}</td>
+        <td>{{ supplier.legalName }}</td>
+  
+        <td>
+          <button class="btn btn-outline-primary" (click)="navegate(supplier.id)">
+            Details
+          </button>
+        </td>
+      </tr>
+  
+      }
+    </tbody>
+  </table>
+  
