@@ -17,6 +17,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/brand")
+@CrossOrigin(origins = "http://localhost:4200")
 public class BrandController {
 
     @Autowired

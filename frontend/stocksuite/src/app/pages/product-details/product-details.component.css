@@ -2,3 +2,12 @@
   display: flex;
   justify-content: center;
 }
+
+.card-header {
+  justify-content: center;
+  text-align: center;
+}
+
+.stock {
+  text-align: end;
+}

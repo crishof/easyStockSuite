@@ -4,19 +4,14 @@
   } @if (!loading) {
 
   <div class="card" style="width: 18rem">
-    <!--
-
-        <img
-        src="{{ product?.image }}"
-        class="card-img-top"
-        alt="{{ product?.title }}"
-        />
-    -->
-
-    <div class="card-body">
-      <!-- <h4>{{ product?.price | currency }}</h4> -->
+    <div class="card-header">
+      <h5 class="card-title">{{ product?.brandName }}</h5>
       <h5 class="card-title">{{ product?.model }}</h5>
+      <h4>{{ product?.sellingPrice | currency }}</h4>
+    </div>
+    <div class="card-body">
       <p class="card-text">{{ product?.description }}</p>
+      <p class="card-text stock">Stock: {{ product?.stock }}</p>
       <a href="#" class="btn btn-primary">Go somewhere</a>
     </div>
   </div>
