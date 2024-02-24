@@ -3,14 +3,14 @@ import { IBrand } from '../../../model/brand.model';
 import { BrandService } from '../../../services/brand.service';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
-import { BrandEditComponent } from "../brand-edit/brand-edit.component";
+import { BrandEditComponent } from '../brand-edit/brand-edit.component';
 
 @Component({
-    selector: 'app-brand-details',
-    standalone: true,
-    templateUrl: './brand-details.component.html',
-    styleUrl: './brand-details.component.css',
-    imports: [CommonModule, BrandEditComponent]
+  selector: 'app-brand-details',
+  standalone: true,
+  templateUrl: './brand-details.component.html',
+  styleUrl: './brand-details.component.css',
+  imports: [CommonModule, BrandEditComponent],
 })
 export class BrandDetailsComponent implements OnInit {
   loading: boolean = true;
@@ -29,11 +29,11 @@ export class BrandDetailsComponent implements OnInit {
     });
   }
 
-  startEditing():void {
+  startEditing(): void {
     this.editingMode = true;
   }
 
-  saveChanges(updatedBrand : IBrand): void{
+  saveChanges(updatedBrand: IBrand): void {
     this.editingMode = false;
   }
 }

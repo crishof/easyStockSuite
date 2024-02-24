@@ -7,10 +7,8 @@ import { IBrand } from '../../../model/brand.model';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './brand-edit.component.html',
-  styleUrl: './brand-edit.component.css'
+  styleUrl: './brand-edit.component.css',
 })
 export class BrandEditComponent {
-
   public brand?: IBrand;
-
 }
