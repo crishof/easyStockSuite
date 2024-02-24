@@ -1,0 +1,14 @@
+h1 {
+  text-align: center;
+}
+#id {
+  white-space: nowrap;
+}
+
+.custom-table {
+  display: inline-table;
+  justify-content: left;
+  max-width: 100%;
+  overflow-x: auto;
+  margin-left: 0px;
+}
