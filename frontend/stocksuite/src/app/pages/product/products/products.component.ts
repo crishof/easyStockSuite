@@ -1,7 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { ProductService } from '../../services/product.service';
+import { ProductService } from '../../../services/product.service';
 import { CommonModule } from '@angular/common';
-import { IProduct } from '../../model/product.model';
+import { IProduct } from '../../../model/product.model';
 import { Router } from '@angular/router';
 
 @Component({

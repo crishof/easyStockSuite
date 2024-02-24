@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, inject } from '@angular/core';
-import { IBrand } from '../../model/brand.model';
-import { BrandService } from '../../services/brand.service';
+import { IBrand } from '../../../model/brand.model';
+import { BrandService } from '../../../services/brand.service';
 import { Router } from '@angular/router';
 
 @Component({

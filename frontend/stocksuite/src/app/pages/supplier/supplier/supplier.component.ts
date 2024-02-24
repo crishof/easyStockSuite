@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, inject } from '@angular/core';
-import { ISupplier } from '../../model/supplier.model';
+import { ISupplier } from '../../../model/supplier.model';
 import { Router } from '@angular/router';
-import { SupplierService } from '../../services/supplier.service';
+import { SupplierService } from '../../../services/supplier.service';
 
 @Component({
   selector: 'app-supplier',

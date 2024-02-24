@@ -1,7 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { ICategory } from '../../model/category.model';
+import { ICategory } from '../../../model/category.model';
 import { Router } from '@angular/router';
-import { CategoryService } from '../../services/category.service';
+import { CategoryService } from '../../../services/category.service';
 import { CommonModule } from '@angular/common';
 
 @Component({
