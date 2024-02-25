@@ -9,6 +9,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { BrandService } from '../../../services/brand.service';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-brand-edit',
@@ -23,6 +24,8 @@ export class BrandEditComponent implements OnInit {
 
   brandForm!: FormGroup;
   brandService = inject(BrandService);
+
+  private brandUpdatedSubject = new Subject<IBrand>();
 
   constructor(private formBuilder: FormBuilder) {
     this.brandForm = formBuilder.group({
@@ -39,12 +42,12 @@ export class BrandEditComponent implements OnInit {
       // Agregar otros campos de edicion
     };
 
-    console.log('Id antes de la actualización:', this.brand?.id);
-    console.log('Brand antes de la actualización:', this.brand);
-
     this.brandService.updateBrand(updatedBrand.id, updatedBrand).subscribe(
       (response) => {
-        console.log('Brand actualizada:', response);
+        console.log('Brand actualizada: ', response);
+
+        this.brandUpdatedSubject.next(response);
+
         this.onSave.emit(response);
       },
       (error) => {

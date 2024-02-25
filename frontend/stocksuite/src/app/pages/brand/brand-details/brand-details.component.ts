@@ -4,6 +4,7 @@ import { BrandService } from '../../../services/brand.service';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { BrandEditComponent } from '../brand-edit/brand-edit.component';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-brand-details',
@@ -20,12 +21,21 @@ export class BrandDetailsComponent implements OnInit {
   private _route = inject(ActivatedRoute);
   private _brandService = inject(BrandService);
 
+  //private brandUpdateSubject = inject(Subject)
+  private brandUpdatedSubject: Subject<IBrand> = new Subject<IBrand>();
+
   ngOnInit(): void {
     this._route.params.subscribe((params) => {
       this._brandService.getBrand(params['id']).subscribe((data: IBrand) => {
         this.brand = data;
         this.loading = false;
       });
+    });
+
+    this.brandUpdatedSubject.subscribe((updatedBrand) => {
+      if (updatedBrand) {
+        this.brand = updatedBrand;
+      }
     });
   }
 
@@ -35,5 +45,9 @@ export class BrandDetailsComponent implements OnInit {
 
   saveChanges(updatedBrand: IBrand): void {
     this.editingMode = false;
+    if (this.brandUpdatedSubject) {
+      this.brandUpdatedSubject.next(updatedBrand);
+    }
+    this.brandUpdatedSubject.next(updatedBrand);
   }
 }
