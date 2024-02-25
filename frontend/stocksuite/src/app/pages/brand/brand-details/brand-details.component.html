@@ -1,10 +1,21 @@
 <div class="container">
   @if (loading) {
   <h5>Loading....</h5>
-  } @if (!loading) {
-
+  } @if (!loading) { @if (!editingMode){
   <div class="container">
     <p>Name : {{ brand?.name }}</p>
   </div>
-  }
+  <button class="btn btn-outline-primary" (click)="startEditing()">
+    Editar
+  </button>
+  } @if (editingMode){
+
+  <h5>Brand edit: {{ brand!.name }}</h5>
+
+  <app-brand-edit
+    [brand]="brand"
+    (onSave)="saveChanges($event)"
+  ></app-brand-edit>
+
+  } }
 </div>

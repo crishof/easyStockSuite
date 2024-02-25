@@ -8,6 +8,7 @@ import { SupplierComponent } from './pages/supplier/supplier/supplier.component'
 import { SupplierDetailsComponent } from './pages/supplier/supplier-details/supplier-details.component';
 import { CategoryDetailsComponent } from './pages/category/category-details/category-details.component';
 import { BrandDetailsComponent } from './pages/brand/brand-details/brand-details.component';
+import { BrandEditComponent } from './pages/brand/brand-edit/brand-edit.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -15,6 +16,7 @@ export const routes: Routes = [
   { path: 'products/:id', component: ProductDetailsComponent },
   { path: 'brand', component: BrandComponent },
   { path: 'brand/:id', component: BrandDetailsComponent },
+  { path: 'brand/:id/edit', component: BrandEditComponent },
   { path: 'category', component: CategoryComponent },
   { path: 'category/:id', component: CategoryDetailsComponent },
   { path: 'supplier', component: SupplierComponent },
