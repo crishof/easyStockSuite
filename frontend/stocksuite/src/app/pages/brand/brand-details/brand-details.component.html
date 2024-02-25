@@ -10,13 +10,12 @@
   </button>
   } @if (editingMode){
 
-  <h5>Brand edit</h5>
+  <h5>Brand edit: {{ brand!.name }}</h5>
 
-  <app-brand-edit></app-brand-edit>
-
-  <!--
-      <app-brand-edit [brand]="brand" (onSave)="saveChanges($event)"></app-brand-edit>>
-    -->
+  <app-brand-edit
+    [brand]="brand"
+    (onSave)="saveChanges($event)"
+  ></app-brand-edit>
 
   } }
 </div>
