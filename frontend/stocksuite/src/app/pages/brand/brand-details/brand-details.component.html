@@ -8,6 +8,11 @@
   <button class="btn btn-outline-primary" (click)="startEditing()">
     Editar
   </button>
+
+  <button class="btn btn-outline-danger" (click)="goToList()">
+    Go back
+  </button>
+  
   } @if (editingMode){
 
   <h5>Brand edit: {{ brand!.name }}</h5>
@@ -17,5 +22,11 @@
     (onSave)="saveChanges($event)"
   ></app-brand-edit>
 
+  <button class="btn btn-outline-danger"
+  (click)="cancelEditing()">Cancel</button>
+
   } }
+
+
+  
 </div>

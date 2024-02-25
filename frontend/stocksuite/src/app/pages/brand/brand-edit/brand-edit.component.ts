@@ -21,6 +21,7 @@ import { Subject } from 'rxjs';
 export class BrandEditComponent implements OnInit {
   @Input() brand: IBrand | undefined;
   @Output() onSave = new EventEmitter<IBrand>();
+  @Output() onCancel = new EventEmitter<void>();
 
   brandForm!: FormGroup;
   brandService = inject(BrandService);
@@ -57,6 +58,10 @@ export class BrandEditComponent implements OnInit {
   }
 
   ngOnInit(): void {}
+
+  cancelar(): void {
+    this.onCancel.emit();
+  }
 
   hasErrors(field: string, typeError: string) {
     return (
