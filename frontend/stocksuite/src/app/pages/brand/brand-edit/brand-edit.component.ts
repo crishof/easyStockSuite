@@ -24,7 +24,7 @@ export class BrandEditComponent implements OnInit {
   @Output() onCancel = new EventEmitter<void>();
 
   brandForm!: FormGroup;
-  brandService = inject(BrandService);
+  _brandService = inject(BrandService);
 
   private brandUpdatedSubject = new Subject<IBrand>();
 
@@ -43,7 +43,7 @@ export class BrandEditComponent implements OnInit {
       // Agregar otros campos de edicion
     };
 
-    this.brandService.updateBrand(updatedBrand.id, updatedBrand).subscribe(
+    this._brandService.updateBrand(updatedBrand.id, updatedBrand).subscribe(
       (response) => {
         console.log('Brand actualizada: ', response);
 

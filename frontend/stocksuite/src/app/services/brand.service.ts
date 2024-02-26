@@ -24,4 +24,8 @@ export class BrandService {
       updatedBrand
     );
   }
+
+  createBrand(brand: IBrand): Observable<IBrand> {
+    return this._http.post<IBrand>(`${this._urlBase}/save`, brand);
+  }
 }

@@ -1,23 +1,33 @@
-<table class="table">
-  <thead>
-    <tr>
-      <th scope="col">#Id</th>
-      <th scope="col">Name</th>
-    </tr>
-  </thead>
-  <tbody>
-    @for (brand of brandList; track $index){
+<div class="container">
+  <div class="container">
+    <button class="btn btn-outline-success" (click)="toNewBrand()">
+      New Brand
+    </button>
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">#Id</th>
+          <th scope="col">Name</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (brand of brandList; track $index){
 
-    <tr>
-      <th scope="row">{{ brand.id }}</th>
-      <td>{{ brand.name }}</td>
-      <td>
-        <button class="btn btn-outline-primary" (click)="navegate(brand.id)">
-          Details
-        </button>
-      </td>
-    </tr>
+        <tr>
+          <th scope="row">{{ brand.id }}</th>
+          <td>{{ brand.name }}</td>
+          <td>
+            <button
+              class="btn btn-outline-primary"
+              (click)="toBrandDetails(brand.id)"
+            >
+              Details
+            </button>
+          </td>
+        </tr>
 
-    }
-  </tbody>
-</table>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>
