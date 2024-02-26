@@ -5,9 +5,25 @@
   <div class="container">
     <p>Name : {{ brand?.name }}</p>
   </div>
+  @if(brand != null && brand != undefined && successMessage == ''){
+
   <button class="btn btn-outline-primary" (click)="startEditing()">
     Editar
   </button>
+
+  <div>
+    <button class="btn btn-outline-danger" (click)="deleteBrand(brand.id)">
+      Delete
+    </button>
+  </div>
+
+  } @if(successMessage){
+  <div>
+    {{ successMessage }}
+  </div>
+  }
+  <button class="btn btn-outline-danger" (click)="goToList()">Go back</button>
+
   } @if (editingMode){
 
   <h5>Brand edit: {{ brand!.name }}</h5>
@@ -16,6 +32,10 @@
     [brand]="brand"
     (onSave)="saveChanges($event)"
   ></app-brand-edit>
+
+  <button class="btn btn-outline-danger" (click)="cancelEditing()">
+    Cancel
+  </button>
 
   } }
 </div>

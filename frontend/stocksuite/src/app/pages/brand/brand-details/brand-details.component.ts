@@ -2,7 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { IBrand } from '../../../model/brand.model';
 import { BrandService } from '../../../services/brand.service';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { BrandEditComponent } from '../brand-edit/brand-edit.component';
 import { Subject } from 'rxjs';
 
@@ -20,6 +20,9 @@ export class BrandDetailsComponent implements OnInit {
 
   private _route = inject(ActivatedRoute);
   private _brandService = inject(BrandService);
+  private _router = inject(Router);
+
+  successMessage: string = '';
 
   //private brandUpdateSubject = inject(Subject)
   private brandUpdatedSubject: Subject<IBrand> = new Subject<IBrand>();
@@ -49,5 +52,25 @@ export class BrandDetailsComponent implements OnInit {
       this.brandUpdatedSubject.next(updatedBrand);
     }
     this.brandUpdatedSubject.next(updatedBrand);
+  }
+
+  cancelEditing(): void {
+    this.editingMode = false;
+  }
+
+  goToList(): void {
+    this._router.navigate(['/brand']); // Navegar a la lista de marcas
+  }
+
+  deleteBrand(id: string): void {
+    this._brandService.deleteBrand(id).subscribe(
+      (message: any) => {
+        this.successMessage = message;
+        //this.goToList();
+      },
+      (error) => {
+        console.error('Error deleting Brand', error);
+      }
+    );
   }
 }

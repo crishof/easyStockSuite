@@ -21,9 +21,10 @@ import { Subject } from 'rxjs';
 export class BrandEditComponent implements OnInit {
   @Input() brand: IBrand | undefined;
   @Output() onSave = new EventEmitter<IBrand>();
+  @Output() onCancel = new EventEmitter<void>();
 
   brandForm!: FormGroup;
-  brandService = inject(BrandService);
+  _brandService = inject(BrandService);
 
   private brandUpdatedSubject = new Subject<IBrand>();
 
@@ -42,7 +43,7 @@ export class BrandEditComponent implements OnInit {
       // Agregar otros campos de edicion
     };
 
-    this.brandService.updateBrand(updatedBrand.id, updatedBrand).subscribe(
+    this._brandService.updateBrand(updatedBrand.id, updatedBrand).subscribe(
       (response) => {
         console.log('Brand actualizada: ', response);
 
@@ -57,6 +58,10 @@ export class BrandEditComponent implements OnInit {
   }
 
   ngOnInit(): void {}
+
+  cancelar(): void {
+    this.onCancel.emit();
+  }
 
   hasErrors(field: string, typeError: string) {
     return (

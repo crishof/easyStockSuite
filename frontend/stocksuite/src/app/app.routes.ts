@@ -9,12 +9,14 @@ import { SupplierDetailsComponent } from './pages/supplier/supplier-details/supp
 import { CategoryDetailsComponent } from './pages/category/category-details/category-details.component';
 import { BrandDetailsComponent } from './pages/brand/brand-details/brand-details.component';
 import { BrandEditComponent } from './pages/brand/brand-edit/brand-edit.component';
+import { BrandCreateComponent } from './pages/brand/brand-create/brand-create.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'products', component: ProductsComponent },
   { path: 'products/:id', component: ProductDetailsComponent },
   { path: 'brand', component: BrandComponent },
+  { path: 'brand/create', component: BrandCreateComponent },
   { path: 'brand/:id', component: BrandDetailsComponent },
   { path: 'brand/:id/edit', component: BrandEditComponent },
   { path: 'category', component: CategoryComponent },
