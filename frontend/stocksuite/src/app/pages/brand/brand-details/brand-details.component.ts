@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BrandEditComponent } from '../brand-edit/brand-edit.component';
 import { Subject } from 'rxjs';
+import { ConfirmDialogService } from '../../../services/confirm-dialog.service';
 
 @Component({
   selector: 'app-brand-details',
@@ -21,10 +22,10 @@ export class BrandDetailsComponent implements OnInit {
   private _route = inject(ActivatedRoute);
   private _brandService = inject(BrandService);
   private _router = inject(Router);
+  private _confirmDialogService = inject(ConfirmDialogService);
 
   successMessage: string = '';
 
-  //private brandUpdateSubject = inject(Subject)
   private brandUpdatedSubject: Subject<IBrand> = new Subject<IBrand>();
 
   ngOnInit(): void {
@@ -60,6 +61,14 @@ export class BrandDetailsComponent implements OnInit {
 
   goToList(): void {
     this._router.navigate(['/brand']); // Navegar a la lista de marcas
+  }
+
+  confirmDelete(id: string): void {
+    this._confirmDialogService.openConfirmDialog().subscribe((confirmed) => {
+      if (confirmed) {
+        this.deleteBrand(id);
+      }
+    });
   }
 
   deleteBrand(id: string): void {
