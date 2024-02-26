@@ -22,6 +22,8 @@ export class BrandDetailsComponent implements OnInit {
   private _brandService = inject(BrandService);
   private _router = inject(Router);
 
+  successMessage: string = '';
+
   //private brandUpdateSubject = inject(Subject)
   private brandUpdatedSubject: Subject<IBrand> = new Subject<IBrand>();
 
@@ -58,5 +60,17 @@ export class BrandDetailsComponent implements OnInit {
 
   goToList(): void {
     this._router.navigate(['/brand']); // Navegar a la lista de marcas
+  }
+
+  deleteBrand(id: string): void {
+    this._brandService.deleteBrand(id).subscribe(
+      (message: any) => {
+        this.successMessage = message;
+        //this.goToList();
+      },
+      (error) => {
+        console.error('Error deleting Brand', error);
+      }
+    );
   }
 }

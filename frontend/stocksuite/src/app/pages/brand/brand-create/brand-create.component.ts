@@ -8,6 +8,7 @@ import {
 } from '@angular/forms';
 import { BrandService } from '../../../services/brand.service';
 import { IBrand } from '../../../model/brand.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-brand-create',
@@ -21,6 +22,7 @@ export class BrandCreateComponent {
 
   brandForm!: FormGroup;
   _brandService = inject(BrandService);
+  _router = inject(Router);
 
   constructor(private formBuilder: FormBuilder) {
     this.brandForm = formBuilder.group({
@@ -39,6 +41,8 @@ export class BrandCreateComponent {
     this._brandService.createBrand(brand).subscribe(
       (response) => {
         console.log('Brand created successfully', response);
+
+        this._router.navigate(['/brand']);
       },
       (error) => {
         console.log('Error al crear Brand', error);
@@ -46,8 +50,8 @@ export class BrandCreateComponent {
     );
   }
 
-  cancelar(): void {
-    this.onCancel.emit();
+  toList(): void {
+    this._router.navigate(['/brand']);
   }
 
   hasErrors(field: string, typeError: string) {

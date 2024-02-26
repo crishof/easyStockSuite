@@ -19,7 +19,6 @@ export class SupplierComponent implements OnInit {
   ngOnInit(): void {
     this._supplierService.getSuppliers().subscribe((data: ISupplier[]) => {
       this.supplierList = data;
-      console.log(this.supplierList[0].name)
     });
   }
 

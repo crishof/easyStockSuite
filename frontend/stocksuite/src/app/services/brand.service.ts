@@ -28,4 +28,8 @@ export class BrandService {
   createBrand(brand: IBrand): Observable<IBrand> {
     return this._http.post<IBrand>(`${this._urlBase}/save`, brand);
   }
+
+  deleteBrand(id: string): Observable<any> {
+    return this._http.delete<string>(`${this._urlBase}/delete/${id}`, {responseType:'text' as 'json'});
+  }
 }
