@@ -3,11 +3,13 @@ package org.crishof.stocksuitemono.service;
 import org.crishof.stocksuitemono.exception.duplicated.DuplicateNameException;
 import org.crishof.stocksuitemono.exception.notFound.BrandNotFoundException;
 import org.crishof.stocksuitemono.model.Brand;
+import org.crishof.stocksuitemono.model.Image;
 import org.crishof.stocksuitemono.model.Product;
 import org.crishof.stocksuitemono.repository.BrandRepository;
 import org.crishof.stocksuitemono.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Objects;
@@ -20,6 +22,8 @@ public class BrandServiceImpl implements BrandService {
     BrandRepository brandRepository;
     @Autowired
     ProductRepository productRepository;
+    @Autowired
+    ImageService imageService;
 
     @Override
     public List<Brand> getAll() {
@@ -45,15 +49,17 @@ public class BrandServiceImpl implements BrandService {
     }
 
     @Override
-    public Brand update(UUID id, Brand brand) {
+    public Brand update(UUID id, String name, MultipartFile logo) {
 
-        Brand brand1 = this.getById(id);
-        if (brand1 != null) {
-            if (Objects.equals(brand.getName(), "")) {
+        Brand brand = this.getById(id);
+        if (brand != null) {
+            if (Objects.equals(name, "")) {
                 throw new IllegalArgumentException("Brand name cannot be empty");
             }
-            brand1.setName(brand.getName());
-            return brandRepository.save(brand1);
+            brand.setName(name);
+            Image image = imageService.save(logo);
+            brand.setLogo(image);
+            return brandRepository.save(brand);
         } else {
             throw new BrandNotFoundException(id);
         }
@@ -73,8 +79,7 @@ public class BrandServiceImpl implements BrandService {
     @Override
     public Brand getByName(String name) {
 
-        return brandRepository.findByNameIgnoreCase(name)
-                .orElseThrow(() -> new BrandNotFoundException("Brand with name " + name + " not found"));
+        return brandRepository.findByNameIgnoreCase(name).orElseThrow(() -> new BrandNotFoundException("Brand with name " + name + " not found"));
     }
 
     @Override

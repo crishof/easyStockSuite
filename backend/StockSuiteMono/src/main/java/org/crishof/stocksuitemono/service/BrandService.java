@@ -1,6 +1,7 @@
 package org.crishof.stocksuitemono.service;
 
 import org.crishof.stocksuitemono.model.Brand;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.UUID;
@@ -13,7 +14,7 @@ public interface BrandService {
 
     Brand save(Brand brand);
 
-    Brand update(UUID id, Brand brand);
+    Brand update(UUID id, String name, MultipartFile logo);
 
     void deleteById(UUID id);
 
