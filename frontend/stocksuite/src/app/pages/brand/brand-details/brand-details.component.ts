@@ -6,6 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { BrandEditComponent } from '../brand-edit/brand-edit.component';
 import { Subject } from 'rxjs';
 import { ConfirmDialogService } from '../../../services/confirm-dialog.service';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-brand-details',
@@ -24,6 +25,8 @@ export class BrandDetailsComponent implements OnInit {
   private _router = inject(Router);
   private _confirmDialogService = inject(ConfirmDialogService);
 
+  private _sanitizer = inject(DomSanitizer);
+
   successMessage: string = '';
 
   private brandUpdatedSubject: Subject<IBrand> = new Subject<IBrand>();
@@ -41,6 +44,11 @@ export class BrandDetailsComponent implements OnInit {
         this.brand = updatedBrand;
       }
     });
+  }
+
+  getLogoUrl(logo: any): any {
+    const base64Image = logo.content; // Suponiendo que `content` contiene la representación Base64 de la imagen
+    return this._sanitizer.bypassSecurityTrustResourceUrl('data:image/jpeg;base64,' + base64Image);
   }
 
   startEditing(): void {

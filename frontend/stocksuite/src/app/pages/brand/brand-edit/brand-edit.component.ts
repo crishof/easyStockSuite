@@ -10,6 +10,7 @@ import {
 } from '@angular/forms';
 import { BrandService } from '../../../services/brand.service';
 import { Subject } from 'rxjs';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-brand-edit',
@@ -26,6 +27,8 @@ export class BrandEditComponent implements OnInit {
   brandForm!: FormGroup;
   _brandService = inject(BrandService);
 
+  
+
   private brandUpdatedSubject = new Subject<IBrand>();
 
   constructor(private formBuilder: FormBuilder) {
@@ -40,10 +43,20 @@ export class BrandEditComponent implements OnInit {
     const updatedBrand: IBrand = {
       id: this.brand?.id || '',
       name: this.brandForm.get('brandName')?.value || '',
+
       // Agregar otros campos de edicion
     };
 
-    this._brandService.updateBrand(updatedBrand.id, updatedBrand).subscribe(
+    const formData = new FormData();
+    formData.append('name', updatedBrand.name);
+
+    const logo: File | null = this.brandForm.get('logo')?.value || null;
+
+    if (logo) {
+      formData.append('logo', logo, logo.name);
+    }
+
+    this._brandService.updateBrand(updatedBrand.id, formData).subscribe(
       (response) => {
         console.log('Brand actualizada: ', response);
 
@@ -57,7 +70,12 @@ export class BrandEditComponent implements OnInit {
     );
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.brandForm = this.formBuilder.group({
+      brandName: ['', Validators.required],
+      logo: [null],
+    });
+  }
 
   cancelar(): void {
     this.onCancel.emit();
@@ -69,4 +87,6 @@ export class BrandEditComponent implements OnInit {
       this.brandForm.get(field)?.touched
     );
   }
+
+
 }

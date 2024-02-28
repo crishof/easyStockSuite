@@ -17,6 +17,16 @@
           'is-invalid': hasErrors('brandName', 'required')
         }"
       />
+      
+      <div class="mb-3">
+        <label for="formFile" class="form-label">Logo: </label>
+        <input 
+        class="form-control" 
+        type="file" 
+        id="formFile"
+        formControlName="logo">
+      </div>
+
       @if (hasErrors('brandName','required')) {
       <span class="text-danger">Brand name cannot be empty</span>
       }
