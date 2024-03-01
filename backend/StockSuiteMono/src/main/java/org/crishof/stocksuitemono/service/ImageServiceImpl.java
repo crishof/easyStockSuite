@@ -47,7 +47,7 @@ public class ImageServiceImpl implements ImageService {
                     }
                 }
                 image.setMime(file.getContentType());
-                image.setName(file.getName());
+                image.setName(file.getOriginalFilename());
                 image.setContent(file.getBytes());
                 return imageRepository.save(image);
             } catch (IOException e) {
