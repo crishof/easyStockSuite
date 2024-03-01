@@ -11,6 +11,7 @@ import org.crishof.stocksuitemono.model.Brand;
 import org.crishof.stocksuitemono.service.BrandService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.UUID;
@@ -24,18 +25,15 @@ public class BrandController {
     BrandService brandService;
 
     @Operation(summary = "Get All Brands")
-    @GetMapping("/getAll")
+    @GetMapping(path = "/getAll")
     public List<Brand> getAll() {
         return brandService.getAll();
     }
 
     @Operation(summary = "Get Brand by ID")
-    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Brand found",
-            content = {@Content(mediaType = "application/json", schema = @Schema(implementation = Brand.class))}),
-            @ApiResponse(responseCode = "500", description = "Invalid Id", content = @Content)})
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Brand found", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = Brand.class))}), @ApiResponse(responseCode = "500", description = "Invalid Id", content = @Content)})
     @GetMapping("/getById/{id}")
-    public Brand getById(@Parameter(description = "Brand id", example = "87194fd9-de0b-44de-8fcc-b5819c7c94aa")
-                             @PathVariable("id") UUID id) {
+    public Brand getById(@Parameter(description = "Brand id", example = "87194fd9-de0b-44de-8fcc-b5819c7c94aa") @PathVariable("id") UUID id) {
         return brandService.getById(id);
     }
 
@@ -45,8 +43,20 @@ public class BrandController {
     }
 
     @PutMapping("/update/{id}")
-    public Brand updateBrand(@PathVariable("id") UUID id, @RequestBody Brand brand) {
-        return brandService.update(id, brand);
+    public Brand updateBrand(@PathVariable("id") UUID id, @RequestParam(required = false) String name /*, @RequestPart(required = false) MultipartFile logo */) {
+
+//        System.out.println("name = " + name);
+//        if (logo == null) {
+//            System.out.println("LOGO VACIO");
+//        }
+        return brandService.update(id, name /*,  logo */);
+    }
+
+    @PutMapping("/updateLogo/{id}")
+    public Brand updateLogo(@PathVariable("id") UUID uuid, @RequestParam(required = false) MultipartFile logo) {
+
+        return brandService.updateLogo(uuid, logo);
+
     }
 
     @DeleteMapping("/delete/{id}")

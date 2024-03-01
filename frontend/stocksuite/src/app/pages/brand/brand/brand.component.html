@@ -1,5 +1,6 @@
 <div class="container">
   <div class="container">
+    <h2>Brands List</h2>
     <button class="btn btn-outline-success" (click)="toNewBrand()">
       New Brand
     </button>
@@ -7,7 +8,9 @@
       <thead>
         <tr>
           <th scope="col">#Id</th>
+          <th scope="col">Logo</th>
           <th scope="col">Name</th>
+          <th scope="col">Details</th>
         </tr>
       </thead>
       <tbody>
@@ -15,6 +18,11 @@
 
         <tr>
           <th scope="row">{{ brand.id }}</th>
+          <td>
+            @if (brand.logo != null){
+              <img [src]="getLogoUrl(brand.logo)" alt="" width="50px" height="50px">
+            }
+          </td>
           <td>{{ brand.name }}</td>
           <td>
             <button
