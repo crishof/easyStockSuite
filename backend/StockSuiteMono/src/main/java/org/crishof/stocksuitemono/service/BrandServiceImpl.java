@@ -49,7 +49,7 @@ public class BrandServiceImpl implements BrandService {
     }
 
     @Override
-    public Brand update(UUID id, String name, MultipartFile logo) {
+    public Brand update(UUID id, String name /*, MultipartFile logo */) {
 
         Brand brand = this.getById(id);
         if (brand != null) {
@@ -57,6 +57,19 @@ public class BrandServiceImpl implements BrandService {
                 throw new IllegalArgumentException("Brand name cannot be empty");
             }
             brand.setName(name);
+//            Image image = imageService.save(logo);
+//            brand.setLogo(image);
+            return brandRepository.save(brand);
+        } else {
+            throw new BrandNotFoundException(id);
+        }
+    }
+
+    @Override
+    public Brand updateLogo(UUID id, MultipartFile logo){
+
+        Brand brand = this.getById(id);
+        if (brand != null) {
             Image image = imageService.save(logo);
             brand.setLogo(image);
             return brandRepository.save(brand);

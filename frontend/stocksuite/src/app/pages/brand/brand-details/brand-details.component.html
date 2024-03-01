@@ -3,10 +3,9 @@
   <h5>Loading....</h5>
   } @if (!loading) { @if (!editingMode){
   <div class="container">
-    
-      @if (brand?.logo != null){
-        <img [src]="getLogoUrl(brand?.logo)" alt="" width="50px" height="50px">
-      }
+    @if (brand?.logo != null){
+    <img [src]="getLogoUrl(brand?.logo)" alt="" width="50px" height="50px" />
+    }
     <p>Name : {{ brand?.name }}</p>
   </div>
   @if(brand != null && brand != undefined && successMessage == ''){

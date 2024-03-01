@@ -25,7 +25,7 @@ public class BrandController {
     BrandService brandService;
 
     @Operation(summary = "Get All Brands")
-    @GetMapping("/getAll")
+    @GetMapping(path = "/getAll")
     public List<Brand> getAll() {
         return brandService.getAll();
     }
@@ -43,9 +43,20 @@ public class BrandController {
     }
 
     @PutMapping("/update/{id}")
-    public Brand updateBrand(@PathVariable("id") UUID id, @RequestParam(required = false) String name, @RequestPart(required = false) MultipartFile logo) {
+    public Brand updateBrand(@PathVariable("id") UUID id, @RequestParam(required = false) String name /*, @RequestPart(required = false) MultipartFile logo */) {
 
-        return brandService.update(id, name, logo);
+//        System.out.println("name = " + name);
+//        if (logo == null) {
+//            System.out.println("LOGO VACIO");
+//        }
+        return brandService.update(id, name /*,  logo */);
+    }
+
+    @PutMapping("/updateLogo/{id}")
+    public Brand updateLogo(@PathVariable("id") UUID uuid, @RequestParam(required = false) MultipartFile logo) {
+
+        return brandService.updateLogo(uuid, logo);
+
     }
 
     @DeleteMapping("/delete/{id}")

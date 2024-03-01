@@ -7,7 +7,6 @@ import { Router } from '@angular/router'; // Importación del servicio Router pa
 import { IImage } from '../../../model/image.model';
 import { DomSanitizer } from '@angular/platform-browser';
 
-
 @Component({
   selector: 'app-brand', // Selector del componente, utilizado en el HTML para identificar el lugar donde se mostrará
   standalone: true, // Configuración para indicar que el componente es independiente y no necesita otros módulos
@@ -41,10 +40,11 @@ export class BrandComponent implements OnInit {
 
   getLogoUrl(logo: any): any {
     const base64Image = logo.content; // Suponiendo que `content` contiene la representación Base64 de la imagen
-    return this._sanitizer.bypassSecurityTrustResourceUrl('data:image/jpeg;base64,' + base64Image);
+    return this._sanitizer.bypassSecurityTrustResourceUrl(
+      'data:image/jpeg;base64,' + base64Image
+    );
   }
-  
-  
+
   // Convierte un array de bytes a una cadena Base64
   arrayBufferToBase64(buffer: ArrayBuffer): string {
     if (typeof window !== 'undefined') {
@@ -55,8 +55,6 @@ export class BrandComponent implements OnInit {
       }
       return window.btoa(binary);
     }
-    return '';  // Retornar un valor predeterminado o manejar el caso de no navegador según tus necesidades
+    return ''; // Retornar un valor predeterminado o manejar el caso de no navegador según tus necesidades
   }
-  
-  
 }

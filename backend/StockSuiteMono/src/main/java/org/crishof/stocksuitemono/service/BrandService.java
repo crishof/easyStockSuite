@@ -14,11 +14,14 @@ public interface BrandService {
 
     Brand save(Brand brand);
 
-    Brand update(UUID id, String name, MultipartFile logo);
+    Brand update(UUID id, String name /* , MultipartFile logo */ );
+
+    Brand updateLogo(UUID id, MultipartFile logo);
 
     void deleteById(UUID id);
 
     Brand getByName(String name);
 
     Brand saveByName(String brandName);
+
 }

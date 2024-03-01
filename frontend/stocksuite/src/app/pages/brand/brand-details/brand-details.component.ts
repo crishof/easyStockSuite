@@ -48,7 +48,9 @@ export class BrandDetailsComponent implements OnInit {
 
   getLogoUrl(logo: any): any {
     const base64Image = logo.content; // Suponiendo que `content` contiene la representación Base64 de la imagen
-    return this._sanitizer.bypassSecurityTrustResourceUrl('data:image/jpeg;base64,' + base64Image);
+    return this._sanitizer.bypassSecurityTrustResourceUrl(
+      'data:image/jpeg;base64,' + base64Image
+    );
   }
 
   startEditing(): void {
