@@ -89,6 +89,10 @@ public class BrandServiceImpl implements BrandService {
             throw new IllegalStateException("Cannot delete brand with asociated products");
         }
         brandRepository.deleteById(id);
+
+//        if( brand.getLogo() != null){
+//            imageService.deleteById(brand.getLogo().getId());
+//        }
     }
 
     @Override
