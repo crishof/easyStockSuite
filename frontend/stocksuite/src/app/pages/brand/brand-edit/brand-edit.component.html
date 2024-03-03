@@ -2,7 +2,7 @@
   <form
     [formGroup]="brandForm"
     enctype="multipart/form-data"
-    class="row g-3 needs-validation"
+    class="g-3 needs-validation"
     novalidate
     (submit)="enviar($event)"
   >
@@ -29,7 +29,7 @@
 </div>
 
 <div class="container">
-  <form enctype="multipart/form-data">
+  <form class="g-3" enctype="multipart/form-data">
     <div class="mb-3">
       <label for="formFile" class="form-label">Logo: </label>
       <input

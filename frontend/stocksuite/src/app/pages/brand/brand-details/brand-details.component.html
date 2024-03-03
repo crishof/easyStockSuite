@@ -1,6 +1,54 @@
 <div class="container">
   @if (loading) {
   <h5>Loading....</h5>
+  }@if (!loading) { @if (!editingMode){ @if(!successMessage){
+
+  <div class="card" style="width: 18rem">
+    @if (brand?.logo != null){
+    <img [src]="getLogoUrl(brand?.logo)" class="card-img-top" alt="..." />
+    }
+    <div class="card-body">
+      <hr />
+      <h5 class="card-title">{{ brand?.name }}</h5>
+      <hr />
+      <p class="card-text">
+        Some quick example text to build on the card title and make up the bulk
+        of the card's content.
+      </p>
+
+      @if(brand != null && brand != undefined && successMessage == ''){
+      <div class="btn-group" role="group">
+        <button class="btn btn-outline-primary" (click)="startEditing()">
+          Edit
+        </button>
+
+        <button
+          class="btn btn-outline-danger"
+          (click)="confirmDelete(brand.id)"
+        >
+          Delete
+        </button>
+      </div>
+      }
+    </div>
+  </div>
+  } @if(successMessage){
+
+  <div>
+    <h2>{{ successMessage }}</h2>
+  </div>
+  }
+  <!--
+
+}
+}
+</div>
+-->
+
+  <!-- 
+<div class="container">
+  @if (loading) {
+  <h5>Loading....</h5>
   } @if (!loading) { @if (!editingMode){
   <div class="container">
     @if (brand?.logo != null){
@@ -25,7 +73,7 @@
     {{ successMessage }}
   </div>
   }
-  <button class="btn btn-outline-danger" (click)="goToList()">Go back</button>
+-->
 
   } @if (editingMode){
 
@@ -42,3 +90,8 @@
 
   } }
 </div>
+@if(!editingMode){
+<div class="container">
+  <button class="btn btn-outline-danger" (click)="goToList()">Go back</button>
+</div>
+}

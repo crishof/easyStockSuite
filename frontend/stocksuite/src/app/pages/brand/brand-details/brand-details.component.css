@@ -1,0 +1,14 @@
+.container{
+    /* display: flex; */
+    justify-content: center;
+    
+}
+
+h5{
+    text-align: center;
+}
+
+.btn{
+    align-items: center !important;
+    margin: 3px;
+}

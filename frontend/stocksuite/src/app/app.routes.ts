@@ -10,6 +10,7 @@ import { CategoryDetailsComponent } from './pages/category/category-details/cate
 import { BrandDetailsComponent } from './pages/brand/brand-details/brand-details.component';
 import { BrandEditComponent } from './pages/brand/brand-edit/brand-edit.component';
 import { BrandCreateComponent } from './pages/brand/brand-create/brand-create.component';
+import { DashboardComponent } from './pages/dashboard/dashboard.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -23,5 +24,6 @@ export const routes: Routes = [
   { path: 'category/:id', component: CategoryDetailsComponent },
   { path: 'supplier', component: SupplierComponent },
   { path: 'supplier/:id', component: SupplierDetailsComponent },
+  { path: 'dashboard', component: DashboardComponent },
   { path: '**', redirectTo: '', pathMatch: 'full' },
 ];

@@ -90,9 +90,9 @@ public class BrandServiceImpl implements BrandService {
         }
         brandRepository.deleteById(id);
 
-//        if( brand.getLogo() != null){
-//            imageService.deleteById(brand.getLogo().getId());
-//        }
+        if( brand.getLogo() != null){
+            imageService.deleteById(brand.getLogo().getId());
+        }
     }
 
     @Override
