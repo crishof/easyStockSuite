@@ -1,3 +1,53 @@
 nav {
+  /*background-color: #612032;*/
+
+  background: #8e0e00; /* fallback for old browsers */
+  background: -webkit-linear-gradient(
+    to top,
+    #1f1c18,
+    #8e0e00
+  ); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(
+    to top,
+    #1f1c18,
+    #8e0e00
+  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+}
+footer {
+  /*
+  background-color: #612032 !important;
+  */
+  background: #8e0e00; /* fallback for old browsers */
+  background: -webkit-linear-gradient(
+    to bottom,
+    #1f1c18,
+    #8e0e00
+  ); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(
+    to bottom,
+    #1f1c18,
+    #8e0e00
+  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
   background-color: #612032;
+  color: #fff;
+  text-align: center;
+  padding: 10px;
+  z-index: 1000;
+}
+
+:host {
+  display: block;
+  margin-bottom: 90px;
+  margin-top: 90px;
 }
