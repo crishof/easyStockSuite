@@ -3,12 +3,17 @@ h1 {
 }
 #id {
   white-space: nowrap;
+  font-size: small;
 }
 
-.custom-table {
-  display: inline-table;
-  justify-content: left;
+.table-container {
   max-width: 100%;
   overflow-x: auto;
-  margin-left: 0px;
 }
+#page-title {
+  margin: 30px;
+}
+
+/*.table-responsive {
+  overflow: hidden;
+}*/

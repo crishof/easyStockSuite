@@ -3,7 +3,6 @@ package org.crishof.stocksuitemono.service;
 import org.crishof.stocksuitemono.exception.duplicated.DuplicateNameException;
 import org.crishof.stocksuitemono.exception.notFound.BrandNotFoundException;
 import org.crishof.stocksuitemono.model.Brand;
-import org.crishof.stocksuitemono.model.Image;
 import org.crishof.stocksuitemono.model.Product;
 import org.crishof.stocksuitemono.repository.BrandRepository;
 import org.crishof.stocksuitemono.repository.ProductRepository;
@@ -66,16 +65,19 @@ public class BrandServiceImpl implements BrandService {
     }
 
     @Override
-    public Brand updateLogo(UUID id, MultipartFile logo){
+    public Brand updateLogo(UUID id, MultipartFile logo) {
 
         Brand brand = this.getById(id);
         if (brand != null) {
-            Image image = imageService.save(logo);
-            brand.setLogo(image);
-            return brandRepository.save(brand);
+            if (brand.getLogo() != null) {
+                brand.setLogo(imageService.update(brand.getLogo().getId(), logo));
+            } else {
+                brand.setLogo(imageService.save(logo));
+            }
         } else {
             throw new BrandNotFoundException(id);
         }
+        return brandRepository.save(brand);
     }
 
     @Override
@@ -84,9 +86,13 @@ public class BrandServiceImpl implements BrandService {
         Brand brand = brandRepository.findById(id).orElseThrow(() -> new BrandNotFoundException(id));
         List<Product> products = productRepository.findAllByBrandName(brand.getName());
         if (!products.isEmpty()) {
-            throw new IllegalStateException("Cannot delete brand with asociated products");
+            throw new IllegalStateException("Cannot delete brand with associated products");
         }
         brandRepository.deleteById(id);
+
+        if (brand.getLogo() != null) {
+            imageService.deleteById(brand.getLogo().getId());
+        }
     }
 
     @Override

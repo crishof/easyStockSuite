@@ -10,4 +10,6 @@ public interface ImageService {
     Image save(MultipartFile file);
 
     Image update(UUID idImage, MultipartFile file);
+
+    void deleteById(UUID uuid);
 }
