@@ -28,6 +28,7 @@ export class BrandDetailsComponent implements OnInit {
   private _sanitizer = inject(DomSanitizer);
 
   successMessage: string = '';
+  errorMessage: string = '';
 
   private brandUpdatedSubject: Subject<IBrand> = new Subject<IBrand>();
 
@@ -85,10 +86,17 @@ export class BrandDetailsComponent implements OnInit {
     this._brandService.deleteBrand(id).subscribe(
       (message: any) => {
         this.successMessage = message;
+        this.errorMessage = '';
         //this.goToList();
       },
       (error) => {
-        console.error('Error deleting Brand', error);
+        console.error(
+          'Error deleting Brand',
+          (this.errorMessage =
+            error.error
+//            typeof error === 'string' ? error : JSON.stringify(error)
+)
+        );
       }
     );
   }

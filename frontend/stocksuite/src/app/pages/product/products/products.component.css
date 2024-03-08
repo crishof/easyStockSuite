@@ -6,11 +6,14 @@ h1 {
   font-size: small;
 }
 
-td{
-  vertical-align: middle;
-}
-
 .table-container {
   max-width: 100%;
   overflow-x: auto;
 }
+#page-title {
+  margin: 30px;
+}
+
+/*.table-responsive {
+  overflow: hidden;
+}*/

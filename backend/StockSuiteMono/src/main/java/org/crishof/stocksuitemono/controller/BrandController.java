@@ -7,9 +7,12 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import org.crishof.stocksuitemono.exception.notFound.BrandNotFoundException;
 import org.crishof.stocksuitemono.model.Brand;
 import org.crishof.stocksuitemono.service.BrandService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -60,9 +63,18 @@ public class BrandController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public String delete(@PathVariable("id") UUID id) {
-        brandService.deleteById(id);
-        return "Brand successfully deleted";
+    public ResponseEntity<String> delete(@PathVariable("id") UUID id) {
+        try {
+            brandService.deleteById(id);
+            return ResponseEntity.ok("Brand successfully deleted");
+        }catch (BrandNotFoundException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Brand not found: " + e.getMessage());
+        }catch (IllegalStateException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Bad request: " + e.getMessage());
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal server error: " + e.getMessage());
+
+        }
     }
 }
 

@@ -86,11 +86,11 @@ public class BrandServiceImpl implements BrandService {
         Brand brand = brandRepository.findById(id).orElseThrow(() -> new BrandNotFoundException(id));
         List<Product> products = productRepository.findAllByBrandName(brand.getName());
         if (!products.isEmpty()) {
-            throw new IllegalStateException("Cannot delete brand with asociated products");
+            throw new IllegalStateException("Cannot delete brand with associated products");
         }
         brandRepository.deleteById(id);
 
-        if( brand.getLogo() != null){
+        if (brand.getLogo() != null) {
             imageService.deleteById(brand.getLogo().getId());
         }
     }

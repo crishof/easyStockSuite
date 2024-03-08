@@ -1,7 +1,13 @@
-.container{
+.card{
     /* display: flex; */
     justify-content: center;
     
+}
+
+img{
+    max-width: 50%;
+    justify-content: center;
+    position: relative;
 }
 
 h5{
@@ -9,6 +15,5 @@ h5{
 }
 
 .btn{
-    align-items: center !important;
     margin: 3px;
 }

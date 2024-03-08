@@ -58,7 +58,7 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
-    public void deleteById(UUID uuid){
+    public void deleteById(UUID uuid) {
         imageRepository.deleteById(uuid);
     }
 }
