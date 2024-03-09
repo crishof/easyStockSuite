@@ -4,11 +4,12 @@ import { IBrand } from '../../../model/brand.model';
 import { BrandService } from '../../../services/brand.service';
 import { Router } from '@angular/router';
 import { DomSanitizer } from '@angular/platform-browser';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-brand',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './brand.component.html',
   styleUrl: './brand.component.css',
 })
@@ -16,6 +17,8 @@ export class BrandComponent implements OnInit {
   brandList: IBrand[] = [];
   sortedColumn: keyof IBrand | undefined;
   isAscendingOrder: boolean = true;
+  filteredBrandList: IBrand[] = [];
+  searchTerm: string = '';
 
   private _brandService = inject(BrandService);
   private _router = inject(Router);
@@ -24,6 +27,8 @@ export class BrandComponent implements OnInit {
   ngOnInit(): void {
     this._brandService.getBrands().subscribe((data: IBrand[]) => {
       this.brandList = data;
+
+      this.filteredBrandList = this.brandList;
     });
   }
 
@@ -63,7 +68,7 @@ export class BrandComponent implements OnInit {
     }
 
     if (this.sortedColumn) {
-      this.brandList.sort((a, b) => {
+      this.filteredBrandList.sort((a, b) => {
         const orderFactor = this.isAscendingOrder ? 1 : -1;
 
         const aValue = a[this.sortedColumn!] as string | number | undefined;
@@ -82,5 +87,28 @@ export class BrandComponent implements OnInit {
         return 0;
       });
     }
+  }
+
+  handleKeyup(event: KeyboardEvent) {
+    const searchTerm = (event.target as HTMLInputElement)?.value;
+    this.filterBrands(searchTerm);
+  }
+
+  filterBrands(searchTerm: string) {
+    if (!searchTerm) {
+      this.filteredBrandList = this.brandList.slice();
+    } else {
+      const lowerCaseSearchTerm = searchTerm.toLowerCase();
+      this.filteredBrandList = this.brandList.filter(
+        (brand) =>
+          brand.name.toLowerCase().includes(lowerCaseSearchTerm) ||
+          brand.id.toString().includes(lowerCaseSearchTerm)
+      );
+    }
+  }
+
+  searchBrand() {
+    console.log('searchBrand Called' + this.searchTerm);
+    this.filterBrands(this.searchTerm);
   }
 }
