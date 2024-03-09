@@ -11,6 +11,7 @@
       <hr />
       <h5 class="card-title">{{ brand?.name }}</h5>
       <hr />
+
       <p class="card-text">
         Some quick example text to build on the card title and make up the bulk
         of the card's content.
@@ -32,7 +33,8 @@
       }
     </div>
   </div>
-  } @if(successMessage){
+
+  @if(successMessage){
 
   <div class="card bg-success text light">
     <h5>{{ successMessage }}</h5>
@@ -41,46 +43,7 @@
   <div class="card bg-danger text-light">
     <h5>{{ errorMessage }}</h5>
   </div>
-  }
-
-  <!--
-
-}
-}
-</div>
--->
-
-  <!-- 
-<div class="container">
-  @if (loading) {
-  <h5>Loading....</h5>
-  } @if (!loading) { @if (!editingMode){
-  <div class="container">
-    @if (brand?.logo != null){
-    <img [src]="getLogoUrl(brand?.logo)" alt="" width="50px" height="50px" />
-    }
-    <p>Name : {{ brand?.name }}</p>
-  </div>
-  @if(brand != null && brand != undefined && successMessage == ''){
-
-  <button class="btn btn-outline-primary" (click)="startEditing()">
-    Editar
-  </button>
-
-  <div>
-    <button class="btn btn-outline-danger" (click)="confirmDelete(brand.id)">
-      Delete
-    </button>
-  </div>
-
-  } @if(successMessage){
-  <div>
-    {{ successMessage }}
-  </div>
-  }
--->
-
-  } @if (editingMode){
+  } } } @if (editingMode){
   <div class="container text-center m-3">
     <h5>Brand edit: {{ brand!.name }}</h5>
   </div>
