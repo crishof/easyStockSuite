@@ -66,12 +66,12 @@ public class BrandController {
     public ResponseEntity<String> delete(@PathVariable("id") UUID id) {
         try {
             brandService.deleteById(id);
-            return ResponseEntity.ok("Brand successfully deleted");
-        }catch (BrandNotFoundException e){
+            return ResponseEntity.ok("Brand successfully deleted desde back");
+        } catch (BrandNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Brand not found: " + e.getMessage());
-        }catch (IllegalStateException e){
+        } catch (IllegalStateException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Bad request: " + e.getMessage());
-        }catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal server error: " + e.getMessage());
 
         }

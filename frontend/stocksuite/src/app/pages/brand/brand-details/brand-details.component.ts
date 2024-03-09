@@ -48,7 +48,7 @@ export class BrandDetailsComponent implements OnInit {
   }
 
   getLogoUrl(logo: any): any {
-    const base64Image = logo.content; // Suponiendo que `content` contiene la representación Base64 de la imagen
+    const base64Image = logo.content;
     return this._sanitizer.bypassSecurityTrustResourceUrl(
       'data:image/jpeg;base64,' + base64Image
     );
@@ -71,7 +71,7 @@ export class BrandDetailsComponent implements OnInit {
   }
 
   goToList(): void {
-    this._router.navigate(['/brand']); // Navegar a la lista de marcas
+    this._router.navigate(['/brand']);
   }
 
   confirmDelete(id: string): void {
@@ -84,19 +84,13 @@ export class BrandDetailsComponent implements OnInit {
 
   deleteBrand(id: string): void {
     this._brandService.deleteBrand(id).subscribe(
-      (message: any) => {
-        this.successMessage = message;
+      (response: any) => {
+        this.successMessage = response;
         this.errorMessage = '';
-        //this.goToList();
       },
       (error) => {
-        console.error(
-          'Error deleting Brand',
-          (this.errorMessage =
-            error.error
-//            typeof error === 'string' ? error : JSON.stringify(error)
-)
-        );
+        this.errorMessage = error.error;
+        this.successMessage = '';
       }
     );
   }
