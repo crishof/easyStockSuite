@@ -1,37 +1,39 @@
-// Importación de módulos necesarios desde Angular
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, inject } from '@angular/core';
-import { IBrand } from '../../../model/brand.model'; // Importación de la interfaz IBrand para definir el tipo de las marcas
-import { BrandService } from '../../../services/brand.service'; // Importación del servicio BrandService para interactuar con las marcas
-import { Router } from '@angular/router'; // Importación del servicio Router para la navegación entre páginas
-import { IImage } from '../../../model/image.model';
+import { IBrand } from '../../../model/brand.model';
+import { BrandService } from '../../../services/brand.service';
+import { Router } from '@angular/router';
 import { DomSanitizer } from '@angular/platform-browser';
+import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'app-brand', // Selector del componente, utilizado en el HTML para identificar el lugar donde se mostrará
-  standalone: true, // Configuración para indicar que el componente es independiente y no necesita otros módulos
-  imports: [CommonModule], // Importación del módulo CommonModule necesario para algunas directivas de Angular
-  templateUrl: './brand.component.html', // Ruta al archivo HTML que define la estructura del componente
-  styleUrl: './brand.component.css', // Ruta al archivo CSS que define los estilos del componente
+  selector: 'app-brand',
+  standalone: true,
+  imports: [CommonModule, FormsModule],
+  templateUrl: './brand.component.html',
+  styleUrl: './brand.component.css',
 })
 export class BrandComponent implements OnInit {
-  brandList: IBrand[] = []; // Lista que almacenará las marcas obtenidas del servicio
+  brandList: IBrand[] = [];
+  sortedColumn: keyof IBrand | undefined;
+  isAscendingOrder: boolean = true;
+  filteredBrandList: IBrand[] = [];
+  searchTerm: string = '';
 
-  private _brandService = inject(BrandService); // Inyección del servicio BrandService para obtener las marcas
-  private _router = inject(Router); // Inyección del servicio Router para la navegación entre páginas
-
+  private _brandService = inject(BrandService);
+  private _router = inject(Router);
   private _sanitizer = inject(DomSanitizer);
 
   ngOnInit(): void {
-    // Al inicializar el componente, se llama al servicio para obtener la lista de marcas
     this._brandService.getBrands().subscribe((data: IBrand[]) => {
-      this.brandList = data; // Se asigna la lista de marcas obtenida al atributo brandList del componente
+      this.brandList = data;
+
+      this.filteredBrandList = this.brandList;
     });
   }
 
   toBrandDetails(id: string): void {
-    // Método para navegar a la página de detalles de una marca específica al hacer clic en ella
-    this._router.navigate(['/brand', id]); // Se utiliza el servicio Router para realizar la navegación
+    this._router.navigate(['/brand', id]);
   }
 
   toNewBrand(): void {
@@ -39,13 +41,12 @@ export class BrandComponent implements OnInit {
   }
 
   getLogoUrl(logo: any): any {
-    const base64Image = logo.content; // Suponiendo que `content` contiene la representación Base64 de la imagen
+    const base64Image = logo.content;
     return this._sanitizer.bypassSecurityTrustResourceUrl(
       'data:image/jpeg;base64,' + base64Image
     );
   }
 
-  // Convierte un array de bytes a una cadena Base64
   arrayBufferToBase64(buffer: ArrayBuffer): string {
     if (typeof window !== 'undefined') {
       let binary = '';
@@ -55,6 +56,59 @@ export class BrandComponent implements OnInit {
       }
       return window.btoa(binary);
     }
-    return ''; // Retornar un valor predeterminado o manejar el caso de no navegador según tus necesidades
+    return '';
+  }
+
+  sortColumn(column: keyof IBrand) {
+    if (this.sortedColumn === column) {
+      this.isAscendingOrder = !this.isAscendingOrder;
+    } else {
+      this.sortedColumn = column;
+      this.isAscendingOrder = true;
+    }
+
+    if (this.sortedColumn) {
+      this.filteredBrandList.sort((a, b) => {
+        const orderFactor = this.isAscendingOrder ? 1 : -1;
+
+        const aValue = a[this.sortedColumn!] as string | number | undefined;
+        const bValue = b[this.sortedColumn!] as string | number | undefined;
+
+        if (aValue !== undefined && bValue !== undefined) {
+          if (aValue < bValue) {
+            return -1 * orderFactor;
+          } else if (aValue > bValue) {
+            return 1 * orderFactor;
+          } else {
+            return 0;
+          }
+        }
+
+        return 0;
+      });
+    }
+  }
+
+  handleKeyup(event: KeyboardEvent) {
+    const searchTerm = (event.target as HTMLInputElement)?.value;
+    this.filterBrands(searchTerm);
+  }
+
+  filterBrands(searchTerm: string) {
+    if (!searchTerm) {
+      this.filteredBrandList = this.brandList.slice();
+    } else {
+      const lowerCaseSearchTerm = searchTerm.toLowerCase();
+      this.filteredBrandList = this.brandList.filter(
+        (brand) =>
+          brand.name.toLowerCase().includes(lowerCaseSearchTerm) ||
+          brand.id.toString().includes(lowerCaseSearchTerm)
+      );
+    }
+  }
+
+  searchBrand() {
+    console.log('searchBrand Called' + this.searchTerm);
+    this.filterBrands(this.searchTerm);
   }
 }
