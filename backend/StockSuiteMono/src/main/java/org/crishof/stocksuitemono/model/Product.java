@@ -53,7 +53,6 @@ public class Product {
         this.model = productRequest.getModel();
         this.description = productRequest.getDescription();
     }
-
 }
 
 

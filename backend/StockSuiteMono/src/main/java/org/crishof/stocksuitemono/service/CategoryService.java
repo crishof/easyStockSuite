@@ -17,7 +17,7 @@ public interface CategoryService {
 
     CategoryResponse save(CategoryRequest categoryRequest);
 
-    CategoryResponse update(UUID id, CategoryRequest categoryRequest);
+    Category update(UUID id, String name);
 
     void deleteById(UUID id);
 }

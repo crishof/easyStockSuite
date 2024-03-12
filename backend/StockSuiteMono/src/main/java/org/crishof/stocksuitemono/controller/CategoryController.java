@@ -36,9 +36,10 @@ public class CategoryController {
     }
 
     @PutMapping("/update/{id}")
-    public Category update(@PathVariable("id") UUID id, @RequestBody Category category) {
-        category.setId(id);
-        return categoryRepository.save(category);
+    public Category update(@PathVariable("id") UUID id, @RequestParam(required = false) String name) {
+
+        System.out.println("name = " + name);
+        return categoryService.update(id, name);
     }
 
     @DeleteMapping("/delete/{id}")

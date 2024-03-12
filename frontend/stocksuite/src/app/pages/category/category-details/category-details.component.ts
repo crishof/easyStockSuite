@@ -1,61 +1,48 @@
-import {
-  Component,
-  EventEmitter,
-  Input,
-  NgModule,
-  OnChanges,
-  OnInit,
-  Output,
-  SimpleChanges,
-  inject,
-} from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { ICategory } from '../../../model/category.model';
+import { Subject } from 'rxjs';
 import { CategoryService } from '../../../services/category.service';
-import { ActivatedRoute } from '@angular/router';
-import { FormsModule, NgModel } from '@angular/forms';
+import { Router } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { ConfirmDialogService } from '../../../services/confirm-dialog.service';
+import { DomSanitizer } from '@angular/platform-browser';
+import { CategoryEditComponent } from '../category-edit/category-edit.component';
 
 @Component({
   selector: 'app-category-details',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, CategoryEditComponent],
   templateUrl: './category-details.component.html',
   styleUrl: './category-details.component.css',
 })
-
-/*
-
-export class CategoryDetailsComponent implements OnInit {
-  loading: boolean = true;
-  public category?: ICategory;
-  
-  private _categoryService = inject(CategoryService);
-  private _route = inject(ActivatedRoute);
-  
-  ngOnInit(): void {
-    this._route.params.subscribe((params) => {
-      this._categoryService
-      .getCategory(params['id'])
-      .subscribe((data: ICategory) => {
-        this.category = data;
-        this.loading = false;
-      });
-    });
-  }
-  
-  */
 export class CategoryDetailsComponent implements OnChanges {
   loading: boolean = true;
   public category?: ICategory;
+  editingMode: boolean = false;
+  successMessage: string = '';
+  errorMessage: string = '';
 
   @Input() selectedCategory: { [key: string]: any } | null = null;
 
-  constructor(private _categoryService: CategoryService) {}
+  private brandUpdatedSubject: Subject<ICategory> = new Subject<ICategory>();
+
+  constructor(
+    private _categoryService: CategoryService,
+    private _confirmDialogService: ConfirmDialogService,
+    private _sanitizer: DomSanitizer,
+    private _router: Router
+  ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['selectedCategory'] && this.selectedCategory) {
-      this.loading = true;
+      this.loadCategoryData();
+    }
+  }
 
+  loadCategoryData(): void {
+    if (this.selectedCategory && this.selectedCategory['id']) {
+      this.loading = true;
       this._categoryService
         .getCategory(this.selectedCategory['id'])
         .subscribe((data: ICategory) => {
@@ -63,5 +50,63 @@ export class CategoryDetailsComponent implements OnChanges {
           this.loading = false;
         });
     }
+  }
+
+  ngOnInit() {
+    this.subscribeToCategoryUpdatedEvent();
+  }
+
+  private subscribeToCategoryUpdatedEvent(): void {
+    this._categoryService.getCategoryUpdatedObservable().subscribe(() => {
+      console.log(
+        'Evento categoryUpdated recibido en CategoryDetailsComponent'
+      );
+      this.loadCategoryData();
+    });
+  }
+
+  startEditing(): void {
+    this.editingMode = true;
+  }
+
+  cancelEditing(): void {
+    this.editingMode = false;
+  }
+
+  goToList(): void {
+    this._router.navigate(['/category']);
+  }
+
+  getLogoUrl(logo: any): any {
+    const base64Image = logo.content;
+    return this._sanitizer.bypassSecurityTrustResourceUrl(
+      'data:image/jpeg;base64,' + base64Image
+    );
+  }
+
+  saveChanges(updatedBrand: ICategory): void {
+    this.editingMode = false;
+    this.brandUpdatedSubject.next(updatedBrand);
+  }
+
+  confirmDelete(id: string): void {
+    this._confirmDialogService.openConfirmDialog().subscribe((confirmed) => {
+      if (confirmed) {
+        this.deleteCategory(id);
+      }
+    });
+  }
+
+  deleteCategory(id: string): void {
+    this._categoryService.deleteCategory(id).subscribe(
+      (response: any) => {
+        this.successMessage = response;
+        this.errorMessage = '';
+      },
+      (error) => {
+        this.errorMessage = error.error;
+        this.successMessage = '';
+      }
+    );
   }
 }

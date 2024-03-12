@@ -18,9 +18,29 @@ export class CategoryComponent implements OnInit {
   private _router = inject(Router);
 
   ngOnInit(): void {
+    this.loadCategories();
+    this.subscribeToCategoryUpdatedEvent();
+  }
+
+  loadCategories(): void {
     this._categoryService.getCategories().subscribe((data: ICategory[]) => {
       this.categoryList = data;
+
+      if (this.categoryList.length > 0) {
+        this.selectedCategory = this.categoryList[0];
+      }
     });
+  }
+
+  subscribeToCategoryUpdatedEvent(): void {
+    this._categoryService.getCategoryUpdatedObservable().subscribe(() => {
+      console.log('Evento categoryUpdated recibido en CategoryComponent');
+      this.loadCategories();
+    });
+  }
+
+  handleCategoryUpdated(): void {
+    this.loadCategories();
   }
 
   navegate(id: string): void {
