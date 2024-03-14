@@ -12,7 +12,7 @@
         type="text"
         class="form-control"
         id="categoryNameInput"
-        placeholder="{{ category?.name }}"
+        placeholder="Type new name here"
         formControlName="categoryName"
         [ngClass]="{
           'is-invalid': hasErrors('categoryName', 'required')
@@ -44,7 +44,7 @@
     </div>
     <button
       type="button"
-      class="btn btn-outline-primary btn-sm"
+      class="btn btn-outline-primary btn-sm mb-3"
       (click)="updateLogo()"
     >
       Update Logo

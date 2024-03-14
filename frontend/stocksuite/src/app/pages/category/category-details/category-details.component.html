@@ -50,7 +50,7 @@
   </div>
   } } @if (editingMode){
   <div class="container text-center m-3">
-    <h5>Brand edit: {{ category!.name }}</h5>
+    <h5>Category edit: {{ category!.name }}</h5>
   </div>
 
   <app-category-edit [category]="category" (onSave)="saveChanges($event)">

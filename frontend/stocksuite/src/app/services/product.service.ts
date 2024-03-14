@@ -9,7 +9,7 @@ import { IProduct } from '../model/product.model';
 export class ProductService {
 
   private _http = inject(HttpClient);
-  private _urlBase = 'http://localhost:9500/product'
+  private _urlBase = 'http://localhost:443/mono-sv/product'
 
   getProducts(): Observable<IProduct[]>{
     return this._http.get<IProduct[]>(`${this._urlBase}/getAll`);

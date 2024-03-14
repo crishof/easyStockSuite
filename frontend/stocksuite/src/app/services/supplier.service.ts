@@ -8,7 +8,7 @@ import { HttpClient } from '@angular/common/http';
 })
 export class SupplierService {
   private _http = inject(HttpClient);
-  private _urlBase = 'http://localhost:9500/supplier';
+  private _urlBase = 'http://localhost:443/mono-sv/supplier';
 
   getSuppliers(): Observable<ISupplier[]> {
     return this._http.get<ISupplier[]>(`${this._urlBase}/getAll`);
