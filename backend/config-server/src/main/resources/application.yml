@@ -17,6 +17,6 @@ spring:
       server:
         git:
           uri: https://github.com/crishof/easyStockSuite.git
-          search-paths: config-data
+          search-paths: /backend/config-data
           username: ${GIT_USER}
           password: ${GIT_PASSWORD}

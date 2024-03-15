@@ -1,37 +1,27 @@
-server:
-  port: 9500
-
-# EUREKA SERVER
-spring:
-  application:
-    name: mono-sv
-  jpa:
-    database: POSTGRESQL
-    show-sql: true
-    generate-ddl: true
-    hibernate:
-      ddl-auto: update
-  sql:
-    init:
-      platform: postgres
-  datasource:
-    url: jdbc:postgresql://localhost:5432/db_easyStock_mono
-    username: ${POSTGRES_USER}
-    password: ${POSTGRES_PASSWORD}
-
 eureka:
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka
   instance:
     lease-renewal-interval-in-seconds: 0
-
-# FEIGN
-# feign:
-#   brandapi:
-#     url: http:localhost:9002
-
+server:
+  port: 9500
 spring:
+  application:
+    name: mono-sv
+    datasource:
+      url: jdbc:postgresql://localhost:5432/db_easyStock_mono
+      username: ${POSTGRES_USER}
+      password: ${POSTGRES_PASSWORD}
+    jpa:
+      database: POSTGRESQL
+      generate-ddl: true
+      hibernate:
+        ddl-auto: update
+        show-sql: true
+    sql:
+      init:
+        platform: postgres
   servlet:
     multipart:
       max-file-size: 10MB
