@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { CategoryService } from '../../../services/category.service';
 import { CommonModule } from '@angular/common';
 import { CategoryDetailsComponent } from '../category-details/category-details.component';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-category',
@@ -16,6 +17,7 @@ export class CategoryComponent implements OnInit {
   categoryList: ICategory[] = [];
   private _categoryService = inject(CategoryService);
   private _router = inject(Router);
+  private _sanitizer = inject(DomSanitizer);
 
   ngOnInit(): void {
     this.loadCategories();
@@ -41,6 +43,25 @@ export class CategoryComponent implements OnInit {
 
   handleCategoryUpdated(): void {
     this.loadCategories();
+  }
+
+  getLogoUrl(logo: any): any {
+    const base64Image = logo.content;
+    return this._sanitizer.bypassSecurityTrustResourceUrl(
+      'data:image/jpeg;base64,' + base64Image
+    );
+  }
+
+  arrayBufferToBase64(buffer: ArrayBuffer): string {
+    if (typeof window !== 'undefined') {
+      let binary = '';
+      const bytes = new Uint8Array(buffer);
+      for (let i = 0; i < bytes.byteLength; i++) {
+        binary += String.fromCharCode(bytes[i]);
+      }
+      return window.btoa(binary);
+    }
+    return '';
   }
 
   navegate(id: string): void {

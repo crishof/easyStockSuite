@@ -9,6 +9,7 @@ import { Observable } from 'rxjs';
 export class BrandService {
   private _http = inject(HttpClient);
   private _urlBase = 'http://localhost:443/mono-sv/brand';
+  //private _urlBase = 'http://localhost:9500/brand';
 
   getBrands(): Observable<IBrand[]> {
     return this._http.get<IBrand[]>(`${this._urlBase}/getAll`);
