@@ -1,0 +1,46 @@
+<div class="container-fluid">
+  <div class="container text-center">
+    <h2>Products List</h2>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table table-stripped table-hover align-middle table-sm">
+      <thead class="table-dark">
+        <tr>
+          <th scope="col">#Id</th>
+          <th scope="col">Code</th>
+          <th scope="col">Brand</th>
+          <th scope="col">Model</th>
+          <th scope="col">Description</th>
+          <th scope="col">Tax Rate</th>
+          <th scope="col">Selling Price</th>
+          <th scope="col">Stock</th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+
+      <tbody>
+        @for (product of productList; track $index) {
+        <tr>
+          <td id="id">{{ product.id }}</td>
+          <td>{{ product.code }}</td>
+          <td>{{ product.brandName }}</td>
+          <td>{{ product.model }}</td>
+          <td>{{ product.description }}</td>
+          <td>{{ product.taxRate * 100 }}%</td>
+          <td>{{ product.sellingPrice | currency }}</td>
+          <td>{{ product.stock }}</td>
+          <td>
+            <button
+              class="btn btn-outline-primary btn-sm"
+              (click)="navegate(product.id)"
+            >
+              Details
+            </button>
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>

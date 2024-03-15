@@ -1,0 +1,95 @@
+<div class="container">
+  <div class="container text-center m-3">
+    <h2>Brands List</h2>
+  </div>
+
+  <div class="row">
+    <form
+      #brandForm="ngForm"
+      (ngSubmit)="searchBrand()"
+      class="row mb-3 text-center col-md-8"
+    >
+      <div class="col-md-10">
+        <input
+          type="text"
+          class="form-control"
+          id="searchBrand"
+          placeholder="Enter brand name and press enter to search"
+          [(ngModel)]="searchTerm"
+          name="searchTerm"
+          (keyup.enter)="searchBrand()"
+        />
+      </div>
+
+      <div class="col-md-2">
+        <button type="submit" class="btn btn-outline-primary btn-sm">
+          Search
+        </button>
+      </div>
+    </form>
+
+    <div class="col-md-2">
+      <button class="btn btn-outline-success btn-sm" (click)="toNewBrand()">
+        New Brand
+      </button>
+    </div>
+  </div>
+
+  <table class="table table-striped table-hover align-middle">
+    <thead class="table-dark">
+      <tr>
+        <th scope="col" class="sortable" (click)="sortColumn('id')">
+          #Id
+          <span *ngIf="sortedColumn === 'id'" class="arrow">
+            {{ isAscendingOrder ? "↑" : "↓" }}
+          </span>
+        </th>
+
+        <th scope="col">Logo</th>
+
+        <th scope="col" class="sortable" (click)="sortColumn('name')">
+          Name
+          <span *ngIf="sortedColumn === 'name'" class="arrow">
+            {{ isAscendingOrder ? "↑" : "↓" }}</span
+          >
+        </th>
+
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (brand of filteredBrandList; track $index){
+
+      <tr>
+        <td>{{ brand.id }}</td>
+        <td>
+          @if (brand.logo != null){
+          <img
+            [src]="getLogoUrl(brand.logo)"
+            alt=""
+            width="50px"
+            height="50px"
+          />
+          } @else{
+          <img
+            src="../../../../assets/images/no-image-100.png"
+            alt=""
+            width="50px"
+            height="50px"
+          />
+          }
+        </td>
+        <td>{{ brand.name }}</td>
+        <td>
+          <button
+            class="btn btn-outline-primary btn-sm"
+            (click)="toBrandDetails(brand.id)"
+          >
+            Details
+          </button>
+        </td>
+      </tr>
+      }
+    </tbody>
+  </table>
+</div>

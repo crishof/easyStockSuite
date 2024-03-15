@@ -1,0 +1,19 @@
+h1 {
+  text-align: center;
+}
+#id {
+  white-space: nowrap;
+  font-size: small;
+}
+
+.table-container {
+  max-width: 100%;
+  overflow-x: auto;
+}
+#page-title {
+  margin: 30px;
+}
+
+/*.table-responsive {
+  overflow: hidden;
+}*/
