@@ -1,15 +1,16 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, Inject, OnInit, inject } from '@angular/core';
 import { IBrand } from '../../../model/brand.model';
 import { BrandService } from '../../../services/brand.service';
 import { Router } from '@angular/router';
 import { DomSanitizer } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
+import { DefaultImageDirective } from '../../../utils/default-image.directive';
 
 @Component({
   selector: 'app-brand',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, DefaultImageDirective],
   templateUrl: './brand.component.html',
   styleUrl: './brand.component.css',
 })

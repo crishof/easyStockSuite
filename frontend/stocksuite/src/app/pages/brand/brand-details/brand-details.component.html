@@ -1,69 +1,74 @@
-<div class="container m-3 text-center">
-  @if (loading) {
-  <h5>Loading....</h5>
-  } @if (!loading) { @if (!editingMode){ @if(!successMessage){
+<div class="container align-content-center">
+  <div class="container m-3 text-center">
+    @if (loading) {
+    <h5>Loading....</h5>
+    } @if (!loading) { @if (!editingMode){ @if(!successMessage){
 
-  <div class="card" style="width: 18rem">
-    @if (brand?.logo != null){
-    <img [src]="getLogoUrl(brand?.logo)" class="card-img-overlay" alt="..." />
-    }
-    <div class="card-body">
-      <hr />
-      <h5 class="card-title">{{ brand?.name }}</h5>
-      <hr />
-
-      <p class="card-text">
-        Some quick example text to build on the card title and make up the bulk
-        of the card's content.
-      </p>
-
-      @if(brand != null && brand != undefined && !successMessage ){
-      <div class="btn-group" role="group">
-        <button class="btn btn-outline-primary btn-sm" (click)="startEditing()">
-          Edit
-        </button>
-
-        <button
-          class="btn btn-outline-danger btn-sm"
-          (click)="confirmDelete(brand.id)"
-        >
-          Delete
-        </button>
-      </div>
+    <div class="card" style="width: 18rem">
+      @if (brand?.logo != null){
+      <img [src]="getLogoUrl(brand?.logo)" class="card-img-overlay" alt="..." />
       }
+      <div class="card-body">
+        <hr />
+        <h5 class="card-title">{{ brand?.name }}</h5>
+        <hr />
+
+        <p class="card-text">
+          Some quick example text to build on the card title and make up the
+          bulk of the card's content.
+        </p>
+
+        @if(brand != null && brand != undefined && !successMessage ){
+        <div class="btn-group" role="group">
+          <button
+            class="btn btn-outline-primary btn-sm"
+            (click)="startEditing()"
+          >
+            Edit
+          </button>
+
+          <button
+            class="btn btn-outline-danger btn-sm"
+            (click)="confirmDelete(brand.id)"
+          >
+            Delete
+          </button>
+        </div>
+        }
+      </div>
     </div>
+
+    } @if(successMessage){
+
+    <div class="card bg-success text light">
+      <h5>{{ successMessage }}</h5>
+    </div>
+    } @if(errorMessage){
+    <div class="card bg-danger text-light">
+      <h5>{{ errorMessage }}</h5>
+    </div>
+    } } @if (editingMode){
+    <div class="container text-center m-3">
+      <h5>Brand edit: {{ brand!.name }}</h5>
+    </div>
+
+    <app-brand-edit
+      [brand]="brand"
+      (onSave)="saveChanges($event)"
+    ></app-brand-edit>
+
+    <button class="btn btn-outline-danger btn-sm" (click)="cancelEditing()">
+      Cancel
+    </button>
+
+    } }
   </div>
 
-  } @if(successMessage){
-
-  <div class="card bg-success text light">
-    <h5>{{ successMessage }}</h5>
+  @if(!editingMode){
+  <div class="container m-3 text-center">
+    <button class="btn btn-outline-danger btn-sm" (click)="goToList()">
+      Go back
+    </button>
   </div>
-  } @if(errorMessage){
-  <div class="card bg-danger text-light">
-    <h5>{{ errorMessage }}</h5>
-  </div>
-  } } @if (editingMode){
-  <div class="container text-center m-3">
-    <h5>Brand edit: {{ brand!.name }}</h5>
-  </div>
-
-  <app-brand-edit
-    [brand]="brand"
-    (onSave)="saveChanges($event)"
-  ></app-brand-edit>
-
-  <button class="btn btn-outline-danger btn-sm" (click)="cancelEditing()">
-    Cancel
-  </button>
-
-  } }
+  }
 </div>
-
-@if(!editingMode){
-<div class="container m-3 text-center">
-  <button class="btn btn-outline-danger btn-sm" (click)="goToList()">
-    Go back
-  </button>
-</div>
-}

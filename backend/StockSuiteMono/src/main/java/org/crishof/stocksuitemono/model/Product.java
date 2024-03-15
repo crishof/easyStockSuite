@@ -26,8 +26,11 @@ public class Product {
     @ManyToOne(targetEntity = Brand.class)
     @JoinColumn(name = "brand_id")
     private Brand brand;
+    private String supplierCode;
     private String code;
+    private String supplierModel;
     private String model;
+    private String supplierDescription;
     private String description;
     @ManyToOne(targetEntity = Category.class)
     @JoinColumn(name = "category_id")
@@ -50,7 +53,6 @@ public class Product {
         this.model = productRequest.getModel();
         this.description = productRequest.getDescription();
     }
-
 }
 
 /*

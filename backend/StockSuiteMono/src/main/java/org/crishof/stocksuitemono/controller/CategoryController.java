@@ -1,11 +1,13 @@
 package org.crishof.stocksuitemono.controller;
 
 
+import org.crishof.stocksuitemono.model.Brand;
 import org.crishof.stocksuitemono.model.Category;
 import org.crishof.stocksuitemono.repository.CategoryRepository;
 import org.crishof.stocksuitemono.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.UUID;
@@ -36,9 +38,17 @@ public class CategoryController {
     }
 
     @PutMapping("/update/{id}")
-    public Category update(@PathVariable("id") UUID id, @RequestBody Category category) {
-        category.setId(id);
-        return categoryRepository.save(category);
+    public Category update(@PathVariable("id") UUID id, @RequestParam(required = false) String name) {
+
+        System.out.println("name = " + name);
+        return categoryService.update(id, name);
+    }
+
+    @PutMapping("/updateLogo/{id}")
+    public Category updateLogo(@PathVariable("id") UUID uuid, @RequestParam(required = false) MultipartFile logo) {
+
+        return categoryService.updateLogo(uuid, logo);
+
     }
 
     @DeleteMapping("/delete/{id}")

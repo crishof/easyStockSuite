@@ -61,10 +61,10 @@ public class ProductServiceImpl implements ProductService {
         for(Product p : products){
         ProductDTO productDTO = new ProductDTO();
 
-        productDTO.setBrand(productDTO.getBrand());
-        productDTO.setCategory(p.getCategoryId());
+//        productDTO.setBrand(productDTO.getBrand());
+//        productDTO.setCategory(p.getCategoryId());
         }
-        return
+        return null;
 
     }
 
