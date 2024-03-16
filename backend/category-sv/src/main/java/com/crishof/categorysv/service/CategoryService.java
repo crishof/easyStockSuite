@@ -1,20 +1,27 @@
 package com.crishof.categorysv.service;
 
+import com.crishof.categorysv.dto.CategoryRequest;
+import com.crishof.categorysv.dto.CategoryResponse;
 import com.crishof.categorysv.model.Category;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface CategoryService {
 
-    void save(Category category);
 
-    List<Category> finAll();
+    List<CategoryResponse> getAll();
 
-    Category findById(Long id);
+    CategoryResponse getById(UUID id);
 
-    void update(Long id, Category category);
+//    Category getByName(String name);
 
-    void deleteById(Long id);
+    CategoryResponse save(CategoryRequest categoryRequest);
 
+    CategoryResponse update(UUID id, String name);
 
+//    Category updateLogo(UUID id, MultipartFile logo);
+
+//    void deleteById(UUID id);
 }

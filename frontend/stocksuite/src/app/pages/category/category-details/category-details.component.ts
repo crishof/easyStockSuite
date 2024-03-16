@@ -5,7 +5,7 @@ import { CategoryService } from '../../../services/category.service';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { ConfirmDialogService } from '../../../services/confirm-dialog.service';
+import { ModalDialogService } from '../../../services/modal-dialog.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { CategoryEditComponent } from '../category-edit/category-edit.component';
 
@@ -29,7 +29,7 @@ export class CategoryDetailsComponent implements OnChanges {
 
   constructor(
     private _categoryService: CategoryService,
-    private _confirmDialogService: ConfirmDialogService,
+    private _confirmDialogService: ModalDialogService,
     private _sanitizer: DomSanitizer,
     private _router: Router
   ) {}
