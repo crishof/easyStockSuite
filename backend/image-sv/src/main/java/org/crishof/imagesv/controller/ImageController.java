@@ -18,8 +18,15 @@ public class ImageController {
     ImageRepository imageRepository;
 
 
+    @GetMapping("getById")
+    public Image getById(@RequestParam UUID imageId) {
+        return imageService.getById(imageId);
+    }
+
     @PostMapping("/save")
     public UUID saveImage(@RequestBody byte[] fileBytes, @RequestParam String mime, @RequestParam String name) {
+
+        System.out.println("CONTROLADOR " + name);
         return imageService.save(fileBytes, mime, name).getId();
     }
 
@@ -31,10 +38,5 @@ public class ImageController {
     @DeleteMapping("/delete/{id}")
     public void deleteImage(@PathVariable UUID id) {
         imageService.deleteById(id);
-    }
-
-    @GetMapping("getById")
-    public Image getById(@RequestParam UUID imageId) {
-        return imageService.getById(imageId);
     }
 }

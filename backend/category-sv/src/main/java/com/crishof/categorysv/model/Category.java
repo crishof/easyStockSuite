@@ -32,8 +32,4 @@ public class Category {
     public Category(CategoryRequest categoryRequest) {
         this.name = categoryRequest.getName();
     }
-
-    public Category(String name) {
-        this.name = name;
-    }
 }
