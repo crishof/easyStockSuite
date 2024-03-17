@@ -8,7 +8,7 @@ import { IProduct } from '../model/product.model';
 })
 export class ProductService {
   private _http = inject(HttpClient);
-  //private _urlBase = 'http://localhost:443/mono-sv/product';
+  
   private _urlBase = 'http://localhost:9500/product';
 
   getProducts(): Observable<IProduct[]> {

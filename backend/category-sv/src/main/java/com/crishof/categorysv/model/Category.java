@@ -1,10 +1,14 @@
 package com.crishof.categorysv.model;
 
+import com.crishof.categorysv.dto.CategoryRequest;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.awt.*;
+import java.util.UUID;
 
 @Entity
 @Data
@@ -15,7 +19,17 @@ import lombok.NoArgsConstructor;
 public class Category {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    @Column(name = "category_id")
+    @GeneratedValue
+    private UUID id;
+    @Column(nullable = false, unique = true)
     private String name;
+    @Column(name = "image_id")
+    private UUID imageId;
+    @Embedded
+    private Dimension dimension;
+
+    public Category(CategoryRequest categoryRequest) {
+        this.name = categoryRequest.getName();
+    }
 }

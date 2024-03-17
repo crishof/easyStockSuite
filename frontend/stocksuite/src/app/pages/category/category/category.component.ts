@@ -5,6 +5,7 @@ import { CategoryService } from '../../../services/category.service';
 import { CommonModule } from '@angular/common';
 import { CategoryDetailsComponent } from '../category-details/category-details.component';
 import { DomSanitizer } from '@angular/platform-browser';
+import { ModalDialogService } from '../../../services/modal-dialog.service';
 
 @Component({
   selector: 'app-category',
@@ -18,6 +19,7 @@ export class CategoryComponent implements OnInit {
   private _categoryService = inject(CategoryService);
   private _router = inject(Router);
   private _sanitizer = inject(DomSanitizer);
+  private _modalDialogService = inject(ModalDialogService);
 
   ngOnInit(): void {
     this.loadCategories();
@@ -72,5 +74,11 @@ export class CategoryComponent implements OnInit {
 
   showDetails(category: ICategory): void {
     this.selectedCategory = category;
+  }
+
+  openCategoryEditDialog() {
+    this._modalDialogService.openCategoryEditDialog().subscribe(result => {
+      
+    });
   }
 }

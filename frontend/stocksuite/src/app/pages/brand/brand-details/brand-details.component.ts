@@ -5,7 +5,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BrandEditComponent } from '../brand-edit/brand-edit.component';
 import { Subject } from 'rxjs';
-import { ConfirmDialogService } from '../../../services/confirm-dialog.service';
+import { ModalDialogService } from '../../../services/modal-dialog.service';
 import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
@@ -23,7 +23,7 @@ export class BrandDetailsComponent implements OnInit {
   private _route = inject(ActivatedRoute);
   private _brandService = inject(BrandService);
   private _router = inject(Router);
-  private _confirmDialogService = inject(ConfirmDialogService);
+  private _confirmDialogService = inject(ModalDialogService);
 
   private _sanitizer = inject(DomSanitizer);
 
