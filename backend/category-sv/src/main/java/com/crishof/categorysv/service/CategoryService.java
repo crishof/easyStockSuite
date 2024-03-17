@@ -15,13 +15,13 @@ public interface CategoryService {
 
     CategoryResponse getById(UUID id);
 
-//    Category getByName(String name);
+    Category getByName(String name);
 
     CategoryResponse save(CategoryRequest categoryRequest);
 
     CategoryResponse update(UUID id, String name);
 
-//    Category updateLogo(UUID id, MultipartFile logo);
+    Category updateLogo(UUID id, UUID imageId);
 
-//    void deleteById(UUID id);
+    void deleteById(UUID id);
 }

@@ -14,9 +14,11 @@ public class CategoryResponse {
 
     private UUID id;
     private String name;
+    private UUID imageId;
 
     public CategoryResponse(Category category) {
         this.id = category.getId();
         this.name = category.getName();
+        this.imageId = category.getImageId();
     }
 }

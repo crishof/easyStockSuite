@@ -9,7 +9,7 @@ import { ICategory } from '../model/category.model';
 export class CategoryService {
   private _http = inject(HttpClient);
   
-  private _urlBase = 'http://localhost:443/mono-sv/category';
+  private _urlBase = 'http://localhost:443/category-sv/category';
   private categoryUpdatedSubject = new Subject<void>();
 
   getCategories(): Observable<ICategory[]> {

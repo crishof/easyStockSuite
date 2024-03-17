@@ -1,5 +1,6 @@
 package com.crishof.categorysv.service;
 
+import com.crishof.categorysv.apiCient.ImageAPIClient;
 import com.crishof.categorysv.dto.CategoryRequest;
 import com.crishof.categorysv.dto.CategoryResponse;
 import com.crishof.categorysv.exception.CategoryNotFoundException;
@@ -18,8 +19,8 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Autowired
     CategoryRepository categoryRepository;
-//    @Autowired
-//    ImageService imageService;
+    @Autowired
+    ImageAPIClient imageAPIClient;
 
     @Override
     public List<CategoryResponse> getAll() {
@@ -36,10 +37,10 @@ public class CategoryServiceImpl implements CategoryService {
         return CategoryMapper.toCategoryResponse(category);
     }
 
-//    @Override
-//    public Category getByName(String name) {
-//        return categoryRepository.findByName(name).orElseThrow(() -> new CategoryNotFoundException("Category not found with name: " + name));
-//    }
+    @Override
+    public Category getByName(String name) {
+        return categoryRepository.findByName(name).orElseThrow(() -> new CategoryNotFoundException("Category not found with name: " + name));
+    }
 
 
     @Override
@@ -59,29 +60,37 @@ public class CategoryServiceImpl implements CategoryService {
         }
 
         category.setName(name);
-        categoryRepository.save(category);
 
-        return new CategoryResponse(category.getId(), category.getName());
+        return new CategoryResponse(categoryRepository.save(category));
     }
 
-//    @Override
-//    public Category updateLogo(UUID id, MultipartFile logo) {
-//
-//        Category category = this.getById(id);
-//        if (category != null) {
-//            if (category.getImage() != null) {
-//                category.setImage(imageService.update(category.getImage().getId(), logo));
-//            } else {
-//                category.setImage(imageService.save(logo));
-//            }
-//        } else {
-//            throw new CategoryNotFoundException(id);
-//        }
-//        return categoryRepository.save(category);
-//    }
+    @Override
+    public Category updateLogo(UUID id, UUID imageId) {
 
-//    @Override
-//    public void deleteById(UUID id) {
-//        categoryRepository.deleteById(id);
-//    }
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() -> new CategoryNotFoundException("Category not found with id: " + id));
+
+        if (category != null) {
+
+            if (category.getImageId() != null) {
+                imageAPIClient.deleteImage(category.getImageId());
+            }
+            category.setImageId(imageId);
+        } else {
+            throw new CategoryNotFoundException(id);
+        }
+        return categoryRepository.save(category);
+    }
+
+    @Override
+    public void deleteById(UUID id) {
+
+        Category category = categoryRepository.findById(id).orElseThrow(() -> new CategoryNotFoundException(id));
+
+        categoryRepository.deleteById(id);
+
+        if (category.getImageId() != null) {
+            imageAPIClient.deleteImage(category.getImageId());
+        }
+    }
 }
