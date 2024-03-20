@@ -8,8 +8,6 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.UUID;
-
 @RestController
 @RequestMapping("/image")
 public class ImageController {
@@ -18,9 +16,9 @@ public class ImageController {
     private CloudinaryService cloudinaryService;
 
     @PostMapping("/save")
-    public ResponseEntity<String> uploadImage(@RequestParam("file") MultipartFile file, String folderName) {
+    public ResponseEntity<String> uploadImage(@RequestParam("file") MultipartFile file, String entityName) {
         try {
-            String imageUrl = cloudinaryService.uploadImage(file, folderName);
+            String imageUrl = cloudinaryService.uploadImage(file, entityName);
             return ResponseEntity.ok().body(imageUrl);
         } catch (Exception e) {
             e.printStackTrace();
@@ -29,13 +27,12 @@ public class ImageController {
     }
 
     @PostMapping("/saveBytes")
-    public ResponseEntity<String> saveImage(@RequestBody byte[] fileBytes, @RequestParam String mime, @RequestParam String name, @RequestParam String folderName) {
+    public ResponseEntity<String> saveImage(@RequestBody byte[] fileBytes, @RequestParam String mime,
+                                            @RequestParam String name, @RequestParam String entityName) {
 
         MultipartFile file = new MockMultipartFile(name, name, mime, fileBytes);
-
-
         try {
-            String imageUrl = cloudinaryService.uploadImage(file, folderName);
+            String imageUrl = cloudinaryService.uploadImage(file, entityName);
             System.out.println(ResponseEntity.ok().body(imageUrl));
             return ResponseEntity.ok().body(imageUrl);
         } catch (Exception e) {
@@ -43,9 +40,12 @@ public class ImageController {
         }
     }
 
-    @PutMapping("/update/{id}")
-    public String updateImage(@PathVariable UUID id, @RequestBody byte[] fileBytes, @RequestParam String mime, @RequestParam String name) {
-        return "";
+    @PutMapping("/update")
+    public String updateImage(@RequestBody byte[] fileBytes, @RequestParam String mime, @RequestParam String name,
+                              @RequestParam String entityName, @RequestParam String preUrl) {
+
+        this.deleteImageByUrl(preUrl, entityName);
+        return this.saveImage(fileBytes, mime, name, entityName).getBody();
     }
 
     @DeleteMapping("/delete")

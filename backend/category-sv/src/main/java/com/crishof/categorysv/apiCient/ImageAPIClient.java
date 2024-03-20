@@ -3,24 +3,20 @@ package com.crishof.categorysv.apiCient;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.awt.*;
-import java.util.UUID;
+import org.springframework.web.multipart.MultipartFile;
 
 @FeignClient(name = "image-sv")
 public interface ImageAPIClient {
 
-    @PostMapping("/image/saveBytes")
-    public ResponseEntity<String> saveImage(@RequestBody byte[] fileBytes, @RequestParam String mime, @RequestParam String name, @RequestParam String folderName);
-    @GetMapping("/image/getById")
-    Image getById(@RequestParam UUID imageId);
+    @PostMapping("/save")
+    ResponseEntity<String> uploadImage(@RequestParam("file") MultipartFile file, String folderName);
 
-    @PostMapping("/image/save")
-    UUID saveImage(@RequestBody byte[] fileBytes, @RequestParam String mime, @RequestParam String name);
+    @PostMapping("/saveBytes")
+    ResponseEntity<String> saveImage(@RequestBody byte[] fileBytes, @RequestParam String mime, @RequestParam String name, @RequestParam String folderName);
 
-    @PutMapping("/image/update/{id}")
-    UUID updateImage(@PathVariable UUID id, @RequestBody byte[] fileBytes, @RequestParam String mime, @RequestParam String name);
+    @PutMapping("/update")
+    String updateImage(@RequestBody byte[] fileBytes, @RequestParam String mime, @RequestParam String name, @RequestParam String folderName, @RequestParam String preUrl);
 
-    @DeleteMapping("/image/delete/{id}")
-    void deleteImage(@PathVariable UUID id);
+    @DeleteMapping("/delete")
+    ResponseEntity<String> deleteImageByUrl(@RequestParam String url, @RequestParam String entityName);
 }

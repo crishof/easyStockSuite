@@ -19,8 +19,8 @@ public class CloudinaryService {
         this.cloudinary = cloudinary;
     }
 
-    public String uploadImage(MultipartFile file, String folderName) throws IOException {
-        Map<String, Object> options = ObjectUtils.asMap("folder", folderName);
+    public String uploadImage(MultipartFile file, String entityName) throws IOException {
+        Map<String, Object> options = ObjectUtils.asMap("folder", entityName);
         Map uploadResult = cloudinary.uploader().upload(file.getBytes(), options);
         return (String) uploadResult.get("url");
     }
