@@ -24,4 +24,6 @@ public interface CategoryService {
     Category updateLogo(UUID id, UUID imageId);
 
     void deleteById(UUID id);
+
+    Category updateImage(UUID uuid, String imageUrl);
 }

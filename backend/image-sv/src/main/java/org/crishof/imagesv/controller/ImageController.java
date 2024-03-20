@@ -36,6 +36,7 @@ public class ImageController {
 
         try {
             String imageUrl = cloudinaryService.uploadImage(file, folderName);
+            System.out.println(ResponseEntity.ok().body(imageUrl));
             return ResponseEntity.ok().body(imageUrl);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to upload image");

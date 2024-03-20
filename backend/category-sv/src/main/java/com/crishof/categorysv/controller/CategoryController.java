@@ -32,15 +32,14 @@ public class CategoryController {
     @PostMapping("/updateLogo/{id}")
     public Category updateLogo(@PathVariable("id") UUID uuid, @RequestBody MultipartFile file) throws IOException {
 
-        System.out.println("CONTROLADOR " + file.getOriginalFilename());
-
         byte[] fileBytes = file.getBytes();
         String mime = file.getContentType();
         String name = file.getOriginalFilename();
 
-        UUID imageId = imageAPIClient.saveImage(fileBytes, mime, name);
+        ResponseEntity<String> responseEntity = imageAPIClient.saveImage(fileBytes, mime, name, "CATEGORY");
+        String imageUrl = responseEntity.getBody();
 
-        return categoryService.updateLogo(uuid, imageId);
+        return categoryService.updateImage(uuid, imageUrl);
 
     }
 

@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+
 @Service
 public class CategoryServiceImpl implements CategoryService {
 
@@ -62,6 +63,24 @@ public class CategoryServiceImpl implements CategoryService {
         category.setName(name);
 
         return new CategoryResponse(categoryRepository.save(category));
+    }
+
+    @Override
+    public Category updateImage(UUID uuid, String imageUrl) {
+
+        Category category = categoryRepository.findById(uuid)
+                .orElseThrow(() -> new CategoryNotFoundException("Category not found with id: " + uuid));
+
+        if (category != null) {
+
+//            if (category.getImageUrl() != null) {
+//                imageAPIClient.deleteImage(category.getImageId());
+//            }
+            category.setImageUrl(imageUrl);
+        } else {
+            throw new CategoryNotFoundException(uuid);
+        }
+        return categoryRepository.save(category);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.crishof.categorysv.apiCient;
 
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.awt.*;
@@ -8,6 +9,9 @@ import java.util.UUID;
 
 @FeignClient(name = "image-sv")
 public interface ImageAPIClient {
+
+    @PostMapping("/image/saveBytes")
+    public ResponseEntity<String> saveImage(@RequestBody byte[] fileBytes, @RequestParam String mime, @RequestParam String name, @RequestParam String folderName);
     @GetMapping("/image/getById")
     Image getById(@RequestParam UUID imageId);
 
