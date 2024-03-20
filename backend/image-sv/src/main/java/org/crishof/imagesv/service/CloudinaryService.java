@@ -24,5 +24,23 @@ public class CloudinaryService {
         Map uploadResult = cloudinary.uploader().upload(file.getBytes(), options);
         return (String) uploadResult.get("url");
     }
+
+    public void deleteImageByUrl(String imageUrl, String entityName) {
+        try {
+            String publicId = extractPublicIdFromUrl(imageUrl, entityName);
+            cloudinary.uploader().destroy(publicId, ObjectUtils.emptyMap());
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to delete image from Cloudinary", e);
+        }
+    }
+
+    public String extractPublicIdFromUrl(String url, String entityName) {
+
+        String folder = entityName.concat("/");
+        int folderIndex = url.indexOf(folder) + folder.length();
+        int nextDotIndex = url.indexOf(".", folderIndex);
+
+        return folder + url.substring(folderIndex, nextDotIndex);
+    }
 }
 

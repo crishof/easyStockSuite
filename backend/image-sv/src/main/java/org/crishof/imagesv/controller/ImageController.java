@@ -48,7 +48,18 @@ public class ImageController {
         return "";
     }
 
-    @DeleteMapping("/delete/{id}")
-    public void deleteImage(@PathVariable UUID id) {
+    @DeleteMapping("/delete")
+    public ResponseEntity<String> deleteImageByUrl(@RequestParam String url, @RequestParam String entityName) {
+
+        System.out.println("ENTRANDO AL CONTROLLER");
+
+        System.out.println("url = " + url);
+        System.out.println("entityName = " + entityName);
+        try {
+            cloudinaryService.deleteImageByUrl(url, entityName);
+            return ResponseEntity.ok().body("Image deleted successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to delete image");
+        }
     }
 }
