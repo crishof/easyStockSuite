@@ -1,19 +1,8 @@
 spring:
   application:
     name: image-sv
-  jpa:
-    database: POSTGRESQL
-    show-sql: true
-    generate-ddl: true
-    hibernate:
-      ddl-auto: update
-  sql:
-    init:
-      platform: postgres
-  datasource:
-    url: jdbc:postgresql://localhost:5432/db_easyStock_image
-    username: ${POSTGRES_USER}
-    password: ${POSTGRES_PASSWORD}
+  main:
+    allow-bean-definition-overriding: true
 server:
   port: 9005
 eureka:

@@ -77,8 +77,6 @@ export class CategoryComponent implements OnInit {
   }
 
   openCategoryEditDialog() {
-    this._modalDialogService.openCategoryEditDialog().subscribe(result => {
-      
-    });
+    this._modalDialogService.openCategoryEditDialog().subscribe((result) => {});
   }
 }

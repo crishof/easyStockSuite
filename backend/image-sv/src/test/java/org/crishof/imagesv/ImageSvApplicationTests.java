@@ -9,5 +9,4 @@ class ImageSvApplicationTests {
     @Test
     void contextLoads() {
     }
-
 }

@@ -1,42 +1,72 @@
 package org.crishof.imagesv.controller;
 
-import org.crishof.imagesv.model.Image;
-import org.crishof.imagesv.repository.ImageRepository;
-import org.crishof.imagesv.service.ImageService;
+import org.crishof.imagesv.service.CloudinaryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.UUID;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/image")
 public class ImageController {
 
     @Autowired
-    ImageService imageService;
+    Environment environment;
     @Autowired
-    ImageRepository imageRepository;
+    private CloudinaryService cloudinaryService;
 
-
-    @GetMapping("getById")
-    public Image getById(@RequestParam UUID imageId) {
-        return imageService.getById(imageId);
-    }
 
     @PostMapping("/save")
-    public UUID saveImage(@RequestBody byte[] fileBytes, @RequestParam String mime, @RequestParam String name) {
+    public ResponseEntity<String> saveImage(@RequestBody byte[] fileBytes, @RequestParam String mime,
+                                            @RequestParam String name, @RequestParam String entityName) {
 
-        System.out.println("CONTROLADOR " + name);
-        return imageService.save(fileBytes, mime, name).getId();
+        try {
+            if (fileBytes == null || mime.isEmpty() || name.isEmpty() || entityName.isEmpty()) {
+                return ResponseEntity.badRequest().body("Missing or invalid input parameters");
+            }
+
+            MultipartFile file = new MockMultipartFile(name, name, mime, fileBytes);
+            String imageUrl = cloudinaryService.uploadImage(file, entityName);
+            return ResponseEntity.ok().body(imageUrl);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body("Invalid input parameters");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to upload image");
+        }
     }
 
-    @PutMapping("/update/{id}")
-    public UUID updateImage(@PathVariable UUID id, @RequestBody byte[] fileBytes, @RequestParam String mime, @RequestParam String name) {
-        return imageService.update(id, fileBytes, mime, name).getId();
+    @PutMapping("/update")
+    public ResponseEntity<String> updateImage(@RequestBody byte[] fileBytes, @RequestParam String mime,
+                                              @RequestParam String name, @RequestParam String entityName,
+                                              @RequestParam String preUrl) {
+        try {
+            if (fileBytes == null || mime.isEmpty() || name.isEmpty() || entityName.isEmpty() || preUrl.isEmpty()) {
+                return ResponseEntity.badRequest().body("Missing or invalid input parameters");
+            }
+
+            deleteImageByUrl(preUrl, entityName);
+
+            MultipartFile file = new MockMultipartFile(name, name, mime, fileBytes);
+            String imageUrl = cloudinaryService.uploadImage(file, entityName);
+            return ResponseEntity.ok().body(imageUrl);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body("Invalid input parameters");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to update image");
+        }
     }
 
-    @DeleteMapping("/delete/{id}")
-    public void deleteImage(@PathVariable UUID id) {
-        imageService.deleteById(id);
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<String> deleteImageByUrl(@RequestParam String url, @RequestParam String entityName) {
+        try {
+            cloudinaryService.deleteImageByUrl(url, entityName);
+            return ResponseEntity.ok().body("Image deleted successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to delete image");
+        }
     }
 }

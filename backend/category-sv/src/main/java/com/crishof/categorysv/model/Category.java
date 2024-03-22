@@ -24,8 +24,7 @@ public class Category {
     private UUID id;
     @Column(nullable = false, unique = true)
     private String name;
-    @Column(name = "image_id")
-    private UUID imageId;
+    private String imageUrl;
     @Embedded
     private Dimension dimension;
 
