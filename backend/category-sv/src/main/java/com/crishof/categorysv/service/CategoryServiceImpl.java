@@ -4,6 +4,7 @@ import com.crishof.categorysv.apiCient.ImageAPIClient;
 import com.crishof.categorysv.dto.CategoryRequest;
 import com.crishof.categorysv.dto.CategoryResponse;
 import com.crishof.categorysv.exception.CategoryNotFoundException;
+import com.crishof.categorysv.exception.DuplicateNameException;
 import com.crishof.categorysv.model.Category;
 import com.crishof.categorysv.modelMapper.CategoryMapper;
 import com.crishof.categorysv.repository.CategoryRepository;
@@ -47,6 +48,9 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryResponse save(CategoryRequest categoryRequest) {
         Category category = new Category(categoryRequest);
+        if (categoryRepository.findByName(categoryRequest.getName()).isPresent()) {
+            throw new DuplicateNameException("Category with name " + categoryRequest.getName() + " already exist");
+        }
         return new CategoryResponse(categoryRepository.save(category));
     }
 
@@ -73,30 +77,12 @@ public class CategoryServiceImpl implements CategoryService {
 
         if (category != null) {
 
-//            if (category.getImageUrl() != null) {
-//                imageAPIClient.deleteImage(category.getImageId());
-//            }
+            if (category.getImageUrl() != null) {
+                imageAPIClient.deleteImageByUrl(category.getImageUrl(), Category.class.getSimpleName());
+            }
             category.setImageUrl(imageUrl);
         } else {
             throw new CategoryNotFoundException(uuid);
-        }
-        return categoryRepository.save(category);
-    }
-
-    @Override
-    public Category updateLogo(UUID id, UUID imageId) {
-
-        Category category = categoryRepository.findById(id)
-                .orElseThrow(() -> new CategoryNotFoundException("Category not found with id: " + id));
-
-        if (category != null) {
-
-            if (category.getImageId() != null) {
-                imageAPIClient.deleteImage(category.getImageId());
-            }
-            category.setImageId(imageId);
-        } else {
-            throw new CategoryNotFoundException(id);
         }
         return categoryRepository.save(category);
     }
@@ -108,8 +94,8 @@ public class CategoryServiceImpl implements CategoryService {
 
         categoryRepository.deleteById(id);
 
-        if (category.getImageId() != null) {
-            imageAPIClient.deleteImage(category.getImageId());
+        if (category.getImageUrl() != null) {
+            imageAPIClient.deleteImageByUrl(category.getImageUrl(), Category.class.getSimpleName());
         }
     }
 }

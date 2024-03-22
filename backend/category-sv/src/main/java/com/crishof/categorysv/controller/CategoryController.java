@@ -13,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -29,44 +28,16 @@ public class CategoryController {
     @Autowired
     ImageAPIClient imageAPIClient;
 
-    @PostMapping("/updateLogo/{id}")
-    public Category updateLogo(@PathVariable("id") UUID uuid, @RequestBody MultipartFile file) throws IOException {
-
-        byte[] fileBytes = file.getBytes();
-        String mime = file.getContentType();
-        String name = file.getOriginalFilename();
-
-        ResponseEntity<String> responseEntity = imageAPIClient.saveImage(fileBytes, mime, name, "CATEGORY");
-        String imageUrl = responseEntity.getBody();
-
-        return categoryService.updateImage(uuid, imageUrl);
-
-    }
-
-    @GetMapping("/delete/{id}")
-    public ResponseEntity<String> delete(@PathVariable("id") UUID id) {
-        try {
-            categoryService.deleteById(id);
-            return ResponseEntity.ok("Category successfully deleted desde back");
-        } catch (CategoryNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Category not found: " + e.getMessage());
-        } catch (IllegalStateException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Bad request: " + e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal server error: " + e.getMessage());
-
-        }
-    }
 
     @GetMapping("/getAll")
     public List<CategoryResponse> getAll() {
-
-        System.out.println("GET ALL CATEGORIES");
+        System.out.println("CONTROLLER");
         return categoryService.getAll();
     }
 
     @GetMapping("/getById/{id}")
     public CategoryResponse getById(@PathVariable("id") UUID id) {
+        System.out.println("CONTROLLER");
         return categoryService.getById(id);
     }
 
@@ -77,8 +48,49 @@ public class CategoryController {
 
     @PutMapping("/update/{id}")
     public CategoryResponse update(@PathVariable("id") UUID id, @RequestParam(required = false) String name) {
-
-        System.out.println("Controller name = " + name);
         return categoryService.update(id, name);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> delete(@PathVariable("id") UUID id) {
+        try {
+            categoryService.deleteById(id);
+            return ResponseEntity.ok("Category successfully deleted desde back");
+        } catch (CategoryNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Category not found: " + e.getMessage());
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Bad request: " + e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal server error: " + e.getMessage());
+        }
+    }
+
+    @PutMapping("/updateImage/{id}")
+    public ResponseEntity<Category> updateImage(@PathVariable("id") UUID uuid, @RequestParam("file") MultipartFile file) {
+
+        System.out.println("CONTROLLER");
+        try {
+            byte[] fileBytes = file.getBytes();
+            String mime = file.getContentType();
+            String name = file.getOriginalFilename();
+
+            ResponseEntity<String> responseEntity = imageAPIClient.saveImage(fileBytes, mime, name, Category.class.getSimpleName());
+
+            System.out.println("responseEntity = " + responseEntity);
+
+            if (responseEntity.getStatusCode() == HttpStatus.OK) {
+                String imageUrl = responseEntity.getBody();
+
+                System.out.println("imageUrl = " + imageUrl);
+
+                Category updatedCategory = categoryService.updateImage(uuid, imageUrl);
+                return ResponseEntity.ok(updatedCategory);
+            } else {
+                System.out.println("ELSE");
+                return ResponseEntity.status(responseEntity.getStatusCode()).body(null);
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
     }
 }

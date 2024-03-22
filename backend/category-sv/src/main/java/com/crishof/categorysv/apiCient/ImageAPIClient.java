@@ -3,20 +3,18 @@ package com.crishof.categorysv.apiCient;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-@FeignClient(name = "image-sv")
+@FeignClient(name = "image-sv", url = "http://localhost:9005")
 public interface ImageAPIClient {
 
-    @PostMapping("/save")
-    ResponseEntity<String> uploadImage(@RequestParam("file") MultipartFile file, String folderName);
+    @PostMapping("/image/save")
+    ResponseEntity<String> saveImage(@RequestBody byte[] fileBytes, @RequestParam String mime,
+                                     @RequestParam String name, @RequestParam String entityName);
 
-    @PostMapping("/saveBytes")
-    ResponseEntity<String> saveImage(@RequestBody byte[] fileBytes, @RequestParam String mime, @RequestParam String name, @RequestParam String folderName);
+    @PutMapping("/image/update")
+    String updateImage(@RequestBody byte[] fileBytes, @RequestParam String mime, @RequestParam String name,
+                       @RequestParam String entityName, @RequestParam String preUrl);
 
-    @PutMapping("/update")
-    String updateImage(@RequestBody byte[] fileBytes, @RequestParam String mime, @RequestParam String name, @RequestParam String folderName, @RequestParam String preUrl);
-
-    @DeleteMapping("/delete")
+    @DeleteMapping("/image/delete")
     ResponseEntity<String> deleteImageByUrl(@RequestParam String url, @RequestParam String entityName);
 }

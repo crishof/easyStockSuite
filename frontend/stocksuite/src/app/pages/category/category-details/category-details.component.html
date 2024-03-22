@@ -4,9 +4,9 @@
   } @if (!loading) { @if (!editingMode){ @if(!successMessage){
 
   <div class="card" style="width: 18rem">
-    @if (category?.logo != null){
+    @if (category?.imageUrl != null){
     <img
-      [src]="getLogoUrl(category?.logo)"
+      [src]="getLogoUrl(category?.imageUrl)"
       class="card-img-overlay"
       alt="..."
     />
