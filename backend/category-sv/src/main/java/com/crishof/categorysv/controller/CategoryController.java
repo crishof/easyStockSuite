@@ -31,13 +31,11 @@ public class CategoryController {
 
     @GetMapping("/getAll")
     public List<CategoryResponse> getAll() {
-        System.out.println("CONTROLLER");
         return categoryService.getAll();
     }
 
     @GetMapping("/getById/{id}")
     public CategoryResponse getById(@PathVariable("id") UUID id) {
-        System.out.println("CONTROLLER");
         return categoryService.getById(id);
     }
 
@@ -55,7 +53,7 @@ public class CategoryController {
     public ResponseEntity<String> delete(@PathVariable("id") UUID id) {
         try {
             categoryService.deleteById(id);
-            return ResponseEntity.ok("Category successfully deleted desde back");
+            return ResponseEntity.ok("Category successfully deleted");
         } catch (CategoryNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Category not found: " + e.getMessage());
         } catch (IllegalStateException e) {
@@ -68,7 +66,6 @@ public class CategoryController {
     @PutMapping("/updateImage/{id}")
     public ResponseEntity<Category> updateImage(@PathVariable("id") UUID uuid, @RequestParam("file") MultipartFile file) {
 
-        System.out.println("CONTROLLER");
         try {
             byte[] fileBytes = file.getBytes();
             String mime = file.getContentType();
@@ -76,17 +73,12 @@ public class CategoryController {
 
             ResponseEntity<String> responseEntity = imageAPIClient.saveImage(fileBytes, mime, name, Category.class.getSimpleName());
 
-            System.out.println("responseEntity = " + responseEntity);
-
             if (responseEntity.getStatusCode() == HttpStatus.OK) {
                 String imageUrl = responseEntity.getBody();
-
-                System.out.println("imageUrl = " + imageUrl);
 
                 Category updatedCategory = categoryService.updateImage(uuid, imageUrl);
                 return ResponseEntity.ok(updatedCategory);
             } else {
-                System.out.println("ELSE");
                 return ResponseEntity.status(responseEntity.getStatusCode()).body(null);
             }
         } catch (Exception e) {

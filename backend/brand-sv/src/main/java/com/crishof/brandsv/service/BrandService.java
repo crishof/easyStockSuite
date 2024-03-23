@@ -1,24 +1,26 @@
 package com.crishof.brandsv.service;
 
 import com.crishof.brandsv.model.Brand;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface BrandService {
 
-    void save(Brand brand);
+    List<Brand> getAll();
 
-    List<Brand> findAll();
+    Brand getById(UUID id);
 
-    Brand findById(Long id);
+    Brand save(Brand brand);
 
-    void update(Long id, Brand brand);
+    Brand update(UUID id, String name /* , MultipartFile logo */);
 
-    void deleteById(Long id);
+    void deleteById(UUID id);
 
-    Long getBrandIdByName(String brand);
+    Brand getByName(String name);
 
-    Brand getBrandByName(String name);
+    Brand saveByName(String brandName);
+    Brand updateImage(UUID uuid, String imageUrl);
 
-    void saveBrandName(String brand);
 }

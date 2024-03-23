@@ -69,6 +69,7 @@ public class Product {
     private String material;
     private String model;
     private String warranty;
+
     private String sku;
     private String ean;
     private String upc;

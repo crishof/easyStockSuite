@@ -6,17 +6,21 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity
+import java.util.UUID;
+
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
+@Entity
 @Builder
 @Table(name = "tbl_brand")
 public class Brand {
 
     @Id
-    @Column(name = "id_brand")
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    @Column(name = "brand_id")
+    @GeneratedValue
+    private UUID id;
     private String name;
+    private String imageUrl;
+
 }

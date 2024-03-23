@@ -1,7 +1,5 @@
 package org.crishof.stocksuitemono.service;
 
-import org.crishof.stocksuitemono.dto.CategoryRequest;
-import org.crishof.stocksuitemono.dto.CategoryResponse;
 import org.crishof.stocksuitemono.exception.notFound.BrandNotFoundException;
 import org.crishof.stocksuitemono.exception.notFound.CategoryNotFoundException;
 import org.crishof.stocksuitemono.model.Category;
