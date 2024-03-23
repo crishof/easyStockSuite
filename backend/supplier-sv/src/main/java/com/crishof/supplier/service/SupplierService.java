@@ -3,16 +3,19 @@ package com.crishof.supplier.service;
 import com.crishof.supplier.model.Supplier;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface SupplierService {
 
-    void save(Supplier supplier);
-
     List<Supplier> getAll();
 
-    Supplier findById(Long id);
+    Supplier getById(UUID id);
 
-    void update(Long id, Supplier supplier);
+    Supplier findByName(String name);
 
-    void deleteById(Long id);
+    void save(Supplier supplier);
+
+    Supplier update(UUID id, Supplier supplier);
+
+    void deleteById(UUID id);
 }

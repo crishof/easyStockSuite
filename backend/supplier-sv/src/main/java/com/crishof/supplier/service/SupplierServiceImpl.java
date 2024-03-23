@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class SupplierServiceImpl implements SupplierService {
@@ -14,32 +15,40 @@ public class SupplierServiceImpl implements SupplierService {
     SupplierRepository supplierRepository;
 
     @Override
-    public void save(Supplier supplier) {
-        supplierRepository.save(supplier);
-    }
-
-    @Override
     public List<Supplier> getAll() {
         return supplierRepository.findAll();
     }
 
     @Override
-    public Supplier findById(Long id) {
+    public Supplier getById(UUID id) {
         return supplierRepository.findById(id).orElse(null);
     }
 
     @Override
-    public void update(Long id, Supplier supplier) {
-        Supplier supplier1 = this.findById(id);
-        supplier1.setName(supplier.getName());
-        supplier1.setCompanyName(supplier.getCompanyName());
-        supplier1.setTaxIN(supplier.getTaxIN());
+    public Supplier findByName(String name) {
+        return supplierRepository.findByName(name);
+    }
 
-        supplierRepository.save(supplier1);
+
+    @Override
+    public void save(Supplier supplier) {
+        supplierRepository.save(supplier);
     }
 
     @Override
-    public void deleteById(Long id) {
+    public Supplier update(UUID id, Supplier supplier) {
+
+        Supplier supplier1 = this.getById(id);
+
+        supplier1.setName(supplier.getName());
+        supplier1.setTaxId(supplier1.getTaxId());
+        supplier1.setLegalName(supplier.getLegalName());
+
+        return supplierRepository.save(supplier1);
+    }
+
+    @Override
+    public void deleteById(UUID id) {
         supplierRepository.deleteById(id);
     }
 }

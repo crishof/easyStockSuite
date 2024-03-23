@@ -1,7 +1,6 @@
 package com.crishof.brandsv.service;
 
-import com.crishof.brandsv.apiCient.ImageAPIClient;
-import com.crishof.brandsv.exeption.BrandNotFoundExeption;
+import com.crishof.brandsv.exeption.BrandNotFoundException;
 import com.crishof.brandsv.exeption.DuplicateNameException;
 import com.crishof.brandsv.model.Brand;
 import com.crishof.brandsv.repository.BrandRepository;
@@ -18,9 +17,10 @@ public class BrandServiceImpl implements BrandService {
 
     @Autowired
     BrandRepository brandRepository;
-
-    @Autowired
-    ImageAPIClient imageAPIClient;
+//    @Autowired
+//    ProductRepository productRepository;
+//    @Autowired
+//    ImageService imageService;
 
     @Override
     public List<Brand> getAll() {
@@ -29,7 +29,7 @@ public class BrandServiceImpl implements BrandService {
 
     @Override
     public Brand getById(UUID id) {
-        return brandRepository.findById(id).orElseThrow(() -> new BrandNotFoundExeption(id));
+        return brandRepository.findById(id).orElseThrow(() -> new BrandNotFoundException(id));
     }
 
 
@@ -58,24 +58,22 @@ public class BrandServiceImpl implements BrandService {
 //            brand.setLogo(image);
             return brandRepository.save(brand);
         } else {
-            throw new BrandNotFoundExeption(id);
+            throw new BrandNotFoundException(id);
         }
     }
 
     @Override
-    public Brand updateImage(UUID uuid, String imageUrl) {
+    public Brand updateLogo(UUID id, MultipartFile logo) {
 
-        Brand brand = brandRepository.findById(uuid)
-                .orElseThrow(() -> new BrandNotFoundExeption("Brand not found with id: " + uuid));
-
+        Brand brand = this.getById(id);
         if (brand != null) {
-
-            if (brand.getImageUrl() != null) {
-                imageAPIClient.deleteImageByUrl(brand.getImageUrl(), Brand.class.getSimpleName());
+            if (brand.getLogo() != null) {
+                brand.setLogo(imageService.update(brand.getLogo().getId(), logo));
+            } else {
+                brand.setLogo(imageService.save(logo));
             }
-            brand.setImageUrl(imageUrl);
         } else {
-            throw new BrandNotFoundExeption(uuid);
+            throw new BrandNotFoundException(id);
         }
         return brandRepository.save(brand);
     }
@@ -83,22 +81,22 @@ public class BrandServiceImpl implements BrandService {
     @Override
     public void deleteById(UUID id) {
 
-        Brand brand = brandRepository.findById(id).orElseThrow(() -> new BrandNotFoundExeption(id));
-//        List<Product> products = productRepository.findAllByBrandName(brand.getName());
-//        if (!products.isEmpty()) {
-//            throw new IllegalStateException("Cannot delete brand with associated products");
-//        }
+        Brand brand = brandRepository.findById(id).orElseThrow(() -> new BrandNotFoundException(id));
+        List<Product> products = productRepository.findAllByBrandName(brand.getName());
+        if (!products.isEmpty()) {
+            throw new IllegalStateException("Cannot delete brand with associated products");
+        }
         brandRepository.deleteById(id);
 
-        if (brand.getImageUrl() != null) {
-//            imageService.deleteById(brand.getLogo().getId());
+        if (brand.getLogo() != null) {
+            imageService.deleteById(brand.getLogo().getId());
         }
     }
 
     @Override
     public Brand getByName(String name) {
 
-        return brandRepository.findByNameIgnoreCase(name).orElseThrow(() -> new BrandNotFoundExeption("Brand with name " + name + " not found"));
+        return brandRepository.findByNameIgnoreCase(name).orElseThrow(() -> new BrandNotFoundException("Brand with name " + name + " not found"));
     }
 
     @Override

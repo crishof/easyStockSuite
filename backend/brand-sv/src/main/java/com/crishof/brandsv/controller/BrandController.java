@@ -1,7 +1,6 @@
 package com.crishof.brandsv.controller;
 
-import com.crishof.brandsv.apiCient.ImageAPIClient;
-import com.crishof.brandsv.exeption.BrandNotFoundExeption;
+import com.crishof.brandsv.exeption.BrandNotFoundException;
 import com.crishof.brandsv.model.Brand;
 import com.crishof.brandsv.service.BrandService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -12,7 +11,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,16 +21,11 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/brand")
+@CrossOrigin(origins = "http://localhost:4200")
 public class BrandController {
 
     @Autowired
     BrandService brandService;
-
-    @Autowired
-    ImageAPIClient imageAPIClient;
-
-    @Value("${server.port}")
-    private int serverPort;
 
     @Operation(summary = "Get All Brands")
     @GetMapping(path = "/getAll")
@@ -62,41 +55,25 @@ public class BrandController {
         return brandService.update(id, name /*,  logo */);
     }
 
+    @PutMapping("/updateLogo/{id}")
+    public Brand updateLogo(@PathVariable("id") UUID uuid, @RequestParam(required = false) MultipartFile logo) {
+
+        return brandService.updateLogo(uuid, logo);
+
+    }
+
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> delete(@PathVariable("id") UUID id) {
         try {
             brandService.deleteById(id);
             return ResponseEntity.ok("Brand successfully deleted desde back");
-        } catch (BrandNotFoundExeption e) {
+        } catch (BrandNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Brand not found: " + e.getMessage());
         } catch (IllegalStateException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Bad request: " + e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal server error: " + e.getMessage());
 
-        }
-    }
-
-    @PutMapping("/updateImage/{id}")
-    public ResponseEntity<Brand> updateImage(@PathVariable("id") UUID uuid, @RequestParam("file") MultipartFile file) {
-
-        try {
-            byte[] fileBytes = file.getBytes();
-            String mime = file.getContentType();
-            String name = file.getOriginalFilename();
-
-            ResponseEntity<String> responseEntity = imageAPIClient.saveImage(fileBytes, mime, name, Brand.class.getSimpleName());
-
-            if (responseEntity.getStatusCode() == HttpStatus.OK) {
-                String imageUrl = responseEntity.getBody();
-
-                Brand updatedBrand = brandService.updateImage(uuid, imageUrl);
-                return ResponseEntity.ok(updatedBrand);
-            } else {
-                return ResponseEntity.status(responseEntity.getStatusCode()).body(null);
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
 }
