@@ -41,14 +41,14 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Category getByName(String name) {
-        return categoryRepository.findByName(name).orElseThrow(() -> new CategoryNotFoundException("Category not found with name: " + name));
+        return categoryRepository.findByNameIgnoreCase(name).orElseThrow(() -> new CategoryNotFoundException("Category not found with name: " + name));
     }
 
 
     @Override
     public CategoryResponse save(CategoryRequest categoryRequest) {
         Category category = new Category(categoryRequest);
-        if (categoryRepository.findByName(categoryRequest.getName()).isPresent()) {
+        if (categoryRepository.findByNameIgnoreCase(categoryRequest.getName()).isPresent()) {
             throw new DuplicateNameException("Category with name " + categoryRequest.getName() + " already exist");
         }
         return new CategoryResponse(categoryRepository.save(category));
@@ -56,16 +56,13 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CategoryResponse update(UUID id, String name) {
-        System.out.println("name en service" + name);
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new CategoryNotFoundException(id));
 
         if (name == null || name.isEmpty()) {
             throw new IllegalArgumentException("Category name cannot be empty");
         }
-
         category.setName(name);
-
         return new CategoryResponse(categoryRepository.save(category));
     }
 

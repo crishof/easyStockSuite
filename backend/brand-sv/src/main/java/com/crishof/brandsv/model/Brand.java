@@ -1,5 +1,6 @@
 package com.crishof.brandsv.model;
 
+import com.crishof.brandsv.dto.BrandRequest;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,5 +23,9 @@ public class Brand {
     private UUID id;
     private String name;
     private String imageUrl;
+
+    public Brand(BrandRequest brandRequest) {
+        this.name = brandRequest.getName();
+    }
 
 }

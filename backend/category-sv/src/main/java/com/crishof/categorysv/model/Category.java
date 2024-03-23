@@ -7,7 +7,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.awt.*;
 import java.util.UUID;
 
 @Entity
@@ -25,8 +24,10 @@ public class Category {
     @Column(nullable = false, unique = true)
     private String name;
     private String imageUrl;
-    @Embedded
-    private Dimension dimension;
+
+    // TODO corregir dimension
+//    @Embedded
+//    private Dimension dimension;
 
     public Category(CategoryRequest categoryRequest) {
         this.name = categoryRequest.getName();
