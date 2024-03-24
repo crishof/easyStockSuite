@@ -31,7 +31,7 @@ export class BrandEditComponent implements OnInit {
   constructor(private formBuilder: FormBuilder) {
     this.brandForm = formBuilder.group({
       brandName: ['', [Validators.required]],
-      logo: [null],
+      image: [null],
     });
   }
 
@@ -66,20 +66,20 @@ export class BrandEditComponent implements OnInit {
     this.selectedFile = event.target.files[0] as File;
   }
 
-  updateLogo(): void {
+  updateImage(): void {
     if (this.selectedFile && this.brand?.id) {
       this._brandService
-        .updateBrandLogo(this.brand?.id, this.selectedFile)
+        .updateBrandImage(this.brand?.id, this.selectedFile)
         .subscribe(
           (response) => {
-            console.log('Logo actualizado: ', response);
+            console.log('Image updated: ', response);
 
             this.brandUpdatedSubject.next(response);
 
             this.onSave.emit(response);
           },
           (error) => {
-            console.log('Error al actualizar el logo:', error);
+            console.log('Error updating image:', error);
           }
         );
     } else {
@@ -90,7 +90,7 @@ export class BrandEditComponent implements OnInit {
   ngOnInit(): void {
     this.brandForm = this.formBuilder.group({
       brandName: ['', Validators.required],
-      logo: [null],
+      image: [null],
     });
   }
 

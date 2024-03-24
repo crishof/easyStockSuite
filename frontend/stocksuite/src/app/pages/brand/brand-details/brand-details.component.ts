@@ -47,8 +47,8 @@ export class BrandDetailsComponent implements OnInit {
     });
   }
 
-  getLogoUrl(logo: any): any {
-    const base64Image = logo.content;
+  getImageUrl(image: any): any {
+    const base64Image = image.content;
     return this._sanitizer.bypassSecurityTrustResourceUrl(
       'data:image/jpeg;base64,' + base64Image
     );

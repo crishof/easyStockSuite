@@ -23,6 +23,7 @@ export class BrandService {
   }
 
   createBrand(brand: IBrand): Observable<IBrand> {
+    console.log(`Creating brand ${brand.name}`);
     return this._http.post<IBrand>(`${this._urlBase}/save`, brand);
   }
 
@@ -32,12 +33,12 @@ export class BrandService {
     });
   }
 
-  updateBrandLogo(id: string, logo: File): Observable<IBrand> {
+  updateBrandImage(id: string, file: File): Observable<IBrand> {
     const formData = new FormData();
-    formData.append('logo', logo, logo.name);
+    formData.append('file', file, file.name);
 
     return this._http.put<IBrand>(
-      `${this._urlBase}/updateLogo/${id}`,
+      `${this._urlBase}/updateImage/${id}`,
       formData
     );
   }

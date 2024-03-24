@@ -5,8 +5,8 @@
     } @if (!loading) { @if (!editingMode){ @if(!successMessage){
 
     <div class="card" style="width: 18rem">
-      @if (brand?.logo != null){
-      <img [src]="getLogoUrl(brand?.logo)" class="card-img-overlay" alt="..." />
+      @if (brand?.imageUrl != null){
+      <img [src]="brand?.imageUrl" class="card-img-overlay" alt="..." />
       }
       <div class="card-body">
         <hr />

@@ -45,7 +45,7 @@ export class BrandCreateComponent {
         this._router.navigate(['/brand']);
       },
       (error) => {
-        console.log('Error al crear Brand', error);
+        console.log('Error creating Brand', error);
       }
     );
   }

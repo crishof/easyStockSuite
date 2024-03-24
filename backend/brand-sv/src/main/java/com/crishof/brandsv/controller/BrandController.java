@@ -21,9 +21,9 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 import java.util.UUID;
 
+//@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/brand")
-@CrossOrigin(origins = "http://localhost:4200")
 public class BrandController {
 
     @Autowired
