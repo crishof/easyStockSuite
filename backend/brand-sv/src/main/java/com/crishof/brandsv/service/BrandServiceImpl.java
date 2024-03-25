@@ -99,13 +99,13 @@ public class BrandServiceImpl implements BrandService {
         Brand brand = brandRepository.findById(uuid)
                 .orElseThrow(() -> new BrandNotFoundException(uuid));
 
-            if (brand.getImageUrl() != null) {
-                imageAPIClient.deleteImageByUrl(brand.getImageUrl(), Brand.class.getSimpleName());
-            }
-            brand.setImageUrl(imageUrl);
+        if (brand.getImageUrl() != null) {
+            imageAPIClient.deleteImageByUrl(brand.getImageUrl(), Brand.class.getSimpleName());
+        }
+        brand.setImageUrl(imageUrl);
 
 
-        return new BrandResponse( brandRepository.save(brand));
+        return new BrandResponse(brandRepository.save(brand));
     }
 
     @Override
