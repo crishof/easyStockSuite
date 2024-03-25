@@ -41,9 +41,10 @@ public class BrandServiceImpl implements BrandService {
     }
 
     @Override
-    public Brand getByName(String name) {
-        return brandRepository.findByNameIgnoreCase(name)
-                .orElseThrow(() -> new BrandNotFoundException("Brand not found with name: " + name));
+    public BrandResponse getByName(String name) {
+
+        Brand brand = brandRepository.findByNameIgnoreCase(name).orElseThrow(() -> new BrandNotFoundException("Brand not found with name: " + name));
+        return BrandMapper.toBrandResponse(brand);
     }
 
 
@@ -91,21 +92,18 @@ public class BrandServiceImpl implements BrandService {
     }
 
     @Override
-    public Brand updateImage(UUID uuid, String imageUrl) {
+    public BrandResponse updateImage(UUID uuid, String imageUrl) {
 
         Brand brand = brandRepository.findById(uuid)
-                .orElseThrow(() -> new BrandNotFoundException("Brand not found with id: " + uuid));
-
-        if (brand != null) {
+                .orElseThrow(() -> new BrandNotFoundException(uuid));
 
             if (brand.getImageUrl() != null) {
                 imageAPIClient.deleteImageByUrl(brand.getImageUrl(), Brand.class.getSimpleName());
             }
             brand.setImageUrl(imageUrl);
-        } else {
-            throw new BrandNotFoundException(uuid);
-        }
-        return brandRepository.save(brand);
+
+
+        return new BrandResponse( brandRepository.save(brand));
     }
 
     @Override

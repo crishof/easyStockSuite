@@ -52,6 +52,18 @@ public class BrandController {
         }
     }
 
+    @GetMapping("/getByName")
+    public ResponseEntity<?> getById(@RequestParam String name) {
+        try {
+            BrandResponse brand = brandService.getByName(name);
+            return ResponseEntity.ok(brand);
+        } catch (BrandNotFoundException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error");
+        }
+    }
+
     @PostMapping("/save")
     public ResponseEntity<?> save(@RequestBody BrandRequest brandRequest) {
 
@@ -66,12 +78,6 @@ public class BrandController {
     }
 
     @PutMapping("/update/{id}")
-    public BrandResponse updateBrandName(@PathVariable("id") UUID id, @RequestParam(required = false) String name) {
-        return brandService.updateBrandName(id, name);
-    }
-
-
-    @PutMapping("/updateBrand/{id}")
     public ResponseEntity<BrandResponse> updateBrand(
             @PathVariable("id") UUID id,
             @RequestParam(required = false) String brandName,
@@ -104,6 +110,34 @@ public class BrandController {
         }
     }
 
+    @PutMapping("/updateBrandName/{id}")
+    public BrandResponse updateBrandName(@PathVariable("id") UUID id, @RequestParam(required = false) String name) {
+        return brandService.updateBrandName(id, name);
+    }
+
+    @PutMapping("/updateImage/{id}")
+    public ResponseEntity<BrandResponse> updateImage(@PathVariable("id") UUID id, @RequestParam("file") MultipartFile file) {
+
+        try {
+            byte[] fileBytes = file.getBytes();
+            String mime = file.getContentType();
+            String name = file.getOriginalFilename();
+
+            ResponseEntity<String> responseEntity = imageAPIClient.saveImage(fileBytes, mime, name, Brand.class.getSimpleName());
+
+            if (responseEntity.getStatusCode() == HttpStatus.OK) {
+                String imageUrl = responseEntity.getBody();
+
+                BrandResponse updatedBrand = brandService.updateImage(id, imageUrl);
+                return ResponseEntity.ok(updatedBrand);
+            } else {
+                return ResponseEntity.status(responseEntity.getStatusCode()).body(null);
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> delete(@PathVariable("id") UUID id) {
         try {
@@ -116,29 +150,6 @@ public class BrandController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal server error: " + e.getMessage());
 
-        }
-    }
-
-    @PutMapping("/updateImage/{id}")
-    public ResponseEntity<Brand> updateImage(@PathVariable("id") UUID id, @RequestParam("file") MultipartFile file) {
-
-        try {
-            byte[] fileBytes = file.getBytes();
-            String mime = file.getContentType();
-            String name = file.getOriginalFilename();
-
-            ResponseEntity<String> responseEntity = imageAPIClient.saveImage(fileBytes, mime, name, Brand.class.getSimpleName());
-
-            if (responseEntity.getStatusCode() == HttpStatus.OK) {
-                String imageUrl = responseEntity.getBody();
-
-                Brand updatedBrand = brandService.updateImage(id, imageUrl);
-                return ResponseEntity.ok(updatedBrand);
-            } else {
-                return ResponseEntity.status(responseEntity.getStatusCode()).body(null);
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
 
