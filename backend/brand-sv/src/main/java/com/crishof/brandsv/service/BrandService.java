@@ -17,9 +17,12 @@ public interface BrandService {
 
     BrandResponse save(BrandRequest brandRequest);
 
-    BrandResponse update(UUID id, String name /* , MultipartFile logo */);
+    BrandResponse updateBrandName(UUID id, String name /* , MultipartFile logo */);
+
+    BrandResponse updateBrand(UUID uuid, String brandName, String imageUrl);
+
+    Brand updateImage(UUID uuid, String imageUrl);
 
     void deleteById(UUID id);
 
-    Brand updateImage(UUID uuid, String imageUrl);
 }

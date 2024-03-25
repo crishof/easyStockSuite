@@ -53,7 +53,7 @@ public class BrandServiceImpl implements BrandService {
         Brand brand = new Brand(brandRequest);
 
         if (brandRepository.findByNameIgnoreCase(brandRequest.getName()).isPresent()) {
-            throw new DuplicateNameException("Brand with name " + brandRequest.getName() + "already exist");
+            throw new DuplicateNameException("Brand with name " + brandRequest.getName() + " already exist");
         }
         if (Objects.equals(brand.getName(), "")) {
             throw new IllegalArgumentException("Brand name cannot be empty");
@@ -63,7 +63,7 @@ public class BrandServiceImpl implements BrandService {
     }
 
     @Override
-    public BrandResponse update(UUID id, String name) {
+    public BrandResponse updateBrandName(UUID id, String name) {
 
         Brand brand = brandRepository.findById(id)
                 .orElseThrow(() -> new BrandNotFoundException(id));
@@ -72,6 +72,21 @@ public class BrandServiceImpl implements BrandService {
             throw new IllegalArgumentException("Brand name cannot be empty");
         }
         brand.setName(name);
+        return new BrandResponse(brandRepository.save(brand));
+    }
+
+    @Override
+    public BrandResponse updateBrand(UUID uuid, String brandName, String imageUrl) {
+
+        Brand brand = brandRepository.findById(uuid)
+                .orElseThrow(() -> new BrandNotFoundException(uuid));
+
+        if (brandName == null || brandName.isEmpty()) {
+            throw new IllegalArgumentException("Brand name cannot be empty");
+        }
+        brand.setName(brandName);
+        brand.setImageUrl(imageUrl);
+
         return new BrandResponse(brandRepository.save(brand));
     }
 
@@ -104,6 +119,5 @@ public class BrandServiceImpl implements BrandService {
             imageAPIClient.deleteImageByUrl(brand.getImageUrl(), Brand.class.getSimpleName());
         }
     }
-
 }
 

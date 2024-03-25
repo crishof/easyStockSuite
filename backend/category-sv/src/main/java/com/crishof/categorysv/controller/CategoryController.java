@@ -62,7 +62,6 @@ public class CategoryController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal server error: " + e.getMessage());
         }
     }
-
     @PutMapping("/updateImage/{id}")
     public ResponseEntity<Category> updateImage(@PathVariable("id") UUID uuid, @RequestParam("file") MultipartFile file) {
 

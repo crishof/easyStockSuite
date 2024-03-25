@@ -18,7 +18,13 @@ export class BrandService {
     return this._http.get<IBrand>(`${this._urlBase}/getById/${id}`);
   }
 
+  /*
   updateBrand(id: string, formData: FormData): Observable<IBrand> {
+    return this._http.put<IBrand>(`${this._urlBase}/update/${id}`, formData);
+  }
+
+  */
+  updateBrand(id: string, formData: FormData, file: File): Observable<IBrand> {
     return this._http.put<IBrand>(`${this._urlBase}/update/${id}`, formData);
   }
 

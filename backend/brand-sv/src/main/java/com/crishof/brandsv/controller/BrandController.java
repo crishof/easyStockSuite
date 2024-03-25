@@ -4,10 +4,10 @@ import com.crishof.brandsv.apiCient.ImageAPIClient;
 import com.crishof.brandsv.dto.BrandRequest;
 import com.crishof.brandsv.dto.BrandResponse;
 import com.crishof.brandsv.exeption.BrandNotFoundException;
+import com.crishof.brandsv.exeption.DuplicateNameException;
 import com.crishof.brandsv.model.Brand;
 import com.crishof.brandsv.service.BrandService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -41,26 +41,74 @@ public class BrandController {
     @Operation(summary = "Get Brand by ID")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Brand found", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = Brand.class))}), @ApiResponse(responseCode = "500", description = "Invalid Id", content = @Content)})
     @GetMapping("/getById/{id}")
-    public BrandResponse getById(@Parameter(description = "Brand id", example = "87194fd9-de0b-44de-8fcc-b5819c7c94aa") @PathVariable("id") UUID id) {
-        return brandService.getById(id);
+    public ResponseEntity<?> getById(@PathVariable("id") UUID id) {
+        try {
+            BrandResponse brand = brandService.getById(id);
+            return ResponseEntity.ok(brand);
+        } catch (BrandNotFoundException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error");
+        }
     }
 
     @PostMapping("/save")
-    public BrandResponse save(@RequestBody BrandRequest brandRequest) {
+    public ResponseEntity<?> save(@RequestBody BrandRequest brandRequest) {
 
-        return brandService.save(brandRequest);
+        try {
+            BrandResponse brandResponse = brandService.save(brandRequest);
+            return ResponseEntity.ok(brandResponse);
+        } catch (DuplicateNameException | IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error");
+        }
     }
 
     @PutMapping("/update/{id}")
-    public BrandResponse updateBrand(@PathVariable("id") UUID id, @RequestParam(required = false) String name) {
-        return brandService.update(id, name);
+    public BrandResponse updateBrandName(@PathVariable("id") UUID id, @RequestParam(required = false) String name) {
+        return brandService.updateBrandName(id, name);
+    }
+
+
+    @PutMapping("/updateBrand/{id}")
+    public ResponseEntity<BrandResponse> updateBrand(
+            @PathVariable("id") UUID id,
+            @RequestParam(required = false) String brandName,
+            @RequestParam(required = false) MultipartFile file) {
+
+        try {
+            if (brandName == null && (file == null || file.isEmpty())) {
+                return ResponseEntity.badRequest().build();
+            }
+
+            if (file != null && !file.isEmpty()) {
+
+                byte[] fileBytes = file.getBytes();
+                String mime = file.getContentType();
+                String name = file.getOriginalFilename();
+                ResponseEntity<String> responseEntity = imageAPIClient.saveImage(fileBytes, mime, name, Brand.class.getSimpleName());
+
+                if (responseEntity.getStatusCode() == HttpStatus.OK) {
+                    String imageUrl = responseEntity.getBody();
+                    return ResponseEntity.ok().body(brandService.updateBrand(id, brandName, imageUrl));
+                } else {
+                    return ResponseEntity.status(responseEntity.getStatusCode()).body(null);
+                }
+            } else {
+                return ResponseEntity.ok().body(brandService.updateBrandName(id, brandName));
+            }
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
     }
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> delete(@PathVariable("id") UUID id) {
         try {
             brandService.deleteById(id);
-            return ResponseEntity.ok("Brand successfully deleted desde back");
+            return ResponseEntity.ok("Brand successfully deleted");
         } catch (BrandNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Brand not found: " + e.getMessage());
         } catch (IllegalStateException e) {
@@ -72,7 +120,7 @@ public class BrandController {
     }
 
     @PutMapping("/updateImage/{id}")
-    public ResponseEntity<Brand> updateImage(@PathVariable("id") UUID uuid, @RequestParam("file") MultipartFile file) {
+    public ResponseEntity<Brand> updateImage(@PathVariable("id") UUID id, @RequestParam("file") MultipartFile file) {
 
         try {
             byte[] fileBytes = file.getBytes();
@@ -84,8 +132,8 @@ public class BrandController {
             if (responseEntity.getStatusCode() == HttpStatus.OK) {
                 String imageUrl = responseEntity.getBody();
 
-                Brand updatedCategory = brandService.updateImage(uuid, imageUrl);
-                return ResponseEntity.ok(updatedCategory);
+                Brand updatedBrand = brandService.updateImage(id, imageUrl);
+                return ResponseEntity.ok(updatedBrand);
             } else {
                 return ResponseEntity.status(responseEntity.getStatusCode()).body(null);
             }

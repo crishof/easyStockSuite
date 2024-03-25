@@ -17,6 +17,7 @@ public class BrandNotFoundException extends RuntimeException {
     }
 
     public BrandNotFoundException(UUID id) {
-        super("Brand with id: " + id + "not found");
+        super("Brand with id: " + id + " not found");
     }
+
 }
