@@ -36,14 +36,16 @@ public class BrandServiceImpl implements BrandService {
     @Override
     public BrandResponse getById(UUID id) {
 
-        Brand brand = brandRepository.findById(id).orElseThrow(() -> new BrandNotFoundException(id));
+        Brand brand = brandRepository.findById(id).orElseThrow(
+                () -> new BrandNotFoundException(id));
         return BrandMapper.toBrandResponse(brand);
     }
 
     @Override
     public BrandResponse getByName(String name) {
 
-        Brand brand = brandRepository.findByNameIgnoreCase(name).orElseThrow(() -> new BrandNotFoundException("Brand not found with name: " + name));
+        Brand brand = brandRepository.findByNameIgnoreCase(name).orElseThrow(
+                () -> new BrandNotFoundException("Brand not found with name: " + name));
         return BrandMapper.toBrandResponse(brand);
     }
 
@@ -111,11 +113,12 @@ public class BrandServiceImpl implements BrandService {
 
         Brand brand = brandRepository.findById(id).orElseThrow(() -> new BrandNotFoundException(id));
 
-        brandRepository.deleteById(id);
-
         if (brand.getImageUrl() != null) {
             imageAPIClient.deleteImageByUrl(brand.getImageUrl(), Brand.class.getSimpleName());
         }
+
+        brandRepository.deleteById(id);
+
     }
 }
 

@@ -4,6 +4,7 @@ import com.crishof.categorysv.apiCient.ImageAPIClient;
 import com.crishof.categorysv.dto.CategoryRequest;
 import com.crishof.categorysv.dto.CategoryResponse;
 import com.crishof.categorysv.exception.CategoryNotFoundException;
+import com.crishof.categorysv.exception.DuplicateNameException;
 import com.crishof.categorysv.model.Category;
 import com.crishof.categorysv.repository.CategoryRepository;
 import com.crishof.categorysv.service.CategoryService;
@@ -35,18 +36,101 @@ public class CategoryController {
     }
 
     @GetMapping("/getById/{id}")
-    public CategoryResponse getById(@PathVariable("id") UUID id) {
-        return categoryService.getById(id);
+    public ResponseEntity<?> getById(@PathVariable("id") UUID id) {
+        try {
+            CategoryResponse category = categoryService.getById(id);
+            return ResponseEntity.ok(category);
+        } catch (CategoryNotFoundException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error");
+        }
+    }
+
+    @GetMapping("/getByName")
+    public ResponseEntity<?> getById(@RequestParam String name) {
+        try {
+            CategoryResponse category = categoryService.getByName(name);
+            return ResponseEntity.ok(category);
+        } catch (CategoryNotFoundException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error");
+        }
     }
 
     @PostMapping("/save")
-    public CategoryResponse save(@RequestBody CategoryRequest categoryRequest) {
-        return categoryService.save(categoryRequest);
+    public ResponseEntity<?> save(@RequestBody CategoryRequest categoryRequest) {
+
+        try {
+            CategoryResponse categoryResponse = categoryService.save(categoryRequest);
+            return ResponseEntity.ok(categoryResponse);
+        } catch (DuplicateNameException | IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error");
+        }
     }
 
     @PutMapping("/update/{id}")
-    public CategoryResponse update(@PathVariable("id") UUID id, @RequestParam(required = false) String name) {
-        return categoryService.update(id, name);
+    public ResponseEntity<CategoryResponse> updateCategory(
+            @PathVariable("id") UUID id,
+            @RequestParam(required = false) String categoryName,
+            @RequestParam(required = false) MultipartFile file) {
+
+        try {
+            if (categoryName == null && (file == null || file.isEmpty())) {
+                return ResponseEntity.badRequest().build();
+            }
+
+            if (file != null && !file.isEmpty()) {
+
+                byte[] fileBytes = file.getBytes();
+                String mime = file.getContentType();
+                String name = file.getOriginalFilename();
+                ResponseEntity<String> responseEntity = imageAPIClient.saveImage(fileBytes, mime, name, Category.class.getSimpleName());
+
+                if (responseEntity.getStatusCode() == HttpStatus.OK) {
+                    String imageUrl = responseEntity.getBody();
+                    return ResponseEntity.ok().body(categoryService.updateCategory(id, categoryName, imageUrl));
+                } else {
+                    return ResponseEntity.status(responseEntity.getStatusCode()).body(null);
+                }
+            } else {
+                return ResponseEntity.ok().body(categoryService.updateCategoryName(id, categoryName));
+            }
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
+    @PutMapping("/updateCategoryName/{id}")
+    public CategoryResponse updateCategoryName(@PathVariable("id") UUID id, @RequestParam(required = false) String name) {
+        return categoryService.updateCategoryName(id, name);
+    }
+
+    @PutMapping("/updateImage/{id}")
+    public ResponseEntity<CategoryResponse> updateImage(@PathVariable("id") UUID id, @RequestParam("file") MultipartFile file) {
+
+        try {
+            byte[] fileBytes = file.getBytes();
+            String mime = file.getContentType();
+            String name = file.getOriginalFilename();
+
+            ResponseEntity<String> responseEntity = imageAPIClient.saveImage(fileBytes, mime, name, Category.class.getSimpleName());
+
+            if (responseEntity.getStatusCode() == HttpStatus.OK) {
+                String imageUrl = responseEntity.getBody();
+
+                CategoryResponse updatedCategory = categoryService.updateImage(id, imageUrl);
+                return ResponseEntity.ok(updatedCategory);
+            } else {
+                return ResponseEntity.status(responseEntity.getStatusCode()).body(null);
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
     }
 
     @DeleteMapping("/delete/{id}")
@@ -60,28 +144,9 @@ public class CategoryController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Bad request: " + e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal server error: " + e.getMessage());
+
         }
     }
-    @PutMapping("/updateImage/{id}")
-    public ResponseEntity<Category> updateImage(@PathVariable("id") UUID uuid, @RequestParam("file") MultipartFile file) {
 
-        try {
-            byte[] fileBytes = file.getBytes();
-            String mime = file.getContentType();
-            String name = file.getOriginalFilename();
 
-            ResponseEntity<String> responseEntity = imageAPIClient.saveImage(fileBytes, mime, name, Category.class.getSimpleName());
-
-            if (responseEntity.getStatusCode() == HttpStatus.OK) {
-                String imageUrl = responseEntity.getBody();
-
-                Category updatedCategory = categoryService.updateImage(uuid, imageUrl);
-                return ResponseEntity.ok(updatedCategory);
-            } else {
-                return ResponseEntity.status(responseEntity.getStatusCode()).body(null);
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-        }
-    }
 }
