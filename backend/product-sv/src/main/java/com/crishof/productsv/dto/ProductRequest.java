@@ -13,6 +13,7 @@ public class ProductRequest {
     private String code;
     private String model;
     private String description;
+    private String categoryName;
     private double purchasePrice;
     private double taxRate;
     private double sellingPrice;

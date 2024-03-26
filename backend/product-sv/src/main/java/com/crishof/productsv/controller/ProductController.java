@@ -55,14 +55,14 @@ public class ProductController {
 
         System.out.println("productRequest = " + productRequest);
 
-        try {
-            ProductResponse productResponse = productService.save(productRequest);
-            return ResponseEntity.ok(productResponse);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error");
-        }
+//        try {
+        ProductResponse productResponse = productService.save(productRequest);
+        return ResponseEntity.ok(productResponse);
+//        } catch (IllegalArgumentException e) {
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error");
+//        }
     }
 
 

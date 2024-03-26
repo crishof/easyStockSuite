@@ -1,6 +1,7 @@
 package com.crishof.productsv.service;
 
 import com.crishof.productsv.apiCient.BrandAPIClient;
+import com.crishof.productsv.apiCient.CategoryAPIClient;
 import com.crishof.productsv.dto.ProductRequest;
 import com.crishof.productsv.dto.ProductResponse;
 import com.crishof.productsv.exeption.ProductNotFoundException;
@@ -24,6 +25,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     BrandAPIClient brandAPIClient;
+    @Autowired
+    CategoryAPIClient categoryAPIClient;
 
     @Override
     public List<ProductResponse> getAll() {
@@ -53,24 +56,26 @@ public class ProductServiceImpl implements ProductService {
 
         ResponseEntity<?> brandResponse = brandAPIClient.getIdByName(productRequest.getBrandName());
         UUID brandId;
-        System.out.println("brandResponse = " + brandResponse.getStatusCode());
-        System.out.println("brandResponse = " + brandResponse.getBody());
         if (brandResponse.getStatusCode() == HttpStatus.OK) {
             String brandString = (String) brandResponse.getBody();
             assert brandString != null;
             brandId = UUID.fromString(brandString);
-            System.out.println("brandId = " + brandId);
             product.setBrandId(brandId);
         }
 
         //TODO set category
 
-//        ResponseEntity<?> categoryResponse = brandAPIClient.getIdByName(productRequest.getBrandName());
-//        UUID categoryId;
-//        if (categoryResponse.getStatusCode() == HttpStatus.OK) {
-//            categoryId = (UUID) categoryResponse.getBody();
-//            product.setCategoryId(categoryId);
-//        }
+        ResponseEntity<?> categoryResponse = categoryAPIClient.getIdByName(productRequest.getCategoryName());
+        UUID categoryId;
+        System.out.println("categoryResponse = " + categoryResponse.getStatusCode());
+        System.out.println("categoryResponse = " + categoryResponse.getBody());
+        if (categoryResponse.getStatusCode() == HttpStatus.OK) {
+            String categoryString = (String) categoryResponse.getBody();
+            assert categoryString != null;
+            categoryId = UUID.fromString(categoryString);
+            System.out.println("categoryId = " + categoryId);
+            product.setCategoryId(categoryId);
+        }
 
         //TODO set prices
 

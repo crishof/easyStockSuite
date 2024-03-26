@@ -59,6 +59,20 @@ public class CategoryController {
         }
     }
 
+    @GetMapping("/getIdByName")
+    public ResponseEntity<?> getIdByName(@RequestParam String categoryName) {
+        try {
+            CategoryResponse categoryResponse = categoryService.getByName(categoryName);
+            return ResponseEntity.ok(categoryResponse.getId());
+        } catch (CategoryNotFoundException e) {
+            CategoryRequest categoryRequest = new CategoryRequest(categoryName);
+            CategoryResponse categoryResponse = categoryService.save(categoryRequest);
+            return ResponseEntity.ok(categoryResponse.getId());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal server error");
+        }
+    }
+
     @PostMapping("/save")
     public ResponseEntity<?> save(@RequestBody CategoryRequest categoryRequest) {
 

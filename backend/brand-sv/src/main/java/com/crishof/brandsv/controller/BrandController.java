@@ -65,18 +65,16 @@ public class BrandController {
     }
 
     @GetMapping("/getIdByName")
-    public ResponseEntity<?> getIdByName(@RequestParam String brandName){
+    public ResponseEntity<?> getIdByName(@RequestParam String brandName) {
         try {
-            BrandResponse brand = brandService.getByName(brandName);
-            if(brand.getId() == null){
-                BrandRequest brandRequest = new BrandRequest(brandName);
-                brand = brandService.save(brandRequest);
-            }
-            return ResponseEntity.ok(brand.getId());
-        } catch (BrandNotFoundException ex) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
-        } catch (Exception ex) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error");
+            BrandResponse brandResponse = brandService.getByName(brandName);
+            return ResponseEntity.ok(brandResponse.getId());
+        } catch (BrandNotFoundException e) {
+            BrandRequest brandRequest = new BrandRequest(brandName);
+            BrandResponse brandResponse = brandService.save(brandRequest);
+            return ResponseEntity.ok(brandResponse.getId());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal server error");
         }
     }
 
