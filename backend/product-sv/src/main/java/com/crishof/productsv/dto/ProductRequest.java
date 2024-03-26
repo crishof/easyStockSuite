@@ -16,5 +16,5 @@ public class ProductRequest {
     private double purchasePrice;
     private double taxRate;
     private double sellingPrice;
-    private String supplier;
+    private String supplierName;
 }

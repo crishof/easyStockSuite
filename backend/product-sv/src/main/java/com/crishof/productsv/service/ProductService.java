@@ -12,7 +12,7 @@ public interface ProductService {
 
     ProductResponse getById(UUID id);
 
-//    ProductResponse save(ProductRequest productRequest);
+    ProductResponse save(ProductRequest productRequest);
 
     ProductResponse update(UUID id, ProductRequest productRequest);
 
@@ -22,5 +22,5 @@ public interface ProductService {
 
     List<ProductResponse> getAllByFilterAndStock(String filter);
 
-//    Product getProductById(UUID id);
+
 }

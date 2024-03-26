@@ -1,11 +1,14 @@
 package com.crishof.productsv.service;
 
+import com.crishof.productsv.apiCient.BrandAPIClient;
 import com.crishof.productsv.dto.ProductRequest;
 import com.crishof.productsv.dto.ProductResponse;
 import com.crishof.productsv.exeption.ProductNotFoundException;
 import com.crishof.productsv.model.Product;
 import com.crishof.productsv.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -18,12 +21,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     ProductRepository productRepository;
-//    @Autowired
-//    BrandService brandService;
-//    @Autowired
-//    CategoryService categoryService;
-//    @Autowired
-//    SupplierService supplierService;
+
+    @Autowired
+    BrandAPIClient brandAPIClient;
 
     @Override
     public List<ProductResponse> getAll() {
@@ -42,25 +42,42 @@ public class ProductServiceImpl implements ProductService {
 //        return this.productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException(id));
 //    }
 
-//    @Override
-//    public ProductResponse save(ProductRequest productRequest) throws SupplierNotFoundException {
-//
-//        Product product = new Product(productRequest);
-//        product.setPrice(new Price());
-//
-//        product.setCode(productRequest.getCode());
-//        product.setModel(productRequest.getModel());
-//        product.setDescription(productRequest.getDescription());
-//        product.getPrice().setPurchasePrice(productRequest.getPurchasePrice());
-//        product.getPrice().setSellingPrice(productRequest.getSellingPrice());
-//        product.getPrice().setTaxRate(productRequest.getTaxRate());
-//
-//        Brand brand = brandService.saveByName(productRequest.getBrandName());
-//        product.setBrand(brand);
-//
-//        Product saved = productRepository.save(product);
-//        return new ProductResponse(saved);
-//    }
+    @Override
+    public ProductResponse save(ProductRequest productRequest) {
+
+        Product product = new Product(productRequest);
+
+        System.out.println("product = " + product);
+
+        //TODO set brand
+
+        ResponseEntity<?> brandResponse = brandAPIClient.getIdByName(productRequest.getBrandName());
+        UUID brandId;
+        System.out.println("brandResponse = " + brandResponse.getStatusCode());
+        System.out.println("brandResponse = " + brandResponse.getBody());
+        if (brandResponse.getStatusCode() == HttpStatus.OK) {
+            String brandString = (String) brandResponse.getBody();
+            assert brandString != null;
+            brandId = UUID.fromString(brandString);
+            System.out.println("brandId = " + brandId);
+            product.setBrandId(brandId);
+        }
+
+        //TODO set category
+
+//        ResponseEntity<?> categoryResponse = brandAPIClient.getIdByName(productRequest.getBrandName());
+//        UUID categoryId;
+//        if (categoryResponse.getStatusCode() == HttpStatus.OK) {
+//            categoryId = (UUID) categoryResponse.getBody();
+//            product.setCategoryId(categoryId);
+//        }
+
+        //TODO set prices
+
+        Product saved = productRepository.save(product);
+        System.out.println("saved = " + saved);
+        return new ProductResponse(saved);
+    }
 
     @Override
     public ProductResponse update(UUID id, ProductRequest productRequest) {
@@ -79,7 +96,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<ProductResponse> getAllByFilter(String filter) {
         List<Product> products = new ArrayList<>();
-        products.addAll(productRepository.findAllByBrandName(filter));
+//        products.addAll(productRepository.findAllByBrandName(filter));
         products.addAll(productRepository.findAllByModelContainingIgnoreCase(filter));
         products.addAll(productRepository.findAllByDescriptionContainingIgnoreCase(filter));
 
