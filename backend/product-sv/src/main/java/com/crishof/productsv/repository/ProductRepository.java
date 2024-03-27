@@ -13,6 +13,8 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
 //    @Query("SELECT p FROM Product p WHERE LOWER(p.brand.name) LIKE lower(concat('%', :filter, '%') ) ")
 //    List<Product> findAllByBrandName(@Param("filter") String filter);
 
+    List<Product> findAllByBrandId(UUID id);
+
     List<Product> findAllByModelContainingIgnoreCase(String filter);
 
     List<Product> findAllByDescriptionContainingIgnoreCase(String filter);

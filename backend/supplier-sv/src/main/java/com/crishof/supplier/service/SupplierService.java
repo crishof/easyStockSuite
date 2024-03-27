@@ -1,5 +1,7 @@
 package com.crishof.supplier.service;
 
+import com.crishof.supplier.dto.SupplierRequest;
+import com.crishof.supplier.dto.SupplierResponse;
 import com.crishof.supplier.model.Supplier;
 
 import java.util.List;
@@ -11,9 +13,11 @@ public interface SupplierService {
 
     Supplier getById(UUID id);
 
+    SupplierResponse getByName(String name);
+
     Supplier findByName(String name);
 
-    void save(Supplier supplier);
+    SupplierResponse save(SupplierRequest supplierRequest);
 
     Supplier update(UUID id, Supplier supplier);
 

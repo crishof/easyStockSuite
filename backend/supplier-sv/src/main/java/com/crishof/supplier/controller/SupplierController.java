@@ -1,8 +1,14 @@
 package com.crishof.supplier.controller;
 
+import com.crishof.supplier.dto.SupplierRequest;
+import com.crishof.supplier.dto.SupplierResponse;
+import com.crishof.supplier.exception.DuplicateNameException;
+import com.crishof.supplier.exception.SupplierNotFoundException;
 import com.crishof.supplier.model.Supplier;
 import com.crishof.supplier.service.SupplierService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,11 +33,31 @@ public class SupplierController {
         return supplierService.getById(id);
     }
 
-    @PostMapping("/save")
-    public String save(@RequestBody Supplier supplier) {
-        supplierService.save(supplier);
+    @GetMapping("/getIdByName")
+    public ResponseEntity<?> getIdByName(@RequestParam String supplierName) {
+        try {
+            SupplierResponse supplierResponse = supplierService.getByName(supplierName);
+            return ResponseEntity.ok(supplierResponse.getId());
+        } catch (SupplierNotFoundException e) {
+            SupplierRequest supplierRequest = new SupplierRequest(supplierName);
+            SupplierResponse supplierResponse = supplierService.save(supplierRequest);
+            return ResponseEntity.ok(supplierResponse.getId());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal server error");
+        }
+    }
 
-        return "Supplier successfully saved";
+    @PostMapping("/save")
+    public ResponseEntity<?> save(@RequestBody SupplierRequest categoryRequest) {
+
+        try {
+            SupplierResponse categoryResponse = supplierService.save(categoryRequest);
+            return ResponseEntity.ok(categoryResponse);
+        } catch (DuplicateNameException | IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error");
+        }
     }
 
 

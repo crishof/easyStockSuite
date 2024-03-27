@@ -1,9 +1,12 @@
 package com.crishof.productsv.dto;
 
+import com.crishof.productsv.apiCient.BrandAPIClient;
+import com.crishof.productsv.apiCient.ImageAPIClient;
 import com.crishof.productsv.model.Product;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.UUID;
 
@@ -13,7 +16,7 @@ import java.util.UUID;
 public class ProductResponse {
 
     private UUID id;
-    private String brandName;
+    private UUID brandId;
     private String code;
     private String model;
     private String description;

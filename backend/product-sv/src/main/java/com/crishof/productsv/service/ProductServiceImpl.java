@@ -2,6 +2,7 @@ package com.crishof.productsv.service;
 
 import com.crishof.productsv.apiCient.BrandAPIClient;
 import com.crishof.productsv.apiCient.CategoryAPIClient;
+import com.crishof.productsv.apiCient.SupplierAPIClient;
 import com.crishof.productsv.dto.ProductRequest;
 import com.crishof.productsv.dto.ProductResponse;
 import com.crishof.productsv.exeption.ProductNotFoundException;
@@ -27,6 +28,8 @@ public class ProductServiceImpl implements ProductService {
     BrandAPIClient brandAPIClient;
     @Autowired
     CategoryAPIClient categoryAPIClient;
+    @Autowired
+    SupplierAPIClient supplierAPIClient;
 
     @Override
     public List<ProductResponse> getAll() {
@@ -39,11 +42,6 @@ public class ProductServiceImpl implements ProductService {
         Product product = this.productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException(id));
         return new ProductResponse(product);
     }
-
-//    @Override
-//    public Product getProductById(UUID id) {
-//        return this.productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException(id));
-//    }
 
     @Override
     public ProductResponse save(ProductRequest productRequest) {
@@ -65,16 +63,32 @@ public class ProductServiceImpl implements ProductService {
 
         //TODO set category
 
-        ResponseEntity<?> categoryResponse = categoryAPIClient.getIdByName(productRequest.getCategoryName());
-        UUID categoryId;
-        System.out.println("categoryResponse = " + categoryResponse.getStatusCode());
-        System.out.println("categoryResponse = " + categoryResponse.getBody());
-        if (categoryResponse.getStatusCode() == HttpStatus.OK) {
-            String categoryString = (String) categoryResponse.getBody();
-            assert categoryString != null;
-            categoryId = UUID.fromString(categoryString);
-            System.out.println("categoryId = " + categoryId);
-            product.setCategoryId(categoryId);
+        if(productRequest.getCategoryName() != null) {
+            ResponseEntity<?> categoryResponse = categoryAPIClient.getIdByName(productRequest.getCategoryName());
+            UUID categoryId;
+            System.out.println("categoryResponse = " + categoryResponse.getStatusCode());
+            System.out.println("categoryResponse = " + categoryResponse.getBody());
+            if (categoryResponse.getStatusCode() == HttpStatus.OK) {
+                String categoryString = (String) categoryResponse.getBody();
+                assert categoryString != null;
+                categoryId = UUID.fromString(categoryString);
+                System.out.println("categoryId = " + categoryId);
+                product.setCategoryId(categoryId);
+            }
+        }
+
+        //TODO set Supplier
+
+        ResponseEntity<?> supplierResponse = supplierAPIClient.getIdByName(productRequest.getSupplierName());
+        UUID supplierId;
+        System.out.println("supplierResponse = " + supplierResponse.getStatusCode());
+        System.out.println("supplierResponse = " + supplierResponse.getBody());
+        if (supplierResponse.getStatusCode() == HttpStatus.OK) {
+            String supplierString = (String) supplierResponse.getBody();
+            assert supplierString != null;
+            supplierId = UUID.fromString(supplierString);
+            System.out.println("supplierId = " + supplierId);
+            product.setSupplierId(supplierId);
         }
 
         //TODO set prices
@@ -101,7 +115,15 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<ProductResponse> getAllByFilter(String filter) {
         List<Product> products = new ArrayList<>();
-//        products.addAll(productRepository.findAllByBrandName(filter));
+
+        ResponseEntity<?> brandResponse = brandAPIClient.getIdByName(filter);
+        UUID brandId;
+        if (brandResponse.getStatusCode() == HttpStatus.OK) {
+            String brandString = (String) brandResponse.getBody();
+            assert brandString != null;
+            brandId = UUID.fromString(brandString);
+            products.addAll(productRepository.findAllByBrandId(brandId));
+        }
         products.addAll(productRepository.findAllByModelContainingIgnoreCase(filter));
         products.addAll(productRepository.findAllByDescriptionContainingIgnoreCase(filter));
 

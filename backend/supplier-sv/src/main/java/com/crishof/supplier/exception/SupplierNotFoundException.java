@@ -1,4 +1,4 @@
-package com.crishof.supplier.exeption;
+package com.crishof.supplier.exception;
 
 import java.io.Serial;
 import java.util.UUID;
