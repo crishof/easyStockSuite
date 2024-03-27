@@ -2,7 +2,9 @@ package com.crishof.productsv.service;
 
 import com.crishof.productsv.apiCient.BrandAPIClient;
 import com.crishof.productsv.apiCient.CategoryAPIClient;
+import com.crishof.productsv.apiCient.PriceApiClient;
 import com.crishof.productsv.apiCient.SupplierAPIClient;
+import com.crishof.productsv.dto.PriceRequest;
 import com.crishof.productsv.dto.ProductRequest;
 import com.crishof.productsv.dto.ProductResponse;
 import com.crishof.productsv.exeption.ProductNotFoundException;
@@ -31,6 +33,9 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     SupplierAPIClient supplierAPIClient;
 
+    @Autowired
+    PriceApiClient priceApiClient;
+
     @Override
     public List<ProductResponse> getAll() {
         List<Product> products = this.productRepository.findAll();
@@ -48,8 +53,6 @@ public class ProductServiceImpl implements ProductService {
 
         Product product = new Product(productRequest);
 
-        System.out.println("product = " + product);
-
         //TODO set brand
 
         ResponseEntity<?> brandResponse = brandAPIClient.getIdByName(productRequest.getBrandName());
@@ -63,16 +66,13 @@ public class ProductServiceImpl implements ProductService {
 
         //TODO set category
 
-        if(productRequest.getCategoryName() != null) {
+        if (productRequest.getCategoryName() != null) {
             ResponseEntity<?> categoryResponse = categoryAPIClient.getIdByName(productRequest.getCategoryName());
             UUID categoryId;
-            System.out.println("categoryResponse = " + categoryResponse.getStatusCode());
-            System.out.println("categoryResponse = " + categoryResponse.getBody());
             if (categoryResponse.getStatusCode() == HttpStatus.OK) {
                 String categoryString = (String) categoryResponse.getBody();
                 assert categoryString != null;
                 categoryId = UUID.fromString(categoryString);
-                System.out.println("categoryId = " + categoryId);
                 product.setCategoryId(categoryId);
             }
         }
@@ -81,20 +81,31 @@ public class ProductServiceImpl implements ProductService {
 
         ResponseEntity<?> supplierResponse = supplierAPIClient.getIdByName(productRequest.getSupplierName());
         UUID supplierId;
-        System.out.println("supplierResponse = " + supplierResponse.getStatusCode());
-        System.out.println("supplierResponse = " + supplierResponse.getBody());
         if (supplierResponse.getStatusCode() == HttpStatus.OK) {
             String supplierString = (String) supplierResponse.getBody();
             assert supplierString != null;
             supplierId = UUID.fromString(supplierString);
-            System.out.println("supplierId = " + supplierId);
             product.setSupplierId(supplierId);
         }
 
         //TODO set prices
 
+        PriceRequest priceRequest = new PriceRequest(
+                productRequest.getPurchasePrice(),
+                productRequest.getSellingPrice(),
+                productRequest.getTaxRate());
+        ResponseEntity<?> priceResponse = priceApiClient.save(priceRequest);
+        UUID priceId;
+
+        if (priceResponse.getStatusCode() == HttpStatus.OK) {
+            String priceString = (String) priceResponse.getBody();
+            assert priceString != null;
+            priceId = UUID.fromString(priceString);
+
+            product.setPriceId(priceId);
+        }
+
         Product saved = productRepository.save(product);
-        System.out.println("saved = " + saved);
         return new ProductResponse(saved);
     }
 

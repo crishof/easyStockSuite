@@ -36,7 +36,7 @@ public class Product {
     private List<UUID> imageId;
     @ElementCollection
     private List<UUID> stockIds;
-    private UUID pricesId;
+    private UUID priceId;
     private UUID dimension;
 
     public Product(ProductRequest productRequest) {
