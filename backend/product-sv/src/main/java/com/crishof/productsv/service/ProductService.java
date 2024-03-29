@@ -18,9 +18,11 @@ public interface ProductService {
 
     void deleteById(UUID id);
 
+    String getBrandName(UUID uuid);
+
     List<ProductResponse> getAllByFilter(String filter);
 
-    List<ProductResponse> getAllByFilterAndStock(String filter);
+//    List<ProductResponse> getAllByFilterAndStock(String filter);
 
 
 }

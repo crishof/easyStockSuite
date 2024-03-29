@@ -73,6 +73,11 @@ public class CategoryController {
         }
     }
 
+    @GetMapping("/getNameById")
+    public ResponseEntity<String> getNameById(@RequestParam UUID uuid){
+        return ResponseEntity.ok(categoryService.getById(uuid).getName());
+    }
+
     @PostMapping("/save")
     public ResponseEntity<?> save(@RequestBody CategoryRequest categoryRequest) {
 

@@ -10,7 +10,6 @@ import com.crishof.productsv.dto.ProductResponse;
 import com.crishof.productsv.exeption.ProductNotFoundException;
 import com.crishof.productsv.model.Product;
 import com.crishof.productsv.repository.ProductRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -23,30 +22,84 @@ import java.util.stream.Collectors;
 @Service
 public class ProductServiceImpl implements ProductService {
 
-    @Autowired
+    final
     ProductRepository productRepository;
-
-    @Autowired
+    final
     BrandAPIClient brandAPIClient;
-    @Autowired
+    final
     CategoryAPIClient categoryAPIClient;
-    @Autowired
+    final
     SupplierAPIClient supplierAPIClient;
-
-    @Autowired
+    final
     PriceApiClient priceApiClient;
+
+    public ProductServiceImpl(ProductRepository productRepository, BrandAPIClient brandAPIClient, CategoryAPIClient categoryAPIClient, SupplierAPIClient supplierAPIClient, PriceApiClient priceApiClient) {
+        this.productRepository = productRepository;
+        this.brandAPIClient = brandAPIClient;
+        this.categoryAPIClient = categoryAPIClient;
+        this.supplierAPIClient = supplierAPIClient;
+        this.priceApiClient = priceApiClient;
+    }
 
     @Override
     public List<ProductResponse> getAll() {
         List<Product> products = this.productRepository.findAll();
-        return products.stream().map(ProductResponse::new).toList();
+        return products.stream().map(this::toProductResponse)
+                .collect(Collectors.toList());
     }
 
     @Override
     public ProductResponse getById(UUID id) {
-        Product product = this.productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException(id));
-        return new ProductResponse(product);
+        Product product = productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException(id));
+        return this.toProductResponse(product);
     }
+
+    public ProductResponse toProductResponse(Product product) {
+        ProductResponse productResponse = new ProductResponse();
+
+        // Mapea los atributos comunes entre Product y ProductResponse
+        productResponse.setId(product.getId());
+        productResponse.setCode(product.getCode());
+        productResponse.setModel(product.getModel());
+        productResponse.setDescription(product.getDescription());
+        productResponse.setSupplierId(product.getSupplierId());
+        productResponse.setHidden(product.isHidden());
+        productResponse.setImageId(product.getImageId());
+        productResponse.setStockIds(product.getStockIds());
+        productResponse.setPriceId(product.getPriceId());
+        productResponse.setDimension(product.getDimensionId());
+
+
+        String brandName = this.getBrandName(product.getBrandId());
+        productResponse.setBrandName(brandName);
+
+        if(product.getCategoryId() != null) {
+            String categoryName = this.getCategoryName(product.getCategoryId());
+            productResponse.setCategoryName(categoryName);
+        }
+
+        return productResponse;
+    }
+
+    public String getCategoryName(UUID uuid) {
+        ResponseEntity<String> response = categoryAPIClient.getNameById(uuid);
+
+        if (response.getStatusCode().is2xxSuccessful()) {
+            return response.getBody();
+        } else {
+            return "Not available";
+        }
+    }
+    public String getBrandName(UUID uuid) {
+        ResponseEntity<String> response = brandAPIClient.getNameById(uuid);
+
+        if (response.getStatusCode().is2xxSuccessful()) {
+            return response.getBody();
+        } else {
+            return "Not available";
+        }
+    }
+
 
     @Override
     public ProductResponse save(ProductRequest productRequest) {
@@ -106,7 +159,7 @@ public class ProductServiceImpl implements ProductService {
         }
 
         Product saved = productRepository.save(product);
-        return new ProductResponse(saved);
+        return this.toProductResponse(saved);
     }
 
     @Override
@@ -115,7 +168,7 @@ public class ProductServiceImpl implements ProductService {
         Product product = productRepository.findById(id).orElseThrow(ProductNotFoundException::new);
         product.setModel(productRequest.getModel());
         product.setDescription(productRequest.getDescription());
-        return new ProductResponse(productRepository.save(product));
+        return this.toProductResponse(product);
     }
 
     @Override
@@ -138,12 +191,15 @@ public class ProductServiceImpl implements ProductService {
         products.addAll(productRepository.findAllByModelContainingIgnoreCase(filter));
         products.addAll(productRepository.findAllByDescriptionContainingIgnoreCase(filter));
 
-        return products.stream().map(ProductResponse::new).collect(Collectors.toList());
+        return products.stream().map(this::toProductResponse)
+                .collect(Collectors.toList());
     }
 
-    @Override
-    public List<ProductResponse> getAllByFilterAndStock(String filter) {
 
-        return this.getAllByFilter(filter).stream().filter(productResponse -> productResponse.getStock() > 0).collect(Collectors.toList());
-    }
+// TODO corregir stocks
+//    @Override
+//    public List<ProductResponse> getAllByFilterAndStock(String filter) {
+//
+//        return this.getAllByFilter(filter).stream().filter(productResponse -> productResponse.getStockIds() > 0).collect(Collectors.toList());
+//    }
 }

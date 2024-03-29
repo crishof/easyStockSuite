@@ -52,6 +52,11 @@ public class BrandController {
         }
     }
 
+    @GetMapping("/getNameById")
+    public ResponseEntity<String> getNameById(@RequestParam UUID uuid){
+        return ResponseEntity.ok(brandService.getById(uuid).getName());
+    }
+
     @GetMapping("/getByName")
     public ResponseEntity<?> getByName(@RequestParam String name) {
         try {

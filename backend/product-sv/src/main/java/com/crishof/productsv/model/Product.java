@@ -37,7 +37,7 @@ public class Product {
     @ElementCollection
     private List<UUID> stockIds;
     private UUID priceId;
-    private UUID dimension;
+    private UUID dimensionId;
 
     public Product(ProductRequest productRequest) {
         this.code = productRequest.getCode();

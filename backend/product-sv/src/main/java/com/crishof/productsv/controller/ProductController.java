@@ -4,6 +4,8 @@ import com.crishof.productsv.dto.ProductRequest;
 import com.crishof.productsv.dto.ProductResponse;
 import com.crishof.productsv.exeption.ImportFileException;
 import com.crishof.productsv.exeption.ProductNotFoundException;
+import com.crishof.productsv.model.Product;
+import com.crishof.productsv.repository.ProductRepository;
 import com.crishof.productsv.service.ImportFileService;
 import com.crishof.productsv.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +20,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/product")
-@CrossOrigin(origins = "http://localhost:4200")
+//@CrossOrigin(origins = "http://localhost:4200")
 public class ProductController {
 
     @Autowired
@@ -26,6 +28,9 @@ public class ProductController {
 
     @Autowired
     ImportFileService importFileService;
+
+    @Autowired
+    ProductRepository productRepository;
 
     @Value("${server.port}")
     private int serverPort;
@@ -73,21 +78,21 @@ public class ProductController {
         return productService.update(id, productRequest);
     }
 
-//    @DeleteMapping("/delete/{id}")
-//    public ResponseEntity<String> delete(@PathVariable("id") UUID id) {
-//        productService.deleteById(id);
-//        return ResponseEntity.ok("Product successfully deleted");
-//    }
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> delete(@PathVariable("id") UUID id) {
+        productService.deleteById(id);
+        return ResponseEntity.ok("Product successfully deleted");
+    }
 
     @GetMapping("/getAllByFilter")
     public List<ProductResponse> getAllByFilter(@RequestParam String filter) {
         return productService.getAllByFilter(filter);
     }
 
-    @GetMapping("/getAllByFilterAndStock")
-    public List<ProductResponse> getAllByFilterAndStock(@RequestParam String filter) {
-        return productService.getAllByFilterAndStock(filter);
-    }
+//    @GetMapping("/getAllByFilterAndStock")
+//    public List<ProductResponse> getAllByFilterAndStock(@RequestParam String filter) {
+//        return productService.getAllByFilterAndStock(filter);
+//    }
 
     @PostMapping("/importList")
     public String importFile(@RequestParam MultipartFile file, @RequestParam String supplierName) {
