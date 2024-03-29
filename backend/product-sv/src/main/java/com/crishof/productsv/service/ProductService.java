@@ -24,5 +24,7 @@ public interface ProductService {
 
 //    List<ProductResponse> getAllByFilterAndStock(String filter);
 
+    public boolean checkProductsByBrand(UUID brandId);
+
 
 }

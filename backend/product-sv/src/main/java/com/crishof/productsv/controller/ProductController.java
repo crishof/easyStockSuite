@@ -84,6 +84,12 @@ public class ProductController {
         return ResponseEntity.ok("Product successfully deleted");
     }
 
+    @GetMapping("/checkProductsByBrand/{brandId}")
+    public ResponseEntity<Boolean> checkProductsByBrand(@PathVariable UUID brandId) {
+        boolean productsExist = productService.checkProductsByBrand(brandId);
+        return ResponseEntity.ok(productsExist);
+    }
+
     @GetMapping("/getAllByFilter")
     public List<ProductResponse> getAllByFilter(@RequestParam String filter) {
         return productService.getAllByFilter(filter);

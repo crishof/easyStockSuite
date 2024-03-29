@@ -20,15 +20,8 @@ public class PriceController {
     PriceService priceService;
 
     @GetMapping("/getById/{id}")
-    public ResponseEntity<?> getById(@PathVariable("id") UUID id) {
-        try {
-            PriceResponse price = priceService.getById(id);
-            return ResponseEntity.ok(price);
-        } catch (PriceNotFoundException ex) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
-        } catch (Exception ex) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error");
-        }
+    public PriceResponse getById(@PathVariable("id") UUID id) {
+        return priceService.getById(id);
     }
 
     @PostMapping("/save")

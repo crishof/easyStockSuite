@@ -1,6 +1,7 @@
 package com.crishof.productsv.apiCient;
 
 import com.crishof.productsv.dto.PriceRequest;
+import com.crishof.productsv.dto.PriceResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,7 +15,7 @@ import java.util.UUID;
 public interface PriceApiClient {
 
     @GetMapping("/price/getById/{id}")
-    ResponseEntity<?> getById(@PathVariable("id") UUID id);
+    PriceResponse getById(@PathVariable("id") UUID id);
 
     @PostMapping("/price/save")
     ResponseEntity<?> save(@RequestBody PriceRequest priceRequest);

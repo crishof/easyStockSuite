@@ -65,18 +65,22 @@ public class ProductServiceImpl implements ProductService {
         productResponse.setSupplierId(product.getSupplierId());
         productResponse.setHidden(product.isHidden());
         productResponse.setImageId(product.getImageId());
-        productResponse.setStockIds(product.getStockIds());
-        productResponse.setPriceId(product.getPriceId());
-        productResponse.setDimension(product.getDimensionId());
-
 
         String brandName = this.getBrandName(product.getBrandId());
         productResponse.setBrandName(brandName);
 
-        if(product.getCategoryId() != null) {
+        if (product.getCategoryId() != null) {
             String categoryName = this.getCategoryName(product.getCategoryId());
             productResponse.setCategoryName(categoryName);
         }
+
+
+        productResponse.setPriceResponse(priceApiClient.getById(product.getPriceId()));
+
+        productResponse.setStockIds(product.getStockIds());
+
+        productResponse.setDimension(product.getDimensionId());
+
 
         return productResponse;
     }
@@ -90,13 +94,20 @@ public class ProductServiceImpl implements ProductService {
             return "Not available";
         }
     }
-    public String getBrandName(UUID uuid) {
-        ResponseEntity<String> response = brandAPIClient.getNameById(uuid);
 
-        if (response.getStatusCode().is2xxSuccessful()) {
-            return response.getBody();
-        } else {
-            return "Not available";
+    public String getBrandName(UUID uuid) {
+        try {
+            ResponseEntity<String> response = brandAPIClient.getNameById(uuid);
+
+            if (response.getStatusCode().is2xxSuccessful()) {
+                return response.getBody();
+            } else {
+                // Si la llamada no es exitosa, devuelve un valor predeterminado
+                return "Not available";
+            }
+        } catch (Exception ex) {
+            // Manejar la excepción aquí
+            return "Error fetching brand name";
         }
     }
 
@@ -193,6 +204,13 @@ public class ProductServiceImpl implements ProductService {
 
         return products.stream().map(this::toProductResponse)
                 .collect(Collectors.toList());
+    }
+
+    public boolean checkProductsByBrand(UUID brandId) {
+        // Realizar la verificación en la base de datos utilizando el repositorio de productos
+        // Por ejemplo, contar la cantidad de productos asociados a la marca
+        long productCount = productRepository.countByBrandId(brandId);
+        return productCount > 0;
     }
 
 

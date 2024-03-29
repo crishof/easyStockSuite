@@ -1,14 +1,17 @@
 package com.crishof.brandsv.service;
 
 import com.crishof.brandsv.apiCient.ImageAPIClient;
+import com.crishof.brandsv.apiCient.ProductApiClient;
 import com.crishof.brandsv.dto.BrandRequest;
 import com.crishof.brandsv.dto.BrandResponse;
 import com.crishof.brandsv.exeption.BrandNotFoundException;
 import com.crishof.brandsv.exeption.DuplicateNameException;
+import com.crishof.brandsv.exeption.ProductsAssociatedException;
 import com.crishof.brandsv.model.Brand;
 import com.crishof.brandsv.repository.BrandRepository;
 import com.crishof.brandsv.utils.BrandMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,6 +27,9 @@ public class BrandServiceImpl implements BrandService {
 
     @Autowired
     ImageAPIClient imageAPIClient;
+
+    @Autowired
+    ProductApiClient productApiClient;
 
     @Override
     public List<BrandResponse> getAll() {
@@ -108,8 +114,22 @@ public class BrandServiceImpl implements BrandService {
         return new BrandResponse(brandRepository.save(brand));
     }
 
-    @Override
     public void deleteById(UUID id) {
+
+        ResponseEntity<Boolean> response = productApiClient.checkProductsByBrand(id);
+
+        if (response.getStatusCode().is2xxSuccessful()) {
+            boolean productsExist = Boolean.TRUE.equals(response.getBody());
+
+            if (productsExist) {
+
+                throw new ProductsAssociatedException("Cannot delete the brand because products associated with it exist");
+            }
+        } else {
+
+            throw new RuntimeException("Error while verifying products associated with the brand");
+        }
+
 
         Brand brand = brandRepository.findById(id).orElseThrow(() -> new BrandNotFoundException(id));
 
@@ -118,7 +138,6 @@ public class BrandServiceImpl implements BrandService {
         }
 
         brandRepository.deleteById(id);
-
     }
 }
 
