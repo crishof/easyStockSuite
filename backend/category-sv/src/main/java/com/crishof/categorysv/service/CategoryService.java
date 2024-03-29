@@ -24,4 +24,7 @@ public interface CategoryService {
 
     void deleteById(UUID id);
 
+    void deleteCategoryFromDatabase(UUID id);
+
+    void deleteCategoryImage(UUID id);
 }

@@ -9,5 +9,5 @@ public interface PriceService {
 
     PriceResponse getById(UUID uuid);
 
-    public UUID saveAndGetId(PriceRequest priceRequest);
+    UUID saveAndGetId(PriceRequest priceRequest);
 }

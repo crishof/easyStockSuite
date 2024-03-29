@@ -1,14 +1,17 @@
 package com.crishof.categorysv.service;
 
 import com.crishof.categorysv.apiCient.ImageAPIClient;
+import com.crishof.categorysv.apiCient.ProductApiClient;
 import com.crishof.categorysv.dto.CategoryRequest;
 import com.crishof.categorysv.dto.CategoryResponse;
+import com.crishof.categorysv.exception.CategoryDeleteException;
 import com.crishof.categorysv.exception.CategoryNotFoundException;
 import com.crishof.categorysv.exception.DuplicateNameException;
 import com.crishof.categorysv.model.Category;
 import com.crishof.categorysv.modelMapper.CategoryMapper;
 import com.crishof.categorysv.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,6 +27,8 @@ public class CategoryServiceImpl implements CategoryService {
     CategoryRepository categoryRepository;
     @Autowired
     ImageAPIClient imageAPIClient;
+    @Autowired
+    ProductApiClient productApiClient;
 
     @Override
     public List<CategoryResponse> getAll() {
@@ -108,14 +113,29 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public void deleteById(UUID id) {
+        ResponseEntity<String> response = productApiClient.removeCategory(id);
+
+        if (response.getStatusCode().is2xxSuccessful()) {
+            deleteCategoryImage(id);
+            deleteCategoryFromDatabase(id);
+        } else {
+            throw new CategoryDeleteException("Failed to remove category from associated products");
+        }
+    }
+
+    @Override
+    public void deleteCategoryFromDatabase(UUID id) {
 
         Category category = categoryRepository.findById(id).orElseThrow(() -> new CategoryNotFoundException(id));
+        categoryRepository.deleteById(id);
+    }
 
+    @Override
+    public void deleteCategoryImage(UUID id) {
+
+        Category category = categoryRepository.findById(id).orElseThrow(() -> new CategoryNotFoundException(id));
         if (category.getImageUrl() != null) {
             imageAPIClient.deleteImageByUrl(category.getImageUrl(), Category.class.getSimpleName());
         }
-
-        categoryRepository.deleteById(id);
-
     }
 }

@@ -207,10 +207,21 @@ public class ProductServiceImpl implements ProductService {
     }
 
     public boolean checkProductsByBrand(UUID brandId) {
-        // Realizar la verificación en la base de datos utilizando el repositorio de productos
-        // Por ejemplo, contar la cantidad de productos asociados a la marca
         long productCount = productRepository.countByBrandId(brandId);
         return productCount > 0;
+    }
+
+    public Long countProductsByBrand(UUID brandId) {
+        return productRepository.countByBrandId(brandId);
+    }
+
+    public void removeCategory(UUID categoryId) {
+        List<Product> products = productRepository.findAllByCategoryId(categoryId);
+
+        for (Product product : products) {
+            product.setCategoryId(null);
+            productRepository.save(product);
+        }
     }
 
 

@@ -2,7 +2,6 @@ package org.crishof.pricesv.controller;
 
 import org.crishof.pricesv.dto.PriceRequest;
 import org.crishof.pricesv.dto.PriceResponse;
-import org.crishof.pricesv.exception.PriceNotFoundException;
 import org.crishof.pricesv.service.PriceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

@@ -24,7 +24,11 @@ public interface ProductService {
 
 //    List<ProductResponse> getAllByFilterAndStock(String filter);
 
-    public boolean checkProductsByBrand(UUID brandId);
+    boolean checkProductsByBrand(UUID brandId);
+
+    Long countProductsByBrand(UUID brandId);
+
+    void removeCategory(UUID categoryId);
 
 
 }

@@ -4,7 +4,6 @@ import com.crishof.productsv.dto.ProductRequest;
 import com.crishof.productsv.dto.ProductResponse;
 import com.crishof.productsv.exeption.ImportFileException;
 import com.crishof.productsv.exeption.ProductNotFoundException;
-import com.crishof.productsv.model.Product;
 import com.crishof.productsv.repository.ProductRepository;
 import com.crishof.productsv.service.ImportFileService;
 import com.crishof.productsv.service.ProductService;
@@ -99,6 +98,21 @@ public class ProductController {
 //    public List<ProductResponse> getAllByFilterAndStock(@RequestParam String filter) {
 //        return productService.getAllByFilterAndStock(filter);
 //    }
+
+    @PutMapping("/removeCategory")
+    public ResponseEntity<String> removeCategory(@RequestParam UUID categoryId) {
+        try {
+            productService.removeCategory(categoryId);
+            return ResponseEntity.ok("Category removed from associated products");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to remove category from associated products");
+        }
+    }
+
+    @GetMapping("/countProductsByBrand")
+    public Long countProductsByBrand(UUID brandId) {
+        return productService.countProductsByBrand(brandId);
+    }
 
     @PostMapping("/importList")
     public String importFile(@RequestParam MultipartFile file, @RequestParam String supplierName) {
