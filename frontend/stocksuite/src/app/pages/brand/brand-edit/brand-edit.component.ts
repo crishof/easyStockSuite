@@ -34,6 +34,8 @@ export class BrandEditComponent implements OnInit {
   _router = inject(Router);
   formBuilder = inject(FormBuilder);
 
+  errorMessage: string = '';
+
   private brandUpdatedSubject = new Subject<IBrand>();
 
   constructor() {
@@ -54,7 +56,8 @@ export class BrandEditComponent implements OnInit {
     const brandName = this.brandForm.get('brandName')?.value;
 
     if (!brandName && !this.file) {
-      console.error('No changes made. Please upddate at least one field');
+      this.errorMessage = 'No changes made. Please upddate at least one field';
+      console.error(this.errorMessage);
       return;
     }
     if (this.brandForm.invalid) {
