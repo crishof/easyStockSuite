@@ -7,6 +7,7 @@ import { BrandEditComponent } from '../brand-edit/brand-edit.component';
 import { Subject } from 'rxjs';
 import { ModalDialogService } from '../../../services/modal-dialog.service';
 import { DomSanitizer } from '@angular/platform-browser';
+import { ProductService } from '../../../services/product.service';
 
 @Component({
   selector: 'app-brand-details',
@@ -22,6 +23,7 @@ export class BrandDetailsComponent implements OnInit {
 
   private _route = inject(ActivatedRoute);
   private _brandService = inject(BrandService);
+  private _productService = inject(ProductService);
   private _router = inject(Router);
   private _confirmDialogService = inject(ModalDialogService);
 
@@ -30,6 +32,8 @@ export class BrandDetailsComponent implements OnInit {
   successMessage: string = '';
   errorMessage: string = '';
 
+  productsQuantity: number = 0;
+
   private brandUpdatedSubject: Subject<IBrand> = new Subject<IBrand>();
 
   ngOnInit(): void {
@@ -37,12 +41,16 @@ export class BrandDetailsComponent implements OnInit {
       this._brandService.getBrand(params['id']).subscribe((data: IBrand) => {
         this.brand = data;
         this.loading = false;
+        if (this.brand?.id) {
+          this.getBrandProductsQuantity();
+        }
       });
     });
 
     this.brandUpdatedSubject.subscribe((updatedBrand) => {
       if (updatedBrand) {
         this.brand = updatedBrand;
+        this.getBrandProductsQuantity();
       }
     });
   }
@@ -96,6 +104,19 @@ export class BrandDetailsComponent implements OnInit {
       (error) => {
         this.errorMessage = error.error;
         this.successMessage = '';
+      }
+    );
+  }
+
+  getBrandProductsQuantity(): void {
+    const brandId = this.brand?.id ?? '';
+    this._productService.getBrandProductsQuantity(brandId).subscribe(
+      (quantity: number) => {
+        this.productsQuantity = quantity;
+        console.log(this.productsQuantity);
+      },
+      (error) => {
+        console.error('Error getting products quantity:', error);
       }
     );
   }
