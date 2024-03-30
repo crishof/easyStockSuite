@@ -122,11 +122,9 @@ public class BrandServiceImpl implements BrandService {
             boolean productsExist = Boolean.TRUE.equals(response.getBody());
 
             if (productsExist) {
-
                 throw new ProductsAssociatedException("Cannot delete the brand because products associated with it exist");
             }
         } else {
-
             throw new RuntimeException("Error while verifying products associated with the brand");
         }
 

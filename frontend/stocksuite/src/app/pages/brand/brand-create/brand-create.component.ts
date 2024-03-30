@@ -42,15 +42,10 @@ export class BrandCreateComponent {
 
     this._brandService.createBrand(brand).subscribe(
       (response) => {
-        console.log('Brand created successfully', response);
         (this.successMessage = 'Brand created successfully'), response;
         this.errorMessage = '';
-        /*
-        this._router.navigate(['/brand']);
-        */
       },
       (error) => {
-        console.log('Error creating Brand', error);
         this.errorMessage = 'Error creating Brand: ' + error.message;
         this.successMessage = '';
       }

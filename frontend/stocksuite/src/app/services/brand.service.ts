@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { IBrand } from '../model/brand.model';
 import { Observable } from 'rxjs';
@@ -22,12 +22,6 @@ export class BrandService {
     console.log(`${this._urlBase}/update/${id}`);
     return this._http.put<IBrand>(`${this._urlBase}/update/${id}`, formData);
   }
-  /*
-
-  updateBrand(id: string, formData: FormData, file: File): Observable<IBrand> {
-    return this._http.put<IBrand>(`${this._urlBase}/update/${id}`, formData);
-  }
-  */
 
   createBrand(brand: IBrand): Observable<IBrand> {
     return this._http.post<IBrand>(`${this._urlBase}/save`, brand);

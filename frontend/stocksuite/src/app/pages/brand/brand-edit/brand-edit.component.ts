@@ -55,12 +55,11 @@ export class BrandEditComponent implements OnInit {
 
     const brandName = this.brandForm.get('brandName')?.value;
 
+    const currentBrandName = this.brand ? this.brand.name : '';
+
     if (!brandName && !this.file) {
       this.errorMessage = 'No changes made. Please upddate at least one field';
       console.error(this.errorMessage);
-      return;
-    }
-    if (this.brandForm.invalid) {
       return;
     }
 
@@ -68,6 +67,8 @@ export class BrandEditComponent implements OnInit {
 
     if (brandName) {
       formData.append('brandName', brandName);
+    } else {
+      formData.append('brandName', currentBrandName);
     }
 
     if (this.file) {
@@ -101,62 +102,4 @@ export class BrandEditComponent implements OnInit {
   cancelar(): void {
     this.onCancel.emit();
   }
-
-  /*
-  enviar(event: Event) {
-    event.preventDefault();
-
-    const updatedBrand: IBrand = {
-      id: this.brand?.id || '',
-      name: this.brandForm.get('brandName')?.value || '',
-    };
-
-    const formData = new FormData();
-    formData.append('name', updatedBrand.name);
-
-    this._brandService.updateBrand(updatedBrand.id, formData).subscribe(
-      (response) => {
-        console.log('Brand actualizada: ', response);
-
-        this.brandUpdatedSubject.next(response);
-
-        this.onSave.emit(response);
-      },
-      (error) => {
-        console.log('Error al actualizar:', error);
-      }
-    );
-  }
-
-  selectedFile: File | undefined;
-
-  
-  onFileSelected(event: any): void {
-    this.selectedFile = event.target.files[0] as File;
-  }
-  updateImage(): void {
-    if (this.selectedFile && this.brand?.id) {
-      this._brandService
-      .updateBrandImage(this.brand?.id, this.selectedFile)
-      .subscribe(
-        (response) => {
-          console.log('Image updated: ', response);
-          
-          this.brandUpdatedSubject.next(response);
-          
-          this.onSave.emit(response);
-        },
-        (error) => {
-          console.log('Error updating image:', error);
-        }
-        );
-      } else {
-        console.log('Seleccione un archivo y proporcione un ID de marca válido.');
-      }
-    }
-    
-    
-    
-    
-    */
 }
