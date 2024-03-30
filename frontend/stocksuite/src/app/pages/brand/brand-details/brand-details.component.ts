@@ -60,10 +60,15 @@ export class BrandDetailsComponent implements OnInit {
 
   saveChanges(updatedBrand: IBrand): void {
     this.editingMode = false;
+    this.successMessage = 'Brand ' + updatedBrand.name + 'saved successfully';
     if (this.brandUpdatedSubject) {
       this.brandUpdatedSubject.next(updatedBrand);
     }
     this.brandUpdatedSubject.next(updatedBrand);
+  }
+
+  onSuccessMessageHandler(message: string) {
+    this.successMessage = message;
   }
 
   cancelEditing(): void {

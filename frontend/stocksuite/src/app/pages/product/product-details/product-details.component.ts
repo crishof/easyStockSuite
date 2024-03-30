@@ -4,6 +4,10 @@ import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ProductService } from '../../../services/product.service';
 import { IProduct } from '../../../model/product.model';
+import { IBrand } from '../../../model/brand.model';
+import { BrandService } from '../../../services/brand.service';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-product-detail',
@@ -18,6 +22,7 @@ export class ProductDetailsComponent implements OnInit {
 
   private _route = inject(ActivatedRoute);
   private _productService = inject(ProductService);
+  private _brandService = inject(BrandService);
 
   ngOnInit(): void {
     this._route.params.subscribe((params) => {
@@ -28,5 +33,11 @@ export class ProductDetailsComponent implements OnInit {
           this.loading = false;
         });
     });
+  }
+
+  getBrandName(brandId: string): Observable<string> {
+    return this._brandService.getBrand(brandId).pipe(
+      map((brand: IBrand) => brand.name)
+    );
   }
 }

@@ -12,9 +12,12 @@
           <th scope="col">Brand</th>
           <th scope="col">Model</th>
           <th scope="col">Description</th>
+          <th scope="col">Category</th>
+
           <th scope="col">Tax Rate</th>
           <th scope="col">Selling Price</th>
           <th scope="col">Stock</th>
+
           <th scope="col"></th>
         </tr>
       </thead>
@@ -27,9 +30,12 @@
           <td>{{ product.brandName }}</td>
           <td>{{ product.model }}</td>
           <td>{{ product.description }}</td>
-          <td>{{ product.taxRate * 100 }}%</td>
-          <td>{{ product.sellingPrice | currency }}</td>
+          <td>{{ product.categoryName }}</td>
+
+          <td>{{ product.priceResponse.taxRate * 100 }}%</td>
+          <td>{{ product.priceResponse.sellingPrice | currency }}</td>
           <td>{{ product.stock }}</td>
+
           <td>
             <button
               class="btn btn-outline-primary btn-sm"

@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -100,7 +101,7 @@ public class BrandController {
     public ResponseEntity<BrandResponse> updateBrand(
             @PathVariable("id") UUID id,
             @RequestParam(required = false) String brandName,
-            @RequestParam(required = false) MultipartFile file) {
+            @RequestPart(required = false) MultipartFile file) {
 
         try {
             if (brandName == null && (file == null || file.isEmpty())) {

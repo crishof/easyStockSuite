@@ -1,17 +1,17 @@
 <div class="container">
   @if (loading) {
   <h5>Loading....</h5>
-  } @if (!loading) {
+  } @else if (!loading && product) {
 
   <div class="card" style="width: 18rem">
     <div class="card-header">
-      <h5 class="card-title">{{ product?.brandName }}</h5>
-      <h5 class="card-title">{{ product?.model }}</h5>
-      <h4>{{ product?.sellingPrice | currency }}</h4>
+      <h5 class="card-title">{{ product.brandName }}</h5>
+      <h5 class="card-title">{{ product.model }}</h5>
+      <!--  <h4>{{ product.sellingPrice | currency }}</h4> -->
     </div>
     <div class="card-body">
-      <p class="card-text">{{ product?.description }}</p>
-      <p class="card-text stock">Stock: {{ product?.stock }}</p>
+      <p class="card-text">{{ product.description }}</p>
+      <!-- <p class="card-text stock">Stock: {{ product.stock }}</p> -->
       <a href="#" class="btn btn-primary">Go somewhere</a>
     </div>
   </div>

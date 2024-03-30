@@ -18,18 +18,18 @@ export class BrandService {
     return this._http.get<IBrand>(`${this._urlBase}/getById/${id}`);
   }
 
-  /*
   updateBrand(id: string, formData: FormData): Observable<IBrand> {
+    console.log(`${this._urlBase}/update/${id}`);
     return this._http.put<IBrand>(`${this._urlBase}/update/${id}`, formData);
   }
+  /*
 
-  */
   updateBrand(id: string, formData: FormData, file: File): Observable<IBrand> {
     return this._http.put<IBrand>(`${this._urlBase}/update/${id}`, formData);
   }
+  */
 
   createBrand(brand: IBrand): Observable<IBrand> {
-    console.log(`Creating brand ${brand.name}`);
     return this._http.post<IBrand>(`${this._urlBase}/save`, brand);
   }
 
