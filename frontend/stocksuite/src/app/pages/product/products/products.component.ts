@@ -7,11 +7,12 @@ import { BrandService } from '../../../services/brand.service';
 import { Observable } from 'rxjs';
 import { IBrand } from '../../../model/brand.model';
 import { map, tap } from 'rxjs/operators';
+import { ProductNavbarComponent } from '../product-navbar/product-navbar.component';
 
 @Component({
   selector: 'app-products',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ProductNavbarComponent],
   templateUrl: './products.component.html',
   styleUrl: './products.component.css',
 })
@@ -30,9 +31,9 @@ export class ProductsComponent implements OnInit {
   brandName: string = '';
 
   getBrandName(brandId: string): Observable<string> {
-    return this._brandService.getBrand(brandId).pipe(
-      map((brand) => brand.name)
-    );
+    return this._brandService
+      .getBrand(brandId)
+      .pipe(map((brand) => brand.name));
   }
 
   navegate(id: string): void {

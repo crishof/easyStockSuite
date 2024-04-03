@@ -20,6 +20,8 @@ export class ProductService {
   }
 
   getBrandProductsQuantity(id: string): Observable<number> {
-    return this._http.get<number>(`${this._urlBase}/countProductsByBrand/${id}`);
+    return this._http.get<number>(
+      `${this._urlBase}/countProductsByBrand/${id}`
+    );
   }
 }

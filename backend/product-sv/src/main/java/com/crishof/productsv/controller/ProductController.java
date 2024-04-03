@@ -7,7 +7,6 @@ import com.crishof.productsv.exeption.ProductNotFoundException;
 import com.crishof.productsv.repository.ProductRepository;
 import com.crishof.productsv.service.ImportFileService;
 import com.crishof.productsv.service.ProductService;
-import jakarta.ws.rs.Path;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
