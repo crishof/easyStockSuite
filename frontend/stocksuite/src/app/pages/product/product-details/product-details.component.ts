@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, Input, OnInit, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { CommonModule } from '@angular/common';
@@ -17,6 +17,8 @@ import { map } from 'rxjs/operators';
   styleUrl: './product-details.component.css',
 })
 export class ProductDetailsComponent implements OnInit {
+  @Input() product: IProduct | null = null;
+
   /*
   loading: boolean = true;
   public product?: IProduct;

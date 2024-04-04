@@ -34,6 +34,9 @@ export class ProductsComponent implements OnInit {
   brandName: string = '';
   searchTerm: string = '';
 
+  selectedComponent: string = 'product';
+  selectedProduct: IProduct | null = null;
+
   getBrandName(brandId: string): Observable<string> {
     return this._brandService
       .getBrand(brandId)
@@ -46,6 +49,10 @@ export class ProductsComponent implements OnInit {
       .subscribe((data: IProduct[]) => {
         this.productList = data;
       });
+  }
+
+  selectProduct(product: IProduct): void {
+    this.selectedProduct = product;
   }
 
   navegate(id: string): void {

@@ -1,6 +1,4 @@
 nav {
-  /*background-color: #612032;*/
-
   background: #8e0e00; /* fallback for old browsers */
   background: -webkit-linear-gradient(
     to bottom,
@@ -40,7 +38,6 @@ footer {
   bottom: 0;
   left: 0;
   width: 100%;
-  /*background-color: #612032;*/
 
   text-align: center;
   padding: 10px;
