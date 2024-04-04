@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { IProduct } from '../model/product.model';
@@ -17,6 +17,13 @@ export class ProductService {
 
   getProduct(id: string): Observable<IProduct> {
     return this._http.get<IProduct>(`${this._urlBase}/getById/${id}`);
+  }
+
+  getAllByFilter(filter: string): Observable<IProduct[]> {
+    const params = new HttpParams().set('filter', filter);
+    return this._http.get<IProduct[]>(`${this._urlBase}/getAllByFilter`, {
+      params,
+    });
   }
 
   getBrandProductsQuantity(id: string): Observable<number> {

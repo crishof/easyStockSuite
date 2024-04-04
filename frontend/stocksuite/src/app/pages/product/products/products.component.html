@@ -1,5 +1,36 @@
 <app-product-navbar></app-product-navbar>
+<div class="container">
+  <app-product-detail></app-product-detail>
+</div>
+<hr />
 
+<div class="container">
+  <div class="row">
+    <form
+      #brandForm="ngForm"
+      (ngSubmit)="searchProducts()"
+      class="row mb-3 text-center col-md-8"
+    >
+      <div class="col-md-10">
+        <input
+          type="text"
+          class="form-control"
+          id="searchTerm"
+          placeholder="Enter search term and press enter to search"
+          [(ngModel)]="searchTerm"
+          name="searchTerm"
+          (keyup.enter)="searchProducts()"
+        />
+      </div>
+
+      <div class="col-md-2">
+        <button type="submit" class="btn btn-outline-primary btn-sm">
+          Search
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
 <div class="container-fluid">
   <div class="table-responsive">
     <table class="table table-stripped table-hover align-middle table-sm">
@@ -15,8 +46,6 @@
           <th scope="col">Tax Rate</th>
           <th scope="col">Selling Price</th>
           <th scope="col">Stock</th>
-
-          <th scope="col"></th>
         </tr>
       </thead>
 
@@ -33,15 +62,6 @@
           <td>{{ product.priceResponse.taxRate * 100 }}%</td>
           <td>{{ product.priceResponse.sellingPrice | currency }}</td>
           <td>{{ product.stock }}</td>
-
-          <td>
-            <button
-              class="btn btn-outline-primary btn-sm"
-              (click)="navegate(product.id)"
-            >
-              Details
-            </button>
-          </td>
         </tr>
         }
       </tbody>

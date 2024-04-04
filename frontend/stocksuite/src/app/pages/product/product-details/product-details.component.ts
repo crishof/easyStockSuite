@@ -17,14 +17,16 @@ import { map } from 'rxjs/operators';
   styleUrl: './product-details.component.css',
 })
 export class ProductDetailsComponent implements OnInit {
+  /*
   loading: boolean = true;
   public product?: IProduct;
 
   private _route = inject(ActivatedRoute);
   private _productService = inject(ProductService);
   private _brandService = inject(BrandService);
-
+*/
   ngOnInit(): void {
+    /*
     this._route.params.subscribe((params) => {
       this._productService
         .getProduct(params['id'])
@@ -33,11 +35,15 @@ export class ProductDetailsComponent implements OnInit {
           this.loading = false;
         });
     });
+    */
   }
 
+  /*
   getBrandName(brandId: string): Observable<string> {
     return this._brandService.getBrand(brandId).pipe(
       map((brand: IBrand) => brand.name)
     );
+    
   }
+  */
 }
