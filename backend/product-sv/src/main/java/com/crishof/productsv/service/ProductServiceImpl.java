@@ -22,16 +22,11 @@ import java.util.stream.Collectors;
 @Service
 public class ProductServiceImpl implements ProductService {
 
-    final
-    ProductRepository productRepository;
-    final
-    BrandAPIClient brandAPIClient;
-    final
-    CategoryAPIClient categoryAPIClient;
-    final
-    SupplierAPIClient supplierAPIClient;
-    final
-    PriceApiClient priceApiClient;
+    final ProductRepository productRepository;
+    final BrandAPIClient brandAPIClient;
+    final CategoryAPIClient categoryAPIClient;
+    final SupplierAPIClient supplierAPIClient;
+    final PriceApiClient priceApiClient;
 
     public ProductServiceImpl(ProductRepository productRepository, BrandAPIClient brandAPIClient, CategoryAPIClient categoryAPIClient, SupplierAPIClient supplierAPIClient, PriceApiClient priceApiClient) {
         this.productRepository = productRepository;
@@ -44,8 +39,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<ProductResponse> getAll() {
         List<Product> products = this.productRepository.findAll();
-        return products.stream().map(this::toProductResponse)
-                .collect(Collectors.toList());
+        return products.stream().map(this::toProductResponse).collect(Collectors.toList());
     }
 
     @Override
@@ -154,10 +148,7 @@ public class ProductServiceImpl implements ProductService {
 
         //TODO set prices
 
-        PriceRequest priceRequest = new PriceRequest(
-                productRequest.getPurchasePrice(),
-                productRequest.getSellingPrice(),
-                productRequest.getTaxRate());
+        PriceRequest priceRequest = new PriceRequest(productRequest.getPurchasePrice(), productRequest.getSellingPrice(), productRequest.getTaxRate());
         ResponseEntity<?> priceResponse = priceApiClient.save(priceRequest);
         UUID priceId;
 
@@ -202,8 +193,7 @@ public class ProductServiceImpl implements ProductService {
         products.addAll(productRepository.findAllByModelContainingIgnoreCase(filter));
         products.addAll(productRepository.findAllByDescriptionContainingIgnoreCase(filter));
 
-        return products.stream().map(this::toProductResponse)
-                .collect(Collectors.toList());
+        return products.stream().map(this::toProductResponse).collect(Collectors.toList());
     }
 
     public boolean checkProductsByBrand(UUID brandId) {

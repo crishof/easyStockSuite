@@ -46,3 +46,7 @@
   top: 11px;
   left: -6px;
 }
+
+a:hover {
+  cursor: pointer;
+}
