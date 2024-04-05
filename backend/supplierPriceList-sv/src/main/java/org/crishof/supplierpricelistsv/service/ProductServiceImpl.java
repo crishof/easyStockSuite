@@ -150,7 +150,6 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void save(Product product) {
-
         productRepository.save(product);
     }
 
@@ -163,8 +162,53 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product findProductByBrandAndCodeAndSupplierId(String brand, String code, UUID supplierId) {
+        return productRepository.findProductByBrandAndCodeAndSupplierId(brand, code, supplierId);
+    }
 
-        return productRepository.findProductByBrandAndCodeAndSupplierId(brand, code, supplierId).orElse(null);
+    @Override
+    public List<ProductResponse> getAllByFilter(UUID supplierId, String brand, String filter) {
+        List<Product> products = new ArrayList<>();
+
+        if (supplierId == null) {
+            // Supplier null && brand null && filter null
+            if (brand == null && filter == null) {
+                products = productRepository.findAll();
+            }
+            // Supplier null && brand null && filter
+            else if (brand == null && filter != null) {
+                products = productRepository.findAllByBrandContainingOrModelContainingOrDescriptionContaining(filter);
+            }
+            // Supplier null && brand && filter null
+            else if (brand != null && filter == null) {
+                products = productRepository.findAllByBrand(brand);
+            }
+            // Supplier null && brand && filter
+            else {
+                products = productRepository.findAllByBrandAndModelContainingOrDescriptionContaining(brand, filter);
+            }
+        }
+
+        if (supplierId != null) {
+            // Supplier && brand null && filter null
+            if (brand == null && filter == null) {
+                products = productRepository.findAllBySupplierId(supplierId);
+            }
+            // Supplier && brand null && filter
+            else if (brand == null && filter != null) {
+                products = productRepository.findAllBySupplierIdAndBrandContainingOrModelContainingOrDescriptionContaining(supplierId, filter);
+            }
+            // Supplier && brand && filter null
+            else if (brand != null && filter == null) {
+                products = productRepository.findAllBySupplierIdAndBrand(supplierId, brand);
+
+            }
+            // Supplier && brand && filter
+            else {
+                products = productRepository.findAllBySupplierIdAndBrandAndCodeContainingOrDescriptionContaining(supplierId, brand, filter);
+            }
+        }
+        return products.stream().map(this::toProductResponse)
+                .collect(Collectors.toList());
     }
 
     public ProductResponse toProductResponse(Product product) {

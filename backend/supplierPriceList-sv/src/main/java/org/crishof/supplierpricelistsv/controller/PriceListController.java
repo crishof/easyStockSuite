@@ -54,4 +54,9 @@ public class PriceListController {
     public List<ProductResponse> getAll() {
         return productService.getAll();
     }
+
+    @GetMapping("/getAllByFilter")
+    public List<ProductResponse> getAllByFilter(@RequestParam(required = false) UUID supplierId, @RequestParam(required = false) String brand, @RequestParam(required = false) String filter) {
+        return productService.getAllByFilter(supplierId, brand, filter);
+    }
 }

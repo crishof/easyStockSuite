@@ -12,7 +12,10 @@ public interface ProductService {
     List<Product> readExcel(MultipartFile file);
 
     void save(Product product);
+
     List<ProductResponse> getAll();
 
-    Product findProductByBrandAndCodeAndSupplierId(String brand, String model, UUID supplierId);
+    Product findProductByBrandAndCodeAndSupplierId(String brand, String code, UUID supplierId);
+
+    List<ProductResponse> getAllByFilter(UUID supplierid, String brand, String filter);
 }
