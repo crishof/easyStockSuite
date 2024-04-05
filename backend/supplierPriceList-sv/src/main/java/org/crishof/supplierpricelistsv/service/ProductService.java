@@ -13,9 +13,7 @@ public interface ProductService {
 
     void save(Product product);
 
-    List<ProductResponse> getAll();
-
     Product findProductByBrandAndCodeAndSupplierId(String brand, String code, UUID supplierId);
 
-    List<ProductResponse> getAllByFilter(UUID supplierid, String brand, String filter);
+    List<ProductResponse> getAllByFilter(UUID supplierId, String brand, String filter);
 }

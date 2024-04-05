@@ -14,9 +14,6 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
 
     Product findProductByBrandAndCodeAndSupplierId(String brand, String code, UUID supplierId);
 
-    // Supplier null && brand null && filter null
-    //List<Product> findAll();
-
     // Supplier null && brand null && filter
     @Query(value = "SELECT * FROM tbl_supplier_product " +
             "WHERE brand ILIKE CONCAT('%', :filter, '%') " +

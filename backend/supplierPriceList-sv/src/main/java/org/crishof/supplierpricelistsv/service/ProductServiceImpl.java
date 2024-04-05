@@ -154,13 +154,6 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductResponse> getAll() {
-        List<Product> products = this.productRepository.findAll();
-        return products.stream().map(this::toProductResponse)
-                .collect(Collectors.toList());
-    }
-
-    @Override
     public Product findProductByBrandAndCodeAndSupplierId(String brand, String code, UUID supplierId) {
         return productRepository.findProductByBrandAndCodeAndSupplierId(brand, code, supplierId);
     }
