@@ -1,40 +1,55 @@
 <div class="container">
   <div class="row">
-    <form
-      #brandForm="ngForm"
-      (ngSubmit)="searchProducts()"
-      class="row mb-3 text-center col-md-8"
-    >
-      <div class="col-md-10">
-        <input
-          type="text"
-          placeholder="Supplier"
+    <div class="col">
+      <form
+        #brandForm="ngForm"
+        (ngSubmit)="searchProducts()"
+        class="mb-3 text-center"
+      >
+        <select
+          class="form-control form-control-sm mb-2"
           name="supplierId"
-          [(ngModel)]="supplierId"
-        />
-        <input
-          type="text"
-          placeholder="Brand"
+          [ngModel]="selectedSupplierId"
+          (ngModelChange)="onSupplierChange($event)"
+        >
+          <option value="">All Suppliers</option>
+          <option *ngFor="let supplier of suppliers" [value]="supplier.id">
+            {{ supplier.name }}
+          </option>
+        </select>
+
+        <select
+          class="form-control form-control-sm mb-2"
           name="brand"
-          [(ngModel)]="brand"
-        />
+          [(ngModel)]="selectedBrand"
+        >
+          <option value="">All Brands</option>
+          <option *ngFor="let brand of brands" [value]="brand">
+            {{ brand }}
+          </option>
+        </select>
+
         <input
           type="text"
-          class="form-control"
+          class="form-control-sm"
           id="searchTerm"
           placeholder="Enter search term and press enter to search"
           [(ngModel)]="searchTerm"
           name="searchTerm"
           (keyup.enter)="searchProducts()"
         />
-      </div>
 
-      <div class="col-md-2">
         <button type="submit" class="btn btn-outline-primary btn-sm">
           Search
         </button>
-      </div>
-    </form>
+      </form>
+    </div>
+    <div class="col">
+      <div class="row-cols-4">COL 2</div>
+    </div>
+    <div class="col">
+      <div class="row-cols-4">COL 3</div>
+    </div>
   </div>
 </div>
 
@@ -77,7 +92,7 @@
           <td>{{ product.stockAvailable }}</td>
           <td>{{ product.barcode }}</td>
           <td>{{ product.currency }}</td>
-          <td>{{ product.taxRate * 100 }}</td>
+          <td>{{ product.taxRate * 100 }} %</td>
         </tr>
         }
       </tbody>

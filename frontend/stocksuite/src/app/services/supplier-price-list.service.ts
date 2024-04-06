@@ -13,6 +13,7 @@ export class SupplierPriceListService {
   //TODO: corregir camelCase de URL
 
   private _urlBase = 'http://localhost:443/supplierpricelist-sv/priceList';
+  private _urlSupplier = 'http://localhost:443/supplierpricelist-sv/supplier';
   constructor() {}
 
   getAllByFilter(
@@ -30,5 +31,20 @@ export class SupplierPriceListService {
         params,
       }
     );
+  }
+
+  getBrandsBySupplierId(supplierId: string): Observable<String[]> {
+    let params = new HttpParams();
+    params = params.set('supplierId', supplierId);
+    return this._http.get<String[]>(
+      `${this._urlSupplier}/getBrandsBySupplier`,
+      {
+        params: params,
+      }
+    );
+  }
+
+  getAllBrands(): Observable<String[]> {
+    return this._http.get<String[]>(`${this._urlSupplier}/getAllBrands`);
   }
 }

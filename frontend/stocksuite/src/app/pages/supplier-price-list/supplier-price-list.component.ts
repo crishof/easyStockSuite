@@ -3,8 +3,10 @@ import { Component, OnInit, inject } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { SupplierPriceListService } from '../../services/supplier-price-list.service';
 import { IProduct } from '../../model/product.model';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgModel } from '@angular/forms';
 import { ISupplierProduct } from '../../model/supplierProduct';
+import { SupplierService } from '../../services/supplier.service';
+import { BrandService } from '../../services/brand.service';
 
 @Component({
   selector: 'app-supplier-price-list',
@@ -15,6 +17,8 @@ import { ISupplierProduct } from '../../model/supplierProduct';
 })
 export class SupplierPriceListComponent implements OnInit {
   private _supplierPriceList = inject(SupplierPriceListService);
+  private _supplierService = inject(SupplierService);
+  private _brandService = inject(BrandService);
 
   productList: ISupplierProduct[] = [];
   brand: string = '';
@@ -22,7 +26,55 @@ export class SupplierPriceListComponent implements OnInit {
   searchTerm: string = '';
   selectedProduct: ISupplierProduct | null = null;
 
-  ngOnInit(): void {}
+  selectedSupplierId: string = '';
+  selectedBrand: string = '';
+  suppliers: any[] = [];
+  brands: string[] = [];
+
+  ngOnInit(): void {
+    this.loadSuppliers();
+    this.loadBrands();
+  }
+
+  loadSuppliers() {
+    this._supplierService.getSuppliers().subscribe(
+      (suppliers: any[]) => {
+        this.suppliers = suppliers;
+      },
+      (error) => {
+        console.log('Error loading supplier list', error);
+      }
+    );
+  }
+
+  onSupplierChange(supplierId: any) {
+    this.selectedSupplierId = supplierId;
+    this.loadBrands();
+  }
+
+  loadBrands() {
+    if (this.selectedSupplierId) {
+      this._supplierPriceList
+        .getBrandsBySupplierId(this.selectedSupplierId)
+        .subscribe(
+          (brands: any[]) => {
+            this.brands = brands;
+          },
+          (error) => {
+            console.log('Error loading brand list', error);
+          }
+        );
+    } else {
+      this._supplierPriceList.getAllBrands().subscribe(
+        (brands: any[]) => {
+          this.brands = brands;
+        },
+        (error) => {
+          console.log('Error loading brand list', error);
+        }
+      );
+    }
+  }
 
   searchProducts(): void {
     this._supplierPriceList
