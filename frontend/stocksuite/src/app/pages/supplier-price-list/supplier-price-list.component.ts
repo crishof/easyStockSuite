@@ -2,8 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit, inject } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { SupplierPriceListService } from '../../services/supplier-price-list.service';
-import { IProduct } from '../../model/product.model';
-import { FormsModule, NgModel } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { ISupplierProduct } from '../../model/supplierProduct';
 import { SupplierService } from '../../services/supplier.service';
 import { BrandService } from '../../services/brand.service';
@@ -78,9 +77,14 @@ export class SupplierPriceListComponent implements OnInit {
 
   searchProducts(): void {
     this._supplierPriceList
-      .getAllByFilter(this.supplierId, this.brand, this.searchTerm)
+      .getAllByFilter(
+        this.selectedSupplierId,
+        this.selectedBrand,
+        this.searchTerm
+      )
       .subscribe((data: ISupplierProduct[]) => {
         this.productList = data;
+        console.log(this.productList);
       });
   }
 

@@ -55,6 +55,14 @@ public class PriceListController {
 
     @GetMapping("/getAllByFilter")
     public List<ProductResponse> getAllByFilter(@RequestParam(required = false) UUID supplierId, @RequestParam(required = false) String brand, @RequestParam(required = false) String filter) {
-        return productService.getAllByFilter(supplierId, brand, filter);
+
+        System.out.println("supplierId = " + supplierId);
+        System.out.println("brand = " + brand);
+        System.out.println("filter = " + filter);
+
+        List<ProductResponse> productResponses = productService.getAllByFilter(supplierId, brand, filter);
+
+        System.out.println("Resultado: " + productResponses.size());
+        return productResponses;
     }
 }

@@ -165,18 +165,22 @@ public class ProductServiceImpl implements ProductService {
         if (supplierId == null) {
             // Supplier null && brand null && filter null
             if (brand == null && filter == null) {
+                System.out.println("// Supplier null && brand null && filter null");
                 products = productRepository.findAll();
             }
             // Supplier null && brand null && filter
             else if (brand == null && filter != null) {
+                System.out.println("// Supplier null && brand null && filter");
                 products = productRepository.findAllByBrandContainingOrModelContainingOrDescriptionContaining(filter);
             }
             // Supplier null && brand && filter null
             else if (brand != null && filter == null) {
+                System.out.println("// Supplier null && brand && filter null");
                 products = productRepository.findAllByBrand(brand);
             }
             // Supplier null && brand && filter
             else {
+                System.out.println("// Supplier null && brand && filter");
                 products = productRepository.findAllByBrandAndModelContainingOrDescriptionContaining(brand, filter);
             }
         }
@@ -184,19 +188,23 @@ public class ProductServiceImpl implements ProductService {
         if (supplierId != null) {
             // Supplier && brand null && filter null
             if (brand == null && filter == null) {
+                System.out.println("// Supplier && brand null && filter null");
                 products = productRepository.findAllBySupplierId(supplierId);
             }
             // Supplier && brand null && filter
             else if (brand == null && filter != null) {
+                System.out.println("// Supplier && brand null && filter");
                 products = productRepository.findAllBySupplierIdAndBrandContainingOrModelContainingOrDescriptionContaining(supplierId, filter);
             }
             // Supplier && brand && filter null
             else if (brand != null && filter == null) {
+                System.out.println("// Supplier && brand && filter null");
                 products = productRepository.findAllBySupplierIdAndBrand(supplierId, brand);
 
             }
             // Supplier && brand && filter
             else {
+                System.out.println("// Supplier && brand && filter");
                 products = productRepository.findAllBySupplierIdAndBrandAndCodeContainingOrDescriptionContaining(supplierId, brand, filter);
             }
         }

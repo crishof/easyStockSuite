@@ -21,14 +21,21 @@ export class SupplierPriceListService {
     brand: string,
     filter: string
   ): Observable<ISupplierProduct[]> {
-    const params = new HttpParams();
-    params.set('supplierId', supplierId);
-    params.set('brand', brand);
-    params.set('filter', filter);
+    let params = new HttpParams();
+
+    if (supplierId !== null && supplierId !== '') {
+      params = params.set('supplierId', supplierId);
+    }
+    if (brand !== null && brand !== '') {
+      params = params.set('brand', brand);
+    }
+    if (filter !== null && filter !== '') {
+      params = params.set('filter', filter);
+    }
     return this._http.get<ISupplierProduct[]>(
       `${this._urlBase}/getAllByFilter`,
       {
-        params,
+        params: params,
       }
     );
   }
