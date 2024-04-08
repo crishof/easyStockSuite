@@ -17,7 +17,6 @@ import { BrandService } from '../../services/brand.service';
 export class SupplierPriceListComponent implements OnInit {
   private _supplierPriceList = inject(SupplierPriceListService);
   private _supplierService = inject(SupplierService);
-  private _brandService = inject(BrandService);
 
   productList: ISupplierProduct[] = [];
   brand: string = '';
@@ -29,6 +28,50 @@ export class SupplierPriceListComponent implements OnInit {
   selectedBrand: string = '';
   suppliers: any[] = [];
   brands: string[] = [];
+
+  selectedProducts: ISupplierProduct[] = [];
+  lastSelectedIndex: number | null = null;
+
+  selectAllChecked: boolean = false;
+
+  selectAllProducts(event: any) {
+    const isChecked = event.target.checked;
+    if (isChecked) {
+      this.selectedProducts = [...this.productList];
+    } else {
+      this.selectedProducts = [];
+    }
+  }
+
+  toggleSelection(event: any, product: ISupplierProduct) {
+    if (event.target.checked) {
+      // Agregar el producto a la lista de productos seleccionados
+      this.selectedProducts.push(product);
+    } else {
+      // Eliminar el producto de la lista de productos seleccionados
+      const index = this.selectedProducts.indexOf(product);
+      if (index !== -1) {
+        this.selectedProducts.splice(index, 1);
+      }
+    }
+  }
+
+  isSelected(product: any): boolean {
+    return this.selectedProducts.some(
+      (selectedProduct) => selectedProduct.id === product.id
+    );
+  }
+
+  importSelectedProducts(): void {
+    this._supplierPriceList.importProducts(this.selectedProducts).subscribe(
+      () => {
+        console.log('productos importados con exito ');
+      },
+      (error) => {
+        console.log('Error al importar productos', error);
+      }
+    );
+  }
 
   ngOnInit(): void {
     this.loadSuppliers();
@@ -86,9 +129,5 @@ export class SupplierPriceListComponent implements OnInit {
         this.productList = data;
         console.log(this.productList);
       });
-  }
-
-  selectProduct(product: ISupplierProduct): void {
-    this.selectedProduct = product;
   }
 }

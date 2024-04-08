@@ -14,6 +14,7 @@ export class SupplierPriceListService {
 
   private _urlBase = 'http://localhost:443/supplierpricelist-sv/priceList';
   private _urlSupplier = 'http://localhost:443/supplierpricelist-sv/supplier';
+  private _urlProductSv = 'http://localhost:443/product-sv/product';
   constructor() {}
 
   getAllByFilter(
@@ -53,5 +54,14 @@ export class SupplierPriceListService {
 
   getAllBrands(): Observable<String[]> {
     return this._http.get<String[]>(`${this._urlSupplier}/getAllBrands`);
+  }
+
+  importProducts(productList: ISupplierProduct[]): Observable<any> {
+
+    console.log('Product list: ' + productList.length);
+    return this._http.post<any>(
+      `${this._urlProductSv}/importProducts`,
+      productList
+    );
   }
 }

@@ -2,6 +2,7 @@ package com.crishof.productsv.controller;
 
 import com.crishof.productsv.dto.ProductRequest;
 import com.crishof.productsv.dto.ProductResponse;
+import com.crishof.productsv.dto.SupplierProductRequest;
 import com.crishof.productsv.exeption.ImportFileException;
 import com.crishof.productsv.exeption.ProductNotFoundException;
 import com.crishof.productsv.repository.ProductRepository;
@@ -132,5 +133,16 @@ public class ProductController {
         } catch (ImportFileException e) {
             return "Error during import: " + e.getMessage();
         }
+    }
+
+    @PostMapping("/importProducts")
+    public ResponseEntity<String> importProduct(@RequestBody List<SupplierProductRequest> productList) {
+
+        System.out.println("productList = " + productList);
+        System.out.println("TAMAÑO: " + productList.size());
+        System.out.println("PETICION RECIBIDA");
+
+        return ResponseEntity.ok().body("{\"message\": \"Productos importados con éxito\"}");
+
     }
 }
