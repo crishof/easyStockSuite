@@ -76,6 +76,8 @@ export class SupplierPriceListComponent implements OnInit {
   ngOnInit(): void {
     this.loadSuppliers();
     this.loadBrands();
+
+    console.log(this.brands);
   }
 
   loadSuppliers() {

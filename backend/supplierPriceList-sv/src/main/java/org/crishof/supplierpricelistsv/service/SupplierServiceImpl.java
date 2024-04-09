@@ -19,9 +19,13 @@ public class SupplierServiceImpl implements SupplierService {
 
         List<Product> products = productRepository.findAllBySupplierId(supplierId);
 
-        return products.stream()
+        List<String> brands = products.stream()
                 .map(Product::getBrand)
+                .distinct()
                 .toList();
+
+        System.out.println("brands = " + brands);
+        return brands;
     }
 
     @Override
@@ -30,6 +34,7 @@ public class SupplierServiceImpl implements SupplierService {
 
         return products.stream()
                 .map(Product::getBrand)
+                .distinct()
                 .toList();
     }
 }

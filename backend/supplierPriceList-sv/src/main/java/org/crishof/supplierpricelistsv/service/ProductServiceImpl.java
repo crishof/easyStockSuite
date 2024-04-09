@@ -6,7 +6,6 @@ import org.crishof.supplierpricelistsv.dto.ProductResponse;
 import org.crishof.supplierpricelistsv.exception.ImportFileException;
 import org.crishof.supplierpricelistsv.model.Product;
 import org.crishof.supplierpricelistsv.repository.ProductRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,8 +21,12 @@ import java.util.stream.Collectors;
 @Service
 public class ProductServiceImpl implements ProductService {
 
-    @Autowired
+    final
     ProductRepository productRepository;
+
+    public ProductServiceImpl(ProductRepository productRepository) {
+        this.productRepository = productRepository;
+    }
 
     public List<Product> readExcel(MultipartFile file) {
         List<Product> products = new ArrayList<>();
@@ -35,7 +38,7 @@ public class ProductServiceImpl implements ProductService {
             // Verifica si hay al menos dos filas en la hoja
             if (sheet.getPhysicalNumberOfRows() < 2) {
                 // No hay suficientes filas para procesar
-                throw new RuntimeException("El archivo no tiene suficientes filas para procesar.");
+                throw new RuntimeException("The file does not have enough rows to process.");
             }
 
             // Obtén la fila de títulos (fila 1)
@@ -45,6 +48,8 @@ public class ProductServiceImpl implements ProductService {
             // Itera sobre las celdas de la fila de títulos y almacena los títulos en minúsculas
             for (Cell titleCell : titleRow) {
                 titles.add(titleCell.getStringCellValue().toLowerCase());
+
+                System.out.println("titles = " + titles);
             }
 
             // Itera sobre cada fila en la hoja, comenzando desde la segunda fila (índice 1)
@@ -71,64 +76,130 @@ public class ProductServiceImpl implements ProductService {
 
                         // Verifica si el título correspondiente a esta celda está en la lista de títulos
                         if (columnIndex < titles.size()) {
-                            String title = titles.get(columnIndex);
+                            String title = titles.get(columnIndex).toLowerCase();
+
+                            System.out.println("title = " + title);
 
                             int maxLength = 255;
+                            double numericValue;
+
+                            //TODO - Error cuando hay celdas vacías
 
                             // Asigna el valor de la celda al atributo correspondiente según el título
                             switch (title) {
                                 case "brand":
+                                    System.out.println("brand = " + cellContent);
                                     product.setBrand(cellContent);
                                     break;
                                 case "code":
-                                    product.setCode(cellContent);
+                                    System.out.println("code = " + cellContent);
+                                    if (!cellContent.isBlank() || !cellContent.isEmpty()) {
+                                        product.setCode(cellContent);
+                                    } else product.setCode(null);
                                     break;
                                 case "model":
-                                    product.setModel(cellContent);
+                                    System.out.println("model = " + cellContent);
+                                    if (!cellContent.isBlank() || !cellContent.isEmpty()) {
+                                        product.setModel(cellContent);
+                                    } else product.setModel(null);
                                     break;
                                 case "description":
-                                    if (cellContent.length() > maxLength) {
-                                        cellContent = cellContent.substring(0, maxLength);
-                                    }
-                                    product.setDescription(cellContent);
+                                    System.out.println("description = " + cellContent);
+                                    if (!cellContent.isBlank() || !cellContent.isEmpty()) {
+                                        if (cellContent.length() > maxLength) {
+                                            cellContent = cellContent.substring(0, maxLength);
+                                        }
+                                        product.setDescription(cellContent);
+
+                                    } else product.setDescription(null);
                                     break;
                                 case "category":
-                                    product.setCategory(cellContent);
+                                    if (!cellContent.isBlank() || !cellContent.isEmpty()) {
+                                        System.out.println("category = " + cellContent);
+                                        product.setCategory(cellContent);
+                                    } else product.setCategory(null);
                                     break;
-                                case "price", "tax-rate", "suggested-price", "suggested-web-price":
-
-                                    // Elimina caracteres no deseados, como comas
+                                case "price":
+                                    System.out.println("cell before= " + cellContent);
+//                                     Elimina caracteres no deseados, como comas
                                     cellContent = cellContent.replaceAll(",", "").replaceAll(" ", "");
+                                    System.out.println("cell after= " + cellContent);
 
                                     // Asigna el valor convertido a double
-                                    double numericValue = Double.parseDouble(cellContent);
+                                    numericValue = Double.parseDouble(cellContent);
+                                    System.out.println("price = " + numericValue);
+                                    product.setPrice(numericValue);
+                                    break;
 
-                                    // Asigna el valor al atributo correspondiente
+                                case "tax-rate":
+                                    if (!cellContent.isBlank() || !cellContent.isEmpty()) {
+                                        System.out.println("cell before= " + cellContent);
+                                        // Elimina caracteres no deseados, como comas y espacios
+                                        cellContent = cellContent.replaceAll(",", "").replaceAll(" ", "");
 
-                                    switch (title) {
-                                        case "price":
-                                            product.setPrice(numericValue);
-                                            break;
-                                        case "tax-rate":
-                                            product.setTaxRate(numericValue);
-                                            break;
-                                        case "suggested-price":
-                                            product.setSuggestedPrice(numericValue);
-                                            break;
-                                        case "suggested-web-price":
-                                            product.setSuggestedWebPrice(numericValue);
-                                            break;
-                                    }
+                                        if (cellContent.endsWith("%")) {
+                                            // Elimina el signo de porcentaje al final de la cadena
+                                            cellContent = cellContent.substring(0, cellContent.length() - 1);
+                                            // Convierte el valor numérico a decimal dividiéndolo por 100
+                                            numericValue = Double.parseDouble(cellContent) / 100.0;
+                                        } else {
+                                            // Si no termina con "%", lo convierte a double
+                                            numericValue = Double.parseDouble(cellContent);
+                                        }
+
+                                        System.out.println("tax-rate = " + numericValue);
+                                        product.setTaxRate(numericValue);
+                                    } else product.setTaxRate(0.21);
+                                    break;
+
+                                case "suggested-price":
+                                    if (!cellContent.isBlank() || !cellContent.isEmpty()) {
+                                        System.out.println("cell before= " + cellContent);
+//                                     Elimina caracteres no deseados, como comas
+                                        cellContent = cellContent.replaceAll(",", "").replaceAll(" ", "");
+                                        System.out.println("cell after= " + cellContent);
+
+                                        // Asigna el valor convertido a double
+                                        numericValue = Double.parseDouble(cellContent);
+                                        System.out.println("suggested-price = " + numericValue);
+                                        product.setSuggestedPrice(numericValue);
+                                    } else product.setSuggestedPrice(0);
+                                    break;
+
+                                case "suggested-web-price":
+                                    if (!cellContent.isBlank() || !cellContent.isEmpty()) {
+                                        System.out.println("cell before= " + cellContent);
+//                                     Elimina caracteres no deseados, como comas
+                                        cellContent = cellContent.replaceAll(",", "").replaceAll(" ", "");
+                                        System.out.println("cell after= " + cellContent);
+
+//                                    Asigna el valor convertido a double
+                                        numericValue = Double.parseDouble(cellContent);
+                                        System.out.println("suggested-web-price = " + numericValue);
+                                        product.setSuggestedWebPrice(numericValue);
+                                    } else product.setSuggestedWebPrice(0);
+                                    break;
+
                                 case "stock":
-                                    product.setStockAvailable(cellContent);
+                                    if (!cellContent.isBlank() || !cellContent.isEmpty()) {
+                                        System.out.println("stock = " + cellContent);
+                                        product.setStockAvailable(cellContent);
+                                    } else product.setStockAvailable(null);
                                     break;
                                 case "bar-code":
-                                    product.setBarcode(cellContent);
+                                    if (!cellContent.isBlank() || !cellContent.isEmpty()) {
+                                        System.out.println("bar-code = " + cellContent);
+                                        product.setBarcode(cellContent);
+                                    } else product.setBarcode(null);
                                     break;
                                 case "currency":
-                                    product.setCurrency(cellContent);
+                                    if (!cellContent.isBlank() || !cellContent.isEmpty()) {
+                                        System.out.println("currency = " + cellContent);
+                                        product.setCurrency(cellContent);
+                                    } else product.setCurrency("$");
                                     break;
                             }
+
                             product.setLastUpdate(LocalDate.now());
                         }
 
@@ -169,12 +240,12 @@ public class ProductServiceImpl implements ProductService {
                 products = productRepository.findAll();
             }
             // Supplier null && brand null && filter
-            else if (brand == null && filter != null) {
+            else if (brand == null) {
                 System.out.println("// Supplier null && brand null && filter");
                 products = productRepository.findAllByBrandContainingOrModelContainingOrDescriptionContaining(filter);
             }
             // Supplier null && brand && filter null
-            else if (brand != null && filter == null) {
+            else if (filter == null) {
                 System.out.println("// Supplier null && brand && filter null");
                 products = productRepository.findAllByBrand(brand);
             }
@@ -192,12 +263,12 @@ public class ProductServiceImpl implements ProductService {
                 products = productRepository.findAllBySupplierId(supplierId);
             }
             // Supplier && brand null && filter
-            else if (brand == null && filter != null) {
+            else if (brand == null) {
                 System.out.println("// Supplier && brand null && filter");
                 products = productRepository.findAllBySupplierIdAndBrandContainingOrModelContainingOrDescriptionContaining(supplierId, filter);
             }
             // Supplier && brand && filter null
-            else if (brand != null && filter == null) {
+            else if (filter == null) {
                 System.out.println("// Supplier && brand && filter null");
                 products = productRepository.findAllBySupplierIdAndBrand(supplierId, brand);
 

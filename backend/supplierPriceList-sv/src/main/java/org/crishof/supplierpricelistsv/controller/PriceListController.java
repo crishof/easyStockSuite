@@ -37,6 +37,7 @@ public class PriceListController {
                     existingProduct.setSuggestedPrice(product.getSuggestedPrice());
                     existingProduct.setSuggestedWebPrice(product.getSuggestedWebPrice());
                     existingProduct.setStockAvailable(product.getStockAvailable());
+                    existingProduct.setCurrency(product.getCurrency());
                     existingProduct.setLastUpdate(LocalDate.now());
 
                     productService.save(existingProduct);
