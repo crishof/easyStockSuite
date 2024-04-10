@@ -19,7 +19,7 @@ public interface SupplierService {
 
     SupplierResponse save(SupplierRequest supplierRequest);
 
-    Supplier update(UUID id, Supplier supplier);
+    Supplier update(UUID id, SupplierRequest supplier);
 
     void deleteById(UUID id);
 }

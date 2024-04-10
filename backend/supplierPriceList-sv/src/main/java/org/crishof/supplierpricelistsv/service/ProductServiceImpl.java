@@ -33,7 +33,7 @@ public class ProductServiceImpl implements ProductService {
 
         try (InputStream inputStream = file.getInputStream()) {
             Workbook workbook = WorkbookFactory.create(inputStream);
-            Sheet sheet = workbook.getSheetAt(0); // Obtén la primera hoja del archivo
+            Sheet sheet = workbook.getSheetAt(0); // Obtiene la primera hoja del archivo
 
             // Verifica si hay al menos dos filas en la hoja
             if (sheet.getPhysicalNumberOfRows() < 2) {
@@ -41,7 +41,7 @@ public class ProductServiceImpl implements ProductService {
                 throw new RuntimeException("The file does not have enough rows to process.");
             }
 
-            // Obtén la fila de títulos (fila 1)
+            // Obtiene la fila de títulos (fila 1)
             Row titleRow = sheet.getRow(0);
             List<String> titles = new ArrayList<>();
 
@@ -121,7 +121,7 @@ public class ProductServiceImpl implements ProductService {
                                     break;
                                 case "price":
                                     System.out.println("cell before= " + cellContent);
-//                                     Elimina caracteres no deseados, como comas
+//                                     Elimina caracteres no deseados
                                     cellContent = cellContent.replaceAll(",", "").replaceAll(" ", "");
                                     System.out.println("cell after= " + cellContent);
 
@@ -134,7 +134,7 @@ public class ProductServiceImpl implements ProductService {
                                 case "tax-rate":
                                     if (!cellContent.isBlank() || !cellContent.isEmpty()) {
                                         System.out.println("cell before= " + cellContent);
-                                        // Elimina caracteres no deseados, como comas y espacios
+                                        // Elimina caracteres no deseados
                                         cellContent = cellContent.replaceAll(",", "").replaceAll(" ", "");
 
                                         if (cellContent.endsWith("%")) {
@@ -155,7 +155,7 @@ public class ProductServiceImpl implements ProductService {
                                 case "suggested-price":
                                     if (!cellContent.isBlank() || !cellContent.isEmpty()) {
                                         System.out.println("cell before= " + cellContent);
-//                                     Elimina caracteres no deseados, como comas
+//                                     Elimina caracteres no deseados
                                         cellContent = cellContent.replaceAll(",", "").replaceAll(" ", "");
                                         System.out.println("cell after= " + cellContent);
 
@@ -169,7 +169,7 @@ public class ProductServiceImpl implements ProductService {
                                 case "suggested-web-price":
                                     if (!cellContent.isBlank() || !cellContent.isEmpty()) {
                                         System.out.println("cell before= " + cellContent);
-//                                     Elimina caracteres no deseados, como comas
+//                                     Elimina caracteres no deseados
                                         cellContent = cellContent.replaceAll(",", "").replaceAll(" ", "");
                                         System.out.println("cell after= " + cellContent);
 

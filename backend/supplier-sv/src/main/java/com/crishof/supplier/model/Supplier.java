@@ -27,6 +27,8 @@ public class Supplier {
 
     public Supplier(SupplierRequest supplierRequest) {
         this.name = supplierRequest.getName();
+        this.taxId = supplierRequest.getTaxId();
+        this.legalName = supplierRequest.getLegalName();
     }
 }
 

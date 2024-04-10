@@ -62,7 +62,7 @@ public class SupplierController {
 
 
     @PutMapping("/update/{id}")
-    public Supplier updateSupplier(@RequestParam("id") UUID id, @RequestBody Supplier supplier) {
+    public Supplier updateSupplier(@PathVariable("id") UUID id, @RequestBody SupplierRequest supplier) {
         return supplierService.update(id, supplier);
     }
 

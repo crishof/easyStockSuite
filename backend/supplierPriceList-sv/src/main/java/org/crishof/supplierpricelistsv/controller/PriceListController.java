@@ -4,7 +4,7 @@ import org.crishof.supplierpricelistsv.dto.ProductResponse;
 import org.crishof.supplierpricelistsv.exception.ImportFileException;
 import org.crishof.supplierpricelistsv.model.Product;
 import org.crishof.supplierpricelistsv.service.ProductService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,11 +16,18 @@ import java.util.UUID;
 @RequestMapping("/priceList")
 public class PriceListController {
 
-    @Autowired
+    final
     ProductService productService;
 
+    public PriceListController(ProductService productService) {
+        this.productService = productService;
+    }
+
     @PostMapping("/importList")
-    public String importFile(@RequestParam MultipartFile file, @RequestParam UUID supplierId) {
+    public ResponseEntity<String> importFile(@RequestParam MultipartFile file, @RequestParam UUID supplierId) {
+
+        int importedCount = 0;
+        int alreadyImportedCount = 0;
 
         try {
 
@@ -41,16 +48,26 @@ public class PriceListController {
                     existingProduct.setLastUpdate(LocalDate.now());
 
                     productService.save(existingProduct);
+                    alreadyImportedCount++;
                 } else {
                     // Asignar el ID del proveedor al producto y guardarlo
                     product.setSupplierId(supplierId);
                     productService.save(product);
+                    importedCount++;
                 }
             }
 
-            return "All products imported";
+            String message = "Products updated successfully";
+            if (importedCount > 0) {
+                message += " " + importedCount + " products imported";
+            }
+            if (alreadyImportedCount > 0) {
+                message += " " + alreadyImportedCount + " existing products were updated";
+            }
+
+            return ResponseEntity.ok().body("{\"message\": \"" + message + "\"}");
         } catch (ImportFileException e) {
-            return "Error during import: " + e.getMessage();
+            return ResponseEntity.internalServerError().body("Error during import: " + e.getMessage());
         }
     }
 

@@ -58,15 +58,15 @@ public class SupplierServiceImpl implements SupplierService {
     }
 
     @Override
-    public Supplier update(UUID id, Supplier supplier) {
+    public Supplier update(UUID id, SupplierRequest supplierRequest) {
 
-        Supplier supplier1 = this.getById(id);
+        Supplier supplier = this.getById(id);
 
-        supplier1.setName(supplier.getName());
-        supplier1.setTaxId(supplier1.getTaxId());
-        supplier1.setLegalName(supplier.getLegalName());
+        supplier.setName(supplierRequest.getName());
+        supplier.setTaxId(supplierRequest.getTaxId());
+        supplier.setLegalName(supplierRequest.getLegalName());
 
-        return supplierRepository.save(supplier1);
+        return supplierRepository.save(supplier);
     }
 
     @Override
