@@ -11,6 +11,7 @@ import { BrandDetailsComponent } from './pages/brand/brand-details/brand-details
 import { BrandEditComponent } from './pages/brand/brand-edit/brand-edit.component';
 import { BrandCreateComponent } from './pages/brand/brand-create/brand-create.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
+import { SupplierPriceListComponent } from './pages/supplier-price-list/supplier-price-list.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -25,5 +26,6 @@ export const routes: Routes = [
   { path: 'supplier', component: SupplierComponent },
   { path: 'supplier/:id', component: SupplierDetailsComponent },
   { path: 'dashboard', component: DashboardComponent },
+  { path: 'supplierPriceList', component: SupplierPriceListComponent },
   { path: '**', redirectTo: '', pathMatch: 'full' },
 ];

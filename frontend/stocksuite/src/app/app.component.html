@@ -8,16 +8,18 @@
       class="navbar-toggler"
       type="button"
       data-bs-toggle="collapse"
-      data-bs-target="#navbarSupportedContent"
-      aria-controls="navbarSupportedContent"
+      data-bs-target="#navbarSupportedMain"
+      aria-controls="navbarSupportedMain"
       aria-expanded="false"
       aria-label="Toggle navigation"
     >
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <div class="collapse navbar-collapse" id="navbarSupportedMain">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <!-- Home -->
+
         <li class="nav-item">
           <a
             class="nav-link"
@@ -27,6 +29,8 @@
             >Home</a
           >
         </li>
+
+        <!-- Dashboard -->
 
         <li class="nav-item">
           <a
@@ -38,6 +42,8 @@
           >
         </li>
 
+        <!-- Productos -->
+
         <li class="nav-item">
           <a
             class="nav-link"
@@ -48,25 +54,144 @@
           >
         </li>
 
-        <li class="nav-item">
+        <!-- Comprobantes -->
+
+        <li class="nav-item dropdown">
           <a
-            class="nav-link"
-            routerLink="brand"
-            [ngClass]="{ active: menuOption == 'brand' }"
-            (click)="onOption('brand')"
-            >Brands</a
+            class="nav-link dropdown-toggle"
+            href="#"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+            >Comprobantes</a
           >
+
+          <ul class="dropdown-menu">
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+                >Nuevo comprobante</a
+              >
+
+              <ul class="dropdown-menu sub-menu">
+                <li><a class="dropdown-item" href="#">Factura</a></li>
+                <li><a class="dropdown-item" href="#">Nota de crédito</a></li>
+                <li><a class="dropdown-item" href="#">Nota de Débito</a></li>
+                <li><a class="dropdown-item" href="#">Presupuesto</a></li>
+
+                <li><hr class="dropdown-divider" /></li>
+
+                <li><a class="dropdown-item" href="#">Remito</a></li>
+                <li><a class="dropdown-item" href="#">Remito de ingreso</a></li>
+
+                <li><hr class="dropdown-divider" /></li>
+
+                <li><a class="dropdown-item" href="#">Envío a sucursal</a></li>
+                <li><a class="dropdown-item" href="#">Envío a depósito</a></li>
+
+                <li><hr class="dropdown-divider" /></li>
+
+                <li>
+                  <a class="dropdown-item" href="#">Recepción de sucursal</a>
+                </li>
+                <li><a class="dropdown-item" href="#">Pedido a sucursal</a></li>
+
+                <li><hr class="dropdown-divider" /></li>
+
+                <li>
+                  <a class="dropdown-item" href="#">Pedido de comercio</a>
+                </li>
+              </ul>
+            </li>
+
+            <li><hr class="dropdown-divider" /></li>
+
+            <li><a class="dropdown-item" href="#">Recibos</a></li>
+            <li><a class="dropdown-item" href="#">Pagos</a></li>
+
+            <li><hr class="dropdown-divider" /></li>
+            <li><a class="dropdown-item" href="#">Ver comprobantes</a></li>
+
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+                >Pendientes</a
+              >
+
+              <ul class="dropdown-menu sub-menu">
+                <li>
+                  <a class="dropdown-item" href="#">Pedidos pendientes</a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="#"
+                    >Descuentos pendientes de autorización</a
+                  >
+                </li>
+                <li>
+                  <a class="dropdown-item" href="#"
+                    >Artículos pendientes de entrega</a
+                  >
+                </li>
+              </ul>
+            </li>
+          </ul>
         </li>
 
-        <li class="nav-item">
+        <!-- Ecommerce -->
+
+        <li class="nav-item dropdown">
           <a
-            class="nav-link"
-            routerLink="category"
-            [ngClass]="{ active: menuOption == 'category' }"
-            (click)="onOption('category')"
-            >Categories</a
+            class="nav-link dropdown-toggle"
+            href="#"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+            >Ecommerce</a
           >
+
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">Menu</a></li>
+            <li><a class="dropdown-item" href="#">Mis Ordenes</a></li>
+            <li><a class="dropdown-item" href="#">SEO</a></li>
+            <li>
+              <a class="dropdown-item" href="#">Articulos complementarios</a>
+            </li>
+            <li><a class="dropdown-item" href="#">Etiquetas</a></li>
+            <li><a class="dropdown-item" href="#">Sinonimos de busqueda</a></li>
+          </ul>
         </li>
+
+        <!-- Servicio Técnico -->
+
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle"
+            href="#"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+            >Servicio técnico</a
+          >
+
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">Servicio técnico</a></li>
+            <li><a class="dropdown-item" href="#">Turnos</a></li>
+          </ul>
+        </li>
+
+        <!-- Caja diaria -->
+
+        <li class="nav-item"><a class="nav-link" href="#">Caja diaria</a></li>
+
+        <!-- Suppliers -->
 
         <li class="nav-item">
           <a
@@ -76,6 +201,217 @@
             (click)="onOption('supplier')"
             >Suppliers</a
           >
+        </li>
+
+        <!-- Clientes -->
+
+        <li class="nav-item"><a class="nav-link" href="#">Clientes</a></li>
+
+        <!-- Importaciones -->
+
+        <li class="nav-item"><a class="nav-link" href="#">Importaciones</a></li>
+
+        <!-- Informes -->
+
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle"
+            href="#"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+            >Informes</a
+          >
+
+          <ul class="dropdown-menu">
+            <li>
+              <a class="dropdown-item" href="#">Informes dinámicos en excel</a>
+            </li>
+
+            <li><hr class="dropdown-divider" /></li>
+
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+                >Informes y estadísticas</a
+              >
+
+              <ul class="dropdown-menu sub-menu">
+                <li><a class="dropdown-item" href="#">Buscar auditorías</a></li>
+                <li>
+                  <a class="dropdown-item" href="#">Descuentos por período</a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="#"
+                    >Detalle de facturas de Proveedores de bienes de uso</a
+                  >
+                </li>
+                <li>
+                  <a class="dropdown-item" href="#"
+                    >Detalle de los movimientos de caja</a
+                  >
+                </li>
+                <li>
+                  <a class="dropdown-item" href="#"
+                    >Distribución de gastos entre los clientes socios</a
+                  >
+                </li>
+                <li>
+                  <a class="dropdown-item" href="#"
+                    >Exportación de datos del servicio técnico</a
+                  >
+                </li>
+                <li>
+                  <a class="dropdown-item" href="#">Garantías extendidas</a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="#">Listado de recibos</a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="#"
+                    >Listado de Ubicaciones de artículos</a
+                  >
+                </li>
+                <li>
+                  <a class="dropdown-item" href="#">Movimientos de artículos</a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="#"
+                    >Movimientos de stock por grupo de artículos</a
+                  >
+                </li>
+                <li>
+                  <a class="dropdown-item" href="#"
+                    >Movimientos de pesos, dólares y cheques</a
+                  >
+                </li>
+              </ul>
+            </li>
+
+            <li><hr class="dropdown-divider" /></li>
+
+            <li>
+              <a class="dropdown-item" href="#"
+                >Totales de venta en tiempo real</a
+              >
+            </li>
+            <li>
+              <a class="dropdown-item" href="#">Informes de despacho a plaza</a>
+            </li>
+
+            <li><hr class="dropdown-divider" /></li>
+
+            <li><a class="dropdown-item" href="#">Dashboard</a></li>
+          </ul>
+        </li>
+
+        <!-- Contabilidad -->
+
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle"
+            href="#"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+            >Contabilidad</a
+          >
+
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">Libro IVA</a></li>
+            <li>
+              <a class="dropdown-item" href="#"
+                >Listado de retenciones de IIBB realizadas</a
+              >
+            </li>
+            <li>
+              <a class="dropdown-item" href="#"
+                >Listado de retenciones de IIBB recibidas</a
+              >
+            </li>
+
+            <li><hr class="dropdown-divider" /></li>
+
+            <li><a class="dropdown-item" href="#">Libro Mayor</a></li>
+          </ul>
+        </li>
+
+        <!-- Configuracion del sistema -->
+
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle"
+            href="#"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+            >Configuracion del sistema</a
+          >
+
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">General</a></li>
+            <li><a class="dropdown-item" href="#">Usuarios</a></li>
+
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+                >Administracion de Archivos</a
+              >
+
+              <ul class="dropdown-menu sub-menu">
+                <li>
+                  <a class="dropdown-item" href="#"
+                    >Cuenta corriente entre sucursales</a
+                  >
+                </li>
+                <li><a class="dropdown-item" href="#">Marcas</a></li>
+                <li>
+                  <a class="dropdown-item" href="#">Proveedores eventuales</a>
+                </li>
+                <li><a class="dropdown-item" href="#">Rubros y grupos</a></li>
+                <li><a class="dropdown-item" href="#">Tipos de cliente</a></li>
+                <li><a class="dropdown-item" href="#">Transportes</a></li>
+                <li class="nav-item dropdown">
+                  <a
+                    class="nav-link dropdown-toggle"
+                    href="#"
+                    role="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                    >Valores</a
+                  >
+
+                  <ul class="dropdown-menu sub-menu">
+                    <li>
+                      <a class="dropdown-item" href="#">Cheques de tercero</a>
+                    </li>
+                    <li>
+                      <a class="dropdown-item" href="#">Cheques propios</a>
+                    </li>
+                    <li>
+                      <a class="dropdown-item" href="#"
+                        >Documentos en cartera</a
+                      >
+                    </li>
+                    <li><a class="dropdown-item" href="#">Señas</a></li>
+                    <li>
+                      <a class="dropdown-item" href="#">Tarjetas en cartera</a>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+
+            <li><a class="dropdown-item" href="#">Mi cuenta</a></li>
+          </ul>
         </li>
       </ul>
       <form class="d-flex" role="search">
@@ -93,16 +429,14 @@
 
 <router-outlet />
 
-<footer
-  class="navbar navbar-expand-lg navbar-dark text-light mt-5 py-3 bg-dark"
->
-  <div class="container-fluid">
-    <div class="row align-items-center">
-      <div class="col-md-6">
-        <p class="mb-0">© 2022 Company, Inc</p>
+<footer class="navbar-dark text-light mt-5 py-3 bg-dark">
+  <div class="container">
+    <div class="d-inline-block">
+      <div>
+        <p>© 2024 StockSuite, Inc</p>
       </div>
 
-      <div class="col-md-6">
+      <div>
         <ul class="navbar-nav me-auto list-inline flex-row">
           <li class="nav-item list-inline-item">
             <a class="nav-link" href="#">Home</a>

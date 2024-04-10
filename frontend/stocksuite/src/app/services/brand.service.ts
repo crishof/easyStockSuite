@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { IBrand } from '../model/brand.model';
 import { Observable } from 'rxjs';
@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 })
 export class BrandService {
   private _http = inject(HttpClient);
-  private _urlBase = 'http://localhost:443/mono-sv/brand';
+  private _urlBase = 'http://localhost:443/brand-sv/brand';
 
   getBrands(): Observable<IBrand[]> {
     return this._http.get<IBrand[]>(`${this._urlBase}/getAll`);
@@ -19,6 +19,7 @@ export class BrandService {
   }
 
   updateBrand(id: string, formData: FormData): Observable<IBrand> {
+    console.log(`${this._urlBase}/update/${id}`);
     return this._http.put<IBrand>(`${this._urlBase}/update/${id}`, formData);
   }
 
@@ -32,12 +33,12 @@ export class BrandService {
     });
   }
 
-  updateBrandLogo(id: string, logo: File): Observable<IBrand> {
+  updateBrandImage(id: string, file: File): Observable<IBrand> {
     const formData = new FormData();
-    formData.append('logo', logo, logo.name);
+    formData.append('file', file, file.name);
 
     return this._http.put<IBrand>(
-      `${this._urlBase}/updateLogo/${id}`,
+      `${this._urlBase}/updateImage/${id}`,
       formData
     );
   }

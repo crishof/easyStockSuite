@@ -1,11 +1,18 @@
 package com.crishof.supplier.service;
 
+import com.crishof.supplier.dto.SupplierRequest;
+import com.crishof.supplier.dto.SupplierResponse;
+import com.crishof.supplier.exception.DuplicateNameException;
+import com.crishof.supplier.exception.SupplierNotFoundException;
 import com.crishof.supplier.model.Supplier;
+import com.crishof.supplier.modelMapper.SupplierMapper;
 import com.crishof.supplier.repository.SupplierRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 
 @Service
 public class SupplierServiceImpl implements SupplierService {
@@ -14,32 +21,56 @@ public class SupplierServiceImpl implements SupplierService {
     SupplierRepository supplierRepository;
 
     @Override
-    public void save(Supplier supplier) {
-        supplierRepository.save(supplier);
-    }
-
-    @Override
     public List<Supplier> getAll() {
         return supplierRepository.findAll();
     }
 
     @Override
-    public Supplier findById(Long id) {
+    public Supplier getById(UUID id) {
         return supplierRepository.findById(id).orElse(null);
     }
 
     @Override
-    public void update(Long id, Supplier supplier) {
-        Supplier supplier1 = this.findById(id);
-        supplier1.setName(supplier.getName());
-        supplier1.setCompanyName(supplier.getCompanyName());
-        supplier1.setTaxIN(supplier.getTaxIN());
-
-        supplierRepository.save(supplier1);
+    public Supplier findByName(String name) {
+        return supplierRepository.findByName(name);
     }
 
     @Override
-    public void deleteById(Long id) {
+    public SupplierResponse getByName(String name) {
+
+        Supplier supplier = supplierRepository.findByNameIgnoreCase(name).orElseThrow(() -> new SupplierNotFoundException("Supplier with name " + name + " not found"));
+        return SupplierMapper.toSupplierResponse(supplier);
+    }
+
+    @Override
+    public SupplierResponse save(SupplierRequest supplierRequest) {
+
+        Supplier supplier = new Supplier(supplierRequest);
+
+        if (supplierRepository.findByNameIgnoreCase(supplierRequest.getName()).isPresent()) {
+            throw new DuplicateNameException("Supplier with name " + supplierRequest.getName() + " already exist");
+        }
+        if (Objects.equals(supplier.getName(), "")) {
+            throw new IllegalArgumentException("Supplier name cannot be empty");
+        }
+        return new SupplierResponse(supplierRepository.save(supplier));
+
+    }
+
+    @Override
+    public Supplier update(UUID id, SupplierRequest supplierRequest) {
+
+        Supplier supplier = this.getById(id);
+
+        supplier.setName(supplierRequest.getName());
+        supplier.setTaxId(supplierRequest.getTaxId());
+        supplier.setLegalName(supplierRequest.getLegalName());
+
+        return supplierRepository.save(supplier);
+    }
+
+    @Override
+    public void deleteById(UUID id) {
         supplierRepository.deleteById(id);
     }
 }

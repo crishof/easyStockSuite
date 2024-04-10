@@ -1,11 +1,23 @@
 package com.crishof.brandsv.service;
 
+import com.crishof.brandsv.apiCient.ImageAPIClient;
+import com.crishof.brandsv.apiCient.ProductApiClient;
+import com.crishof.brandsv.dto.BrandRequest;
+import com.crishof.brandsv.dto.BrandResponse;
+import com.crishof.brandsv.exeption.BrandNotFoundException;
+import com.crishof.brandsv.exeption.DuplicateNameException;
+import com.crishof.brandsv.exeption.ProductsAssociatedException;
 import com.crishof.brandsv.model.Brand;
 import com.crishof.brandsv.repository.BrandRepository;
+import com.crishof.brandsv.utils.BrandMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class BrandServiceImpl implements BrandService {
@@ -13,56 +25,117 @@ public class BrandServiceImpl implements BrandService {
     @Autowired
     BrandRepository brandRepository;
 
+    @Autowired
+    ImageAPIClient imageAPIClient;
+
+    @Autowired
+    ProductApiClient productApiClient;
+
     @Override
-    public void save(Brand brand) {
-        brandRepository.save(brand);
+    public List<BrandResponse> getAll() {
+        List<Brand> brands = brandRepository.findAll();
+        return brands.stream()
+                .map(BrandMapper::toBrandResponse)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public List<Brand> findAll() {
-        return brandRepository.findAll();
+    public BrandResponse getById(UUID id) {
+
+        Brand brand = brandRepository.findById(id).orElseThrow(
+                () -> new BrandNotFoundException(id));
+        return BrandMapper.toBrandResponse(brand);
     }
 
     @Override
-    public Brand findById(Long id) {
-        return brandRepository.findById(id).orElse(null);
+    public BrandResponse getByName(String name) {
+
+        Brand brand = brandRepository.findByNameIgnoreCase(name).orElseThrow(
+                () -> new BrandNotFoundException("Brand not found with name: " + name));
+        return BrandMapper.toBrandResponse(brand);
+    }
+
+
+    @Override
+    public BrandResponse save(BrandRequest brandRequest) {
+
+        Brand brand = new Brand(brandRequest);
+
+        if (brandRepository.findByNameIgnoreCase(brandRequest.getName()).isPresent()) {
+            throw new DuplicateNameException("Brand with name " + brandRequest.getName() + " already exist");
+        }
+        if (Objects.equals(brand.getName(), "")) {
+            throw new IllegalArgumentException("Brand name cannot be empty");
+        }
+        return new BrandResponse(brandRepository.save(brand));
+
     }
 
     @Override
-    public void update(Long id, Brand brand) {
+    public BrandResponse updateBrandName(UUID id, String name) {
 
-        Brand brand1 = this.findById(id);
-        brand1.setName(brand.getName());
+        Brand brand = brandRepository.findById(id)
+                .orElseThrow(() -> new BrandNotFoundException(id));
 
-        brandRepository.save(brand1);
-
+        if (name == null || name.isEmpty()) {
+            throw new IllegalArgumentException("Brand name cannot be empty");
+        }
+        brand.setName(name);
+        return new BrandResponse(brandRepository.save(brand));
     }
 
     @Override
-    public void deleteById(Long id) {
+    public BrandResponse updateBrand(UUID uuid, String brandName, String imageUrl) {
+
+        Brand brand = brandRepository.findById(uuid)
+                .orElseThrow(() -> new BrandNotFoundException(uuid));
+
+        if (brandName == null || brandName.isEmpty()) {
+            throw new IllegalArgumentException("Brand name cannot be empty");
+        }
+        brand.setName(brandName);
+        brand.setImageUrl(imageUrl);
+
+        return new BrandResponse(brandRepository.save(brand));
+    }
+
+    @Override
+    public BrandResponse updateImage(UUID uuid, String imageUrl) {
+
+        Brand brand = brandRepository.findById(uuid)
+                .orElseThrow(() -> new BrandNotFoundException(uuid));
+
+        if (brand.getImageUrl() != null) {
+            imageAPIClient.deleteImageByUrl(brand.getImageUrl(), Brand.class.getSimpleName());
+        }
+        brand.setImageUrl(imageUrl);
+
+
+        return new BrandResponse(brandRepository.save(brand));
+    }
+
+    public void deleteById(UUID id) {
+
+        ResponseEntity<Boolean> response = productApiClient.checkProductsByBrand(id);
+
+        if (response.getStatusCode().is2xxSuccessful()) {
+            boolean productsExist = Boolean.TRUE.equals(response.getBody());
+
+            if (productsExist) {
+                throw new ProductsAssociatedException("Cannot delete the brand because products associated with it exist");
+            }
+        } else {
+            throw new RuntimeException("Error while verifying products associated with the brand");
+        }
+
+
+        Brand brand = brandRepository.findById(id).orElseThrow(() -> new BrandNotFoundException(id));
+
+        if (brand.getImageUrl() != null) {
+            imageAPIClient.deleteImageByUrl(brand.getImageUrl(), Brand.class.getSimpleName());
+        }
 
         brandRepository.deleteById(id);
     }
-
-    @Override
-    public Long getBrandIdByName(String brand) {
-        return brandRepository.findByNameIgnoreCase(brand).getId();
-    }
-
-    @Override
-    public Brand getBrandByName(String name) {
-        return brandRepository.findByNameIgnoreCase(name);
-    }
-
-    @Override
-    public void saveBrandName(String brandName) {
-
-        Brand brand = new Brand();
-        Brand brand1 = brandRepository.findByNameIgnoreCase(brandName);
-
-        if (brand1 == null) {
-            brand.setName(brandName);
-            this.save(brand);
-        }
-    }
 }
+

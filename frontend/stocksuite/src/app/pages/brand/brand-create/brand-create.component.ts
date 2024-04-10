@@ -23,6 +23,8 @@ export class BrandCreateComponent {
   brandForm!: FormGroup;
   _brandService = inject(BrandService);
   _router = inject(Router);
+  successMessage: string = '';
+  errorMessage: string = '';
 
   constructor(private formBuilder: FormBuilder) {
     this.brandForm = formBuilder.group({
@@ -40,12 +42,12 @@ export class BrandCreateComponent {
 
     this._brandService.createBrand(brand).subscribe(
       (response) => {
-        console.log('Brand created successfully', response);
-
-        this._router.navigate(['/brand']);
+        (this.successMessage = 'Brand created successfully'), response;
+        this.errorMessage = '';
       },
       (error) => {
-        console.log('Error al crear Brand', error);
+        this.errorMessage = 'Error creating Brand: ' + error.message;
+        this.successMessage = '';
       }
     );
   }

@@ -1,24 +1,27 @@
 package com.crishof.brandsv.service;
 
-import com.crishof.brandsv.model.Brand;
+import com.crishof.brandsv.dto.BrandRequest;
+import com.crishof.brandsv.dto.BrandResponse;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface BrandService {
 
-    void save(Brand brand);
+    List<BrandResponse> getAll();
 
-    List<Brand> findAll();
+    BrandResponse getById(UUID id);
 
-    Brand findById(Long id);
+    BrandResponse getByName(String name);
 
-    void update(Long id, Brand brand);
+    BrandResponse save(BrandRequest brandRequest);
 
-    void deleteById(Long id);
+    BrandResponse updateBrandName(UUID id, String name);
 
-    Long getBrandIdByName(String brand);
+    BrandResponse updateBrand(UUID uuid, String brandName, String imageUrl);
 
-    Brand getBrandByName(String name);
+    BrandResponse updateImage(UUID uuid, String imageUrl);
 
-    void saveBrandName(String brand);
+    void deleteById(UUID id);
+
 }

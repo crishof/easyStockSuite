@@ -1,9 +1,137 @@
-<div class="container-fluid">
-  <div class="container text-center">
-    <h2>Products List</h2>
-  </div>
+<app-product-navbar></app-product-navbar>
 
-  <div class="table-responsive">
+<div
+  class="btn-group btn-group-sm"
+  role="group"
+  aria-label="Basic outlined example"
+>
+  <button
+    type="button"
+    class="btn btn-outline-secondary"
+    [ngClass]="{ active: selectedComponent === 'product' }"
+    (click)="selectedComponent = 'product'"
+  >
+    Product
+  </button>
+  <button
+    type="button"
+    class="btn btn-outline-secondary"
+    [ngClass]="{ active: selectedComponent === 'fichaTecnica' }"
+    (click)="selectedComponent = 'fichaTecnica'"
+  >
+    Ficha Tecnica
+  </button>
+  <button
+    type="button"
+    class="btn btn-outline-secondary"
+    [ngClass]="{ active: selectedComponent === 'proveedor' }"
+    (click)="selectedComponent = 'proveedor'"
+  >
+    Proveedor
+  </button>
+  <button
+    type="button"
+    class="btn btn-outline-secondary"
+    [ngClass]="{ active: selectedComponent === 'codigos' }"
+    (click)="selectedComponent = 'codigos'"
+  >
+    Codigos
+  </button>
+  <button
+    type="button"
+    class="btn btn-outline-secondary"
+    [ngClass]="{ active: selectedComponent === 'varios' }"
+    (click)="selectedComponent = 'varios'"
+  >
+    Varios
+  </button>
+  <button
+    type="button"
+    class="btn btn-outline-secondary"
+    [ngClass]="{ active: selectedComponent === 'stock' }"
+    (click)="selectedComponent = 'stock'"
+  >
+    Stock
+  </button>
+  <button
+    type="button"
+    class="btn btn-outline-secondary"
+    [ngClass]="{ active: selectedComponent === 'tarjetas' }"
+    (click)="selectedComponent = 'tarjetas'"
+  >
+    Pago Tarjetas
+  </button>
+  <button
+    type="button"
+    class="btn btn-outline-secondary"
+    [ngClass]="{ active: selectedComponent === 'especificaciones' }"
+    (click)="selectedComponent = 'especificaciones'"
+  >
+    Especificaciones
+  </button>
+</div>
+
+<div class="container" id="tag-container">
+  <ng-container [ngSwitch]="selectedComponent">
+    <app-product-detail
+      *ngSwitchCase="'product'"
+      [product]="selectedProduct"
+    ></app-product-detail>
+    <div *ngSwitchCase="'fichaTecnica'">
+      <p>Ficha Tecnica</p>
+    </div>
+    <div *ngSwitchCase="'proveedor'">
+      <p>Proveedor</p>
+    </div>
+    <div *ngSwitchCase="'codigos'">
+      <p>Codigos</p>
+    </div>
+    <div *ngSwitchCase="'varios'">
+      <p>varios</p>
+    </div>
+    <div *ngSwitchCase="'stock'">
+      <p>Stock</p>
+    </div>
+    <div *ngSwitchCase="'tarjetas'">
+      <p>tarjetas</p>
+    </div>
+    <div *ngSwitchCase="'especificaciones'">
+      <p>especificaciones</p>
+    </div>
+  </ng-container>
+</div>
+<hr />
+
+<div class="container">
+  <div class="row">
+    <form
+      #brandForm="ngForm"
+      (ngSubmit)="searchProducts()"
+      class="row mb-3 text-center col-md-8"
+    >
+      <div class="col-md-10">
+        <input
+          type="text"
+          class="form-control"
+          id="searchTerm"
+          placeholder="Enter search term and press enter to search"
+          [(ngModel)]="searchTerm"
+          name="searchTerm"
+          (keyup.enter)="searchProducts()"
+        />
+      </div>
+
+      <div class="col-md-2">
+        <button type="submit" class="btn btn-outline-primary btn-sm">
+          Search
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="container-fluid">
+  <div class="table-responsive" id="table-container">
     <table class="table table-stripped table-hover align-middle table-sm">
       <thead class="table-dark">
         <tr>
@@ -12,32 +140,27 @@
           <th scope="col">Brand</th>
           <th scope="col">Model</th>
           <th scope="col">Description</th>
-          <th scope="col">Tax Rate</th>
+          <th scope="col">Category</th>
+
+          <th class="nowrap" scope="col">Tax Rate</th>
           <th scope="col">Selling Price</th>
           <th scope="col">Stock</th>
-          <th scope="col"></th>
         </tr>
       </thead>
 
       <tbody>
         @for (product of productList; track $index) {
-        <tr>
+        <tr (click)="selectProduct(product)">
           <td id="id">{{ product.id }}</td>
           <td>{{ product.code }}</td>
           <td>{{ product.brandName }}</td>
           <td>{{ product.model }}</td>
-          <td>{{ product.description }}</td>
-          <td>{{ product.taxRate * 100 }}%</td>
-          <td>{{ product.sellingPrice | currency }}</td>
+          <td class="description-cell">{{ product.description }}</td>
+          <td>{{ product.categoryName }}</td>
+
+          <td>{{ product.priceResponse.taxRate * 100 }}%</td>
+          <td>{{ product.priceResponse.sellingPrice | currency }}</td>
           <td>{{ product.stock }}</td>
-          <td>
-            <button
-              class="btn btn-outline-primary btn-sm"
-              (click)="navegate(product.id)"
-            >
-              Details
-            </button>
-          </td>
         </tr>
         }
       </tbody>

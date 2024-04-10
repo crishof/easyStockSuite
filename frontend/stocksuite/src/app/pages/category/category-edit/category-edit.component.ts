@@ -38,7 +38,7 @@ export class CategoryEditComponent implements OnInit {
   constructor(private formBuilder: FormBuilder) {
     this.categoryForm = formBuilder.group({
       categoryName: ['', [Validators.required]],
-      logo: [null],
+      image: [null],
     });
   }
   enviar(event: Event) {
@@ -82,20 +82,20 @@ export class CategoryEditComponent implements OnInit {
     this.selectedFile = event.target.files[0] as File;
   }
 
-  updateLogo(): void {
+  updateImage(): void {
     if (this.selectedFile && this.category?.id) {
       this._categoryService
-        .updateCategoryLogo(this.category?.id, this.selectedFile)
+        .updateCategoryImage(this.category?.id, this.selectedFile)
         .subscribe(
           (response) => {
-            console.log('Logo actualizado: ', response);
+            console.log('Image actualizado: ', response);
 
             this.categoryUpdatedSubject.next(response);
 
             this.onSave.emit(response);
           },
           (error) => {
-            console.log('Error al actualizar el logo:', error);
+            console.log('Error al actualizar el image:', error);
           }
         );
     } else {
@@ -106,7 +106,7 @@ export class CategoryEditComponent implements OnInit {
   ngOnInit(): void {
     this.categoryForm = this.formBuilder.group({
       categoryName: ['', Validators.required],
-      logo: [null],
+      image: [null],
     });
   }
 

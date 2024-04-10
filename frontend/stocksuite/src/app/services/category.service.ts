@@ -45,12 +45,12 @@ export class CategoryService {
     });
   }
 
-  updateCategoryLogo(id: string, logo: File): Observable<ICategory> {
+  updateCategoryImage(id: string, image: File): Observable<ICategory> {
     const formData = new FormData();
-    formData.append('logo', logo, logo.name);
+    formData.append('image', image, image.name);
 
     return this._http.put<ICategory>(
-      `${this._urlBase}/updateLogo/${id}`,
+      `${this._urlBase}/updateImage/${id}`,
       formData
     );
   }

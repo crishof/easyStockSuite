@@ -45,7 +45,7 @@
           </span>
         </th>
 
-        <th scope="col">Logo</th>
+        <th scope="col">Image</th>
 
         <th scope="col" class="sortable" (click)="sortColumn('name')">
           Name
@@ -63,13 +63,8 @@
       <tr>
         <td>{{ brand.id }}</td>
         <td>
-          @if (brand.logo != null){
-          <img
-            [src]="getLogoUrl(brand.logo)"
-            alt=""
-            width="50px"
-            height="50px"
-          />
+          @if (brand.imageUrl != null){
+          <img [src]="brand.imageUrl" alt="" width="50px" height="50px" />
           } @else{
           <img
             src="../../../../assets/images/no-image-100.png"

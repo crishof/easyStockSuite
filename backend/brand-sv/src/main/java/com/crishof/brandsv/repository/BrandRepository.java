@@ -2,8 +2,13 @@ package com.crishof.brandsv.repository;
 
 import com.crishof.brandsv.model.Brand;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface BrandRepository extends JpaRepository<Brand, Long> {
+import java.util.Optional;
+import java.util.UUID;
 
-    Brand findByNameIgnoreCase(String name);
+@Repository
+public interface BrandRepository extends JpaRepository<Brand, UUID> {
+
+    Optional<Brand> findByNameIgnoreCase(String name);
 }

@@ -1,18 +1,34 @@
 package com.crishof.productsv.service;
 
-import com.crishof.productsv.model.Product;
+import com.crishof.productsv.dto.ProductRequest;
+import com.crishof.productsv.dto.ProductResponse;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface ProductService {
 
-    void save(Product product);
+    List<ProductResponse> getAll();
 
-    List<Product> findAll();
+    ProductResponse getById(UUID id);
 
-    Product findById(Long id);
+    ProductResponse save(ProductRequest productRequest);
 
-    void update(Long id, Product product);
+    ProductResponse update(UUID id, ProductRequest productRequest);
 
-    void deleteById(Long id);
+    void deleteById(UUID id);
+
+    String getBrandName(UUID uuid);
+
+    List<ProductResponse> getAllByFilter(String filter);
+
+    List<ProductResponse> getAllByFilterAndStock(String filter);
+
+    boolean checkProductsByBrand(UUID brandId);
+
+    Long countProductsByBrand(UUID brandId);
+
+    void removeCategory(UUID categoryId);
+
+
 }

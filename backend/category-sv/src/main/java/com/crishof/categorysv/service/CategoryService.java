@@ -2,25 +2,29 @@ package com.crishof.categorysv.service;
 
 import com.crishof.categorysv.dto.CategoryRequest;
 import com.crishof.categorysv.dto.CategoryResponse;
-import com.crishof.categorysv.model.Category;
 
 import java.util.List;
 import java.util.UUID;
 
 public interface CategoryService {
 
-
     List<CategoryResponse> getAll();
 
     CategoryResponse getById(UUID id);
 
-    Category getByName(String name);
+    CategoryResponse getByName(String name);
 
     CategoryResponse save(CategoryRequest categoryRequest);
 
-    CategoryResponse update(UUID id, String name);
+    CategoryResponse updateCategoryName(UUID uuid, String name);
+
+    CategoryResponse updateCategory(UUID id, String name, String imageUrl);
+
+    CategoryResponse updateImage(UUID uuid, String imageUrl);
 
     void deleteById(UUID id);
 
-    Category updateImage(UUID uuid, String imageUrl);
+    void deleteCategoryFromDatabase(UUID id);
+
+    void deleteCategoryImage(UUID id);
 }

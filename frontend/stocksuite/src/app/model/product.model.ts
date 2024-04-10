@@ -1,10 +1,16 @@
+import { IPrice } from './price.model';
+
 export interface IProduct {
   id: string;
   brandName: string;
   code: string;
   model: string;
   description: string;
-  taxRate: number;
-  sellingPrice: number;
+  categoryName: string;
+  supplierId: string;
+  hidden: boolean;
+  imageId: string[];
   stock: number;
+  priceResponse: IPrice;
+  dimensionId: string;
 }

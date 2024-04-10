@@ -10,6 +10,7 @@ import {
 } from '@angular/forms';
 import { BrandService } from '../../../services/brand.service';
 import { Subject } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-brand-edit',
@@ -22,86 +23,83 @@ export class BrandEditComponent implements OnInit {
   @Input() brand: IBrand | undefined;
   @Output() onSave = new EventEmitter<IBrand>();
   @Output() onCancel = new EventEmitter<void>();
+  @Output() onSuccessMessage = new EventEmitter<String>();
 
   brandForm!: FormGroup;
+  brandId: string;
+  file: File | null = null;
+
   _brandService = inject(BrandService);
+  route = inject(ActivatedRoute);
+  _router = inject(Router);
+  formBuilder = inject(FormBuilder);
+
+  errorMessage: string = '';
 
   private brandUpdatedSubject = new Subject<IBrand>();
 
-  constructor(private formBuilder: FormBuilder) {
-    this.brandForm = formBuilder.group({
-      brandName: ['', [Validators.required]],
-      logo: [null],
+  constructor() {
+    this.brandForm = this.formBuilder.group({
+      brandName: ['', Validators.required],
+      image: [null],
     });
+    this.brandId = '';
   }
 
-  enviar(event: Event) {
+  ngOnInit(): void {
+    this.brandId = this.route.snapshot.paramMap.get('id') ?? '';
+  }
+
+  updateBrand(event: Event) {
     event.preventDefault();
 
-    const updatedBrand: IBrand = {
-      id: this.brand?.id || '',
-      name: this.brandForm.get('brandName')?.value || '',
-    };
+    const brandName = this.brandForm.get('brandName')?.value;
+
+    const currentBrandName = this.brand ? this.brand.name : '';
+
+    if (!brandName && !this.file) {
+      this.errorMessage = 'No changes made. Please upddate at least one field';
+      console.error(this.errorMessage);
+      return;
+    }
 
     const formData = new FormData();
-    formData.append('name', updatedBrand.name);
 
-    this._brandService.updateBrand(updatedBrand.id, formData).subscribe(
+    if (brandName) {
+      formData.append('brandName', brandName);
+    } else {
+      formData.append('brandName', currentBrandName);
+    }
+
+    if (this.file) {
+      formData.append('file', this.file, this.file.name);
+    }
+
+    this._brandService.updateBrand(this.brandId, formData).subscribe(
       (response) => {
-        console.log('Brand actualizada: ', response);
-
-        this.brandUpdatedSubject.next(response);
-
         this.onSave.emit(response);
+        this.onSuccessMessage.emit('Brand updated successfully');
       },
       (error) => {
-        console.log('Error al actualizar:', error);
+        console.error('Error updating Brand', error);
       }
     );
   }
 
-  selectedFile: File | undefined;
-
-  onFileSelected(event: any): void {
-    this.selectedFile = event.target.files[0] as File;
-  }
-
-  updateLogo(): void {
-    if (this.selectedFile && this.brand?.id) {
-      this._brandService
-        .updateBrandLogo(this.brand?.id, this.selectedFile)
-        .subscribe(
-          (response) => {
-            console.log('Logo actualizado: ', response);
-
-            this.brandUpdatedSubject.next(response);
-
-            this.onSave.emit(response);
-          },
-          (error) => {
-            console.log('Error al actualizar el logo:', error);
-          }
-        );
-    } else {
-      console.log('Seleccione un archivo y proporcione un ID de marca válido.');
+  onFileSelected(event: any) {
+    if (event.target.files && event.target.files.length > 0) {
+      this.file = event.target.files[0];
     }
   }
 
-  ngOnInit(): void {
-    this.brandForm = this.formBuilder.group({
-      brandName: ['', Validators.required],
-      logo: [null],
-    });
+  hasErrors(field: string, typeError: string): boolean {
+    const formControl = this.brandForm.get(field);
+    return formControl
+      ? formControl.hasError(typeError) && formControl.touched
+      : false;
   }
 
   cancelar(): void {
     this.onCancel.emit();
-  }
-
-  hasErrors(field: string, typeError: string) {
-    return (
-      this.brandForm.get(field)?.hasError(typeError) &&
-      this.brandForm.get(field)?.touched
-    );
   }
 }
