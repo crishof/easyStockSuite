@@ -64,8 +64,8 @@ export class SupplierPriceListComponent implements OnInit {
 
   importSelectedProducts(): void {
     this._supplierPriceList.importProducts(this.selectedProducts).subscribe(
-      () => {
-        console.log('productos importados con exito ');
+      (response: any) => {
+        console.log(response.message);
       },
       (error) => {
         console.log('Error al importar productos', error);

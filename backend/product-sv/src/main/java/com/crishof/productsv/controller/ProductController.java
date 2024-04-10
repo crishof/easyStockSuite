@@ -3,17 +3,16 @@ package com.crishof.productsv.controller;
 import com.crishof.productsv.dto.ProductRequest;
 import com.crishof.productsv.dto.ProductResponse;
 import com.crishof.productsv.dto.SupplierProductRequest;
-import com.crishof.productsv.exeption.ImportFileException;
 import com.crishof.productsv.exeption.ProductNotFoundException;
 import com.crishof.productsv.repository.ProductRepository;
 import com.crishof.productsv.service.ImportFileService;
 import com.crishof.productsv.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.UUID;
@@ -34,6 +33,8 @@ public class ProductController {
 
     @Value("${server.port}")
     private int serverPort;
+    @Autowired
+    private HttpMessageConverters messageConverters;
 
 //    @GetMapping("/test")
 //    public String LoadBalancerTest() {
@@ -115,34 +116,36 @@ public class ProductController {
         return productService.countProductsByBrand(brandId);
     }
 
-    @PostMapping("/importList")
-    public String importFile(@RequestParam MultipartFile file, @RequestParam String supplierName) {
-
-        System.out.println("file = " + supplierName);
-
-        try {
-
-            List<ProductRequest> products = importFileService.readExcel(file);
-
-            for (ProductRequest product : products) {
-                product.setSupplierName(supplierName);
-                productService.save(product);
-            }
-
-            return "All products imported";
-        } catch (ImportFileException e) {
-            return "Error during import: " + e.getMessage();
-        }
-    }
-
     @PostMapping("/importProducts")
     public ResponseEntity<String> importProduct(@RequestBody List<SupplierProductRequest> productList) {
 
-        System.out.println("productList = " + productList);
-        System.out.println("TAMAÑO: " + productList.size());
-        System.out.println("PETICION RECIBIDA");
+        int importedCount = 0;
+        int alreadyImportedCount = 0;
 
-        return ResponseEntity.ok().body("{\"message\": \"Productos importados con éxito\"}");
+        for (SupplierProductRequest request : productList) {
 
+            System.out.println("is present: " + productRepository.findBySupplierProductId(request.getId()));
+
+            if (productRepository.findBySupplierProductId(request.getId()) == null) {
+                ProductRequest productRequest = new ProductRequest(request);
+                productService.save(productRequest);
+                importedCount++;
+                System.out.println("importedCount = " + importedCount);
+                System.out.println("productRequest = " + productRequest);
+            } else {
+                alreadyImportedCount++;
+                System.out.println("alreadyImportedCount = " + alreadyImportedCount);
+            }
+        }
+
+        String message = "Products imported successfully";
+        if (importedCount > 0) {
+            message += " " + importedCount + " products imported";
+        }
+        if (alreadyImportedCount > 0) {
+            message += " " + alreadyImportedCount + " products already imported";
+        }
+
+        return ResponseEntity.ok().body("{\"message\": \"" + message + "\"}");
     }
 }

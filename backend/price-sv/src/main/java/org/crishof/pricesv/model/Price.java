@@ -22,12 +22,14 @@ public class Price {
     private UUID uuid;
     private double purchasePrice = 0.0;
     private double sellingPrice = 0.0;
-    private double discount = 0;
+    private double webSellingPrice = 0.0;
     private double taxRate = 0.0;
+    private double discount = 0;
 
     public Price(PriceRequest priceRequest) {
         this.purchasePrice = priceRequest.getPurchasePrice();
         this.sellingPrice = priceRequest.getSellingPrice();
+        this.webSellingPrice = priceRequest.getWebSellingPrice();
         this.taxRate = priceRequest.getTaxRate();
     }
 }

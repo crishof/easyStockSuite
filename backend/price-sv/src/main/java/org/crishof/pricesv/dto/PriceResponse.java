@@ -12,11 +12,13 @@ public class PriceResponse {
 
     private double purchasePrice;
     private double sellingPrice;
+    private double webSellingPrice;
     private double taxRate;
 
     public PriceResponse(Price price) {
         this.purchasePrice = price.getPurchasePrice();
         this.sellingPrice = price.getSellingPrice();
+        this.webSellingPrice = price.getWebSellingPrice();
         this.taxRate = price.getTaxRate();
     }
 }

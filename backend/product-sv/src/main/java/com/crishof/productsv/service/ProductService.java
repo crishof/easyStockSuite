@@ -22,7 +22,7 @@ public interface ProductService {
 
     List<ProductResponse> getAllByFilter(String filter);
 
-//    List<ProductResponse> getAllByFilterAndStock(String filter);
+    List<ProductResponse> getAllByFilterAndStock(String filter);
 
     boolean checkProductsByBrand(UUID brandId);
 

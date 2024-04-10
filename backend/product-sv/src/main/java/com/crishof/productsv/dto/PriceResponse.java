@@ -11,6 +11,7 @@ public class PriceResponse {
 
     private double purchasePrice;
     private double sellingPrice;
+    private double webSellingPrice;
     private double taxRate;
 
 }

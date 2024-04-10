@@ -10,6 +10,7 @@ import com.crishof.productsv.dto.ProductResponse;
 import com.crishof.productsv.exeption.ProductNotFoundException;
 import com.crishof.productsv.model.Product;
 import com.crishof.productsv.repository.ProductRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -22,24 +23,136 @@ import java.util.stream.Collectors;
 @Service
 public class ProductServiceImpl implements ProductService {
 
-    final ProductRepository productRepository;
-    final BrandAPIClient brandAPIClient;
-    final CategoryAPIClient categoryAPIClient;
-    final SupplierAPIClient supplierAPIClient;
-    final PriceApiClient priceApiClient;
+    final
+    ProductRepository productRepository;
+    final
+    CategoryAPIClient categoryAPIClient;
+    final
+    PriceApiClient priceApiClient;
+    final
+    BrandAPIClient brandAPIClient;
+    final
+    SupplierAPIClient supplierAPIClient;
 
-    public ProductServiceImpl(ProductRepository productRepository, BrandAPIClient brandAPIClient, CategoryAPIClient categoryAPIClient, SupplierAPIClient supplierAPIClient, PriceApiClient priceApiClient) {
+    public ProductServiceImpl(ProductRepository productRepository, CategoryAPIClient categoryAPIClient, PriceApiClient priceApiClient, BrandAPIClient brandAPIClient, SupplierAPIClient supplierAPIClient) {
         this.productRepository = productRepository;
-        this.brandAPIClient = brandAPIClient;
         this.categoryAPIClient = categoryAPIClient;
-        this.supplierAPIClient = supplierAPIClient;
         this.priceApiClient = priceApiClient;
+        this.brandAPIClient = brandAPIClient;
+        this.supplierAPIClient = supplierAPIClient;
     }
 
     @Override
-    public List<ProductResponse> getAll() {
-        List<Product> products = this.productRepository.findAll();
+    public ProductResponse save(ProductRequest productRequest) {
+
+
+        Product product = new Product();
+
+        product.setBrandId(this.getIdByName(productRequest.getBrandName(), "brand"));
+        product.setCode(productRequest.getCode());
+        product.setModel(productRequest.getModel());
+        product.setDescription(productRequest.getDescription());
+        if (productRequest.getCategoryName() != null) {
+            product.setCategoryId(this.getIdByName(productRequest.getCategoryName(), "category"));
+        }
+        product.setSupplierId(productRequest.getSupplierId());
+        product.setSupplierProductId(productRequest.getSupplierProductId());
+        product.setHidden(false);
+
+        ResponseEntity<?> response = priceApiClient.save(new PriceRequest(
+                productRequest.getPurchasePrice(),
+                productRequest.getSellingPrice(),
+                productRequest.getWebSellingPrice(),
+                productRequest.getTaxRate()
+        ));
+        String idString = (String) response.getBody();
+        assert idString != null;
+        UUID priceId = UUID.fromString(idString);
+        product.setPriceId(priceId);
+
+        return this.toProductResponse(productRepository.save(product));
+    }
+
+    @Override
+    public ProductResponse update(UUID id, ProductRequest productRequest) {
+
+        return null;
+    }
+
+    @Override
+    public void deleteById(UUID id) {
+
+        productRepository.deleteById(id);
+
+    }
+
+    public String getBrandName(UUID uuid) {
+        try {
+            ResponseEntity<String> response = brandAPIClient.getNameById(uuid);
+
+            if (response.getStatusCode().is2xxSuccessful()) {
+                return response.getBody();
+            } else {
+                // Si la llamada no es exitosa, devuelve un valor predeterminado
+                return "Not available";
+            }
+        } catch (Exception ex) {
+            // Manejar la excepción aquí
+            return "Error fetching brand name";
+        }
+    }
+
+    @Override
+    public List<ProductResponse> getAllByFilter(String filter) {
+        List<Product> products = new ArrayList<>();
+
+        if (!filter.isEmpty()) {
+            ResponseEntity<?> brandResponse = brandAPIClient.getIdByName(filter);
+            if (brandResponse.getStatusCode() == HttpStatus.OK) {
+                String brandString = (String) brandResponse.getBody();
+                if (brandString != null && !brandString.isEmpty()) {
+                    UUID brandId = UUID.fromString(brandString);
+                    products.addAll(productRepository.findAllByBrandId(brandId));
+                }
+            }
+        }
+        products.addAll(productRepository.findAllByModelContainingIgnoreCase(filter));
+        products.addAll(productRepository.findAllByDescriptionContainingIgnoreCase(filter));
+
         return products.stream().map(this::toProductResponse).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ProductResponse> getAllByFilterAndStock(String filter) {
+        return List.of();
+    }
+
+    public boolean checkProductsByBrand(UUID brandId) {
+        long productCount = productRepository.countByBrandId(brandId);
+        return productCount > 0;
+    }
+
+    public Long countProductsByBrand(UUID brandId) {
+        return productRepository.countByBrandId(brandId);
+    }
+
+    public void removeCategory(UUID categoryId) {
+        List<Product> products = productRepository.findAllByCategoryId(categoryId);
+
+        for (Product product : products) {
+            product.setCategoryId(null);
+            productRepository.save(product);
+        }
+    }
+
+
+    @Override
+    public List<ProductResponse> getAll() {
+
+        List<Product> products = productRepository.findAll();
+        return products.stream()
+                .map(this::toProductResponse)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -89,136 +202,40 @@ public class ProductServiceImpl implements ProductService {
         }
     }
 
-    public String getBrandName(UUID uuid) {
-        try {
-            ResponseEntity<String> response = brandAPIClient.getNameById(uuid);
-
-            if (response.getStatusCode().is2xxSuccessful()) {
-                return response.getBody();
-            } else {
-                // Si la llamada no es exitosa, devuelve un valor predeterminado
-                return "Not available";
+    public UUID getIdByName(String name, String entityName) {
+        // Manejar caso de entidad desconocida
+        return switch (entityName) {
+            case "brand" -> {
+                ResponseEntity<?> response = brandAPIClient.getIdByName(name);
+                yield handleResponse(response, name, "brand");
             }
-        } catch (Exception ex) {
-            // Manejar la excepción aquí
-            return "Error fetching brand name";
-        }
-    }
-
-
-    @Override
-    public ProductResponse save(ProductRequest productRequest) {
-
-        Product product = new Product(productRequest);
-
-        //TODO set brand
-
-        ResponseEntity<?> brandResponse = brandAPIClient.getIdByName(productRequest.getBrandName());
-        UUID brandId;
-        if (brandResponse.getStatusCode() == HttpStatus.OK) {
-            String brandString = (String) brandResponse.getBody();
-            assert brandString != null;
-            brandId = UUID.fromString(brandString);
-            product.setBrandId(brandId);
-        }
-
-        //TODO set category
-
-        if (productRequest.getCategoryName() != null) {
-            ResponseEntity<?> categoryResponse = categoryAPIClient.getIdByName(productRequest.getCategoryName());
-            UUID categoryId;
-            if (categoryResponse.getStatusCode() == HttpStatus.OK) {
-                String categoryString = (String) categoryResponse.getBody();
-                assert categoryString != null;
-                categoryId = UUID.fromString(categoryString);
-                product.setCategoryId(categoryId);
+            case "category" -> {
+                ResponseEntity<?> response = categoryAPIClient.getIdByName(name);
+                yield handleResponse(response, name, "category");
             }
+            case "supplier" -> {
+                ResponseEntity<?> response = supplierAPIClient.getIdByName(name);
+                yield handleResponse(response, name, "supplier");
+            }
+            default -> throw new IllegalArgumentException("Invalid entity name: " + entityName);
+        };
+    }
+
+    private UUID handleResponse(ResponseEntity<?> response, String name, String entityName) {
+        if (response == null || response.getStatusCode() != HttpStatus.OK) {
+            // Manejar caso de respuesta nula o no exitosa
+            throw new EntityNotFoundException("Error retrieving " + entityName + " ID for " + entityName + ": " + name);
         }
 
-        //TODO set Supplier
-
-        ResponseEntity<?> supplierResponse = supplierAPIClient.getIdByName(productRequest.getSupplierName());
-        UUID supplierId;
-        if (supplierResponse.getStatusCode() == HttpStatus.OK) {
-            String supplierString = (String) supplierResponse.getBody();
-            assert supplierString != null;
-            supplierId = UUID.fromString(supplierString);
-            product.setSupplierId(supplierId);
+        String idString = (String) response.getBody();
+        if (idString == null) {
+            // Manejar caso de respuesta con cuerpo nulo
+            throw new EntityNotFoundException("No " + entityName + " ID found for " + entityName + ": " + name);
         }
 
-        //TODO set prices
-
-        PriceRequest priceRequest = new PriceRequest(productRequest.getPurchasePrice(), productRequest.getSellingPrice(), productRequest.getTaxRate());
-        ResponseEntity<?> priceResponse = priceApiClient.save(priceRequest);
-        UUID priceId;
-
-        if (priceResponse.getStatusCode() == HttpStatus.OK) {
-            String priceString = (String) priceResponse.getBody();
-            assert priceString != null;
-            priceId = UUID.fromString(priceString);
-
-            product.setPriceId(priceId);
-        }
-
-        Product saved = productRepository.save(product);
-        return this.toProductResponse(saved);
-    }
-
-    @Override
-    public ProductResponse update(UUID id, ProductRequest productRequest) {
-
-        Product product = productRepository.findById(id).orElseThrow(ProductNotFoundException::new);
-        product.setModel(productRequest.getModel());
-        product.setDescription(productRequest.getDescription());
-        return this.toProductResponse(product);
-    }
-
-    @Override
-    public void deleteById(UUID id) {
-        productRepository.deleteById(id);
-    }
-
-    @Override
-    public List<ProductResponse> getAllByFilter(String filter) {
-        List<Product> products = new ArrayList<>();
-
-        ResponseEntity<?> brandResponse = brandAPIClient.getIdByName(filter);
-        UUID brandId;
-        if (brandResponse.getStatusCode() == HttpStatus.OK) {
-            String brandString = (String) brandResponse.getBody();
-            assert brandString != null;
-            brandId = UUID.fromString(brandString);
-            products.addAll(productRepository.findAllByBrandId(brandId));
-        }
-        products.addAll(productRepository.findAllByModelContainingIgnoreCase(filter));
-        products.addAll(productRepository.findAllByDescriptionContainingIgnoreCase(filter));
-
-        return products.stream().map(this::toProductResponse).collect(Collectors.toList());
-    }
-
-    public boolean checkProductsByBrand(UUID brandId) {
-        long productCount = productRepository.countByBrandId(brandId);
-        return productCount > 0;
-    }
-
-    public Long countProductsByBrand(UUID brandId) {
-        return productRepository.countByBrandId(brandId);
-    }
-
-    public void removeCategory(UUID categoryId) {
-        List<Product> products = productRepository.findAllByCategoryId(categoryId);
-
-        for (Product product : products) {
-            product.setCategoryId(null);
-            productRepository.save(product);
-        }
+        return UUID.fromString(idString);
     }
 
 
-// TODO corregir stocks
-//    @Override
-//    public List<ProductResponse> getAllByFilterAndStock(String filter) {
-//
-//        return this.getAllByFilter(filter).stream().filter(productResponse -> productResponse.getStockIds() > 0).collect(Collectors.toList());
-//    }
 }
+

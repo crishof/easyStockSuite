@@ -23,27 +23,19 @@ public class Product {
     @Column(name = "product_id", nullable = false)
     private UUID id;
     private UUID brandId;
-    private String supplierCode;
     private String code;
-    private String supplierModel;
     private String model;
-    private String supplierDescription;
     private String description;
     private UUID categoryId;
     private UUID supplierId;
-    private boolean hidden = false;
+    private UUID supplierProductId;
+    private boolean hidden;
     @ElementCollection
     private List<UUID> imageId;
     @ElementCollection
     private List<UUID> stockIds;
     private UUID priceId;
     private UUID dimensionId;
-
-    public Product(ProductRequest productRequest) {
-        this.code = productRequest.getCode();
-        this.model = productRequest.getModel();
-        this.description = productRequest.getDescription();
-    }
 }
 
 /*

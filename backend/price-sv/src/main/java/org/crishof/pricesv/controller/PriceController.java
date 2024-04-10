@@ -3,7 +3,6 @@ package org.crishof.pricesv.controller;
 import org.crishof.pricesv.dto.PriceRequest;
 import org.crishof.pricesv.dto.PriceResponse;
 import org.crishof.pricesv.service.PriceService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,8 +14,12 @@ import java.util.UUID;
 //@CrossOrigin(origins = "http://localhost:4200")
 public class PriceController {
 
-    @Autowired
+    final
     PriceService priceService;
+
+    public PriceController(PriceService priceService) {
+        this.priceService = priceService;
+    }
 
     @GetMapping("/getById/{id}")
     public PriceResponse getById(@PathVariable("id") UUID id) {
