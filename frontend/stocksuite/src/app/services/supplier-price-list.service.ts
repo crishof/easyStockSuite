@@ -1,4 +1,4 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { IProduct } from '../model/product.model';
 import { Observable } from 'rxjs';
@@ -16,6 +16,20 @@ export class SupplierPriceListService {
   private _urlSupplier = 'http://localhost:443/supplierpricelist-sv/supplier';
   private _urlProductSv = 'http://localhost:443/product-sv/product';
   constructor() {}
+
+  uploadFile(file: File, supplierId: string, updateExistingProducts: boolean) {
+    console.log('FILE: ' + file)
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('supplierId', supplierId);
+    formData.append('updateExistingProducts', String(updateExistingProducts));
+
+    const headers = new HttpHeaders();
+    headers.append('Content-Type', 'multipart/form-data');
+    return this._http.post<any>(`${this._urlBase}/importList`, formData, {
+      headers,
+    });
+  }
 
   getAllByFilter(
     supplierId: string,
@@ -57,7 +71,6 @@ export class SupplierPriceListService {
   }
 
   importProducts(productList: ISupplierProduct[]): Observable<any> {
-
     console.log('Product list: ' + productList.length);
     return this._http.post<any>(
       `${this._urlProductSv}/importProducts`,

@@ -24,7 +24,11 @@ public class PriceListController {
     }
 
     @PostMapping("/importList")
-    public ResponseEntity<String> importFile(@RequestParam MultipartFile file, @RequestParam UUID supplierId) {
+    public ResponseEntity<String> importFile(@RequestParam MultipartFile file, @RequestParam UUID supplierId, @RequestParam boolean updateExistingProducts) {
+
+        System.out.println("file.getOriginalFilename() = " + file.getOriginalFilename());
+        System.out.println("supplierId = " + supplierId);
+        System.out.println("updateExistingProducts = " + updateExistingProducts);
 
         int importedCount = 0;
         int alreadyImportedCount = 0;
@@ -81,6 +85,7 @@ public class PriceListController {
         List<ProductResponse> productResponses = productService.getAllByFilter(supplierId, brand, filter);
 
         System.out.println("Resultado: " + productResponses.size());
+
         return productResponses;
     }
 }

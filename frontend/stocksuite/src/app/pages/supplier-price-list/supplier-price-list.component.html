@@ -102,22 +102,46 @@
     </div>
 
     <div class="col">
+      <form
+        [formGroup]="fileForm"
+        enctype="multipart/form-data"
+        class="g-3"
+        (submit)="uploadFile($event)"
+      >
+      <div class="mb-3">
+        <select class="form-control form-control-sm mb-2" formControlName="supplierId">
+          <option value="">All Suppliers</option>
+          <option *ngFor="let supplier of suppliers" [value]="supplier.id">
+            {{ supplier.name }}
+          </option>
+        </select>
+      </div>
+        <div class="mb-3">
+          <label for="file" class="form-label">Upload Price List</label>
+          <input
+            type="file"
+            class="form-control"
+            id="file"
+            (change)="onFileSelected($event)"
+          />
+        </div>
 
-      <form>
-        <div class="mb-3">
-          
-        </div>
-        <div class="mb-3">
-          <label for="fileInput" class="form-label">Upload Prices List</label>
-          <input type="file" class="form-control" id="fileInput">
-        </div>
         <div class="mb-3 form-check">
-          <input type="checkbox" class="form-check-input" id="exampleCheck1">
-          <label class="form-check-label" for="exampleCheck1">Update existing products</label>
+          <input
+            type="checkbox"
+            class="form-check-input"
+            id="updateExistingProducts"
+            formControlName="updateExistingProducts"
+          />
+          <label class="form-check-label" for="updateExistingProducts"
+            >Update existing products</label
+          >
         </div>
-        <button type="submit" class="btn btn-outline-primary btn-sm">Submit</button>
+
+        <button type="submit" class="btn btn-outline-primary btn-sm">
+          Submit
+        </button>
       </form>
-      
     </div>
   </div>
 </div>

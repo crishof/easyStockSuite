@@ -1,16 +1,28 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgClass } from '@angular/common';
 import { Component, OnInit, inject } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { SupplierPriceListService } from '../../services/supplier-price-list.service';
-import { FormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { ISupplierProduct } from '../../model/supplierProduct';
 import { SupplierService } from '../../services/supplier.service';
-import { BrandService } from '../../services/brand.service';
 
 @Component({
   selector: 'app-supplier-price-list',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, RouterLink, FormsModule],
+  imports: [
+    CommonModule,
+    RouterOutlet,
+    RouterLink,
+    FormsModule,
+    ReactiveFormsModule,
+    NgClass,
+  ],
   templateUrl: './supplier-price-list.component.html',
   styleUrl: './supplier-price-list.component.css',
 })
@@ -36,6 +48,48 @@ export class SupplierPriceListComponent implements OnInit {
 
   errorMessage: string = '';
   successMessage: string = '';
+
+  selectedFile: File | null = null;
+  updateExistingProducts: boolean = false;
+
+  fileForm!: FormGroup;
+  formBuilder = inject(FormBuilder);
+
+  onFileSelected(event: any) {
+    this.selectedFile = event.target.files[0] as File;
+  }
+
+  uploadFile(event: Event) {
+    event.preventDefault(); // Evita que el formulario se envíe automáticamente
+
+    if (this.fileForm.valid && this.selectedFile) {
+      // Verifica si el formulario es válido
+      const supplierId = this.fileForm.get('supplierId')?.value;
+      const updateExistingProducts = this.fileForm.get(
+        'updateExistingProducts'
+      )?.value;
+
+      console.log('supplierId: ' + supplierId, 'check: ' + updateExistingProducts,'file: ' + this.selectedFile);
+
+      if (this.selectedFile != null && supplierId != null && updateExistingProducts != null) {
+        this._supplierPriceList
+          .uploadFile(this.selectedFile, supplierId, updateExistingProducts)
+          .subscribe(
+            (response: any) => {
+              console.log(response);
+              // Aquí puedes manejar la respuesta del backend si es necesario
+            },
+            (error: any) => {
+              console.error(error);
+              // Aquí puedes manejar los errores si es necesario
+            }
+          );
+      } else {
+        console.error('Formulario inválido');
+        // Puedes mostrar un mensaje de error o tomar otra acción si el formulario no es válido
+      }
+    }
+  }
 
   selectAllProducts(event: any) {
     const isChecked = event.target.checked;
@@ -87,7 +141,11 @@ export class SupplierPriceListComponent implements OnInit {
     this.loadSuppliers();
     this.loadBrands();
 
-    console.log(this.brands);
+    this.fileForm = this.formBuilder.group({
+      supplierId: ['', Validators.required], // Inicializa los campos del formulario según tus necesidades
+      updateExistingProducts: [false],
+      file: ['']
+    });
   }
 
   loadSuppliers() {
