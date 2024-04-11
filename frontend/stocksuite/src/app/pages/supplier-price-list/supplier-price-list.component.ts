@@ -34,6 +34,9 @@ export class SupplierPriceListComponent implements OnInit {
 
   selectAllChecked: boolean = false;
 
+  errorMessage: string = '';
+  successMessage: string = '';
+
   selectAllProducts(event: any) {
     const isChecked = event.target.checked;
     if (isChecked) {
@@ -63,14 +66,21 @@ export class SupplierPriceListComponent implements OnInit {
   }
 
   importSelectedProducts(): void {
-    this._supplierPriceList.importProducts(this.selectedProducts).subscribe(
-      (response: any) => {
-        console.log(response.message);
-      },
-      (error) => {
-        console.log('Error al importar productos', error);
-      }
-    );
+    if (this.selectedProducts.length == 0) {
+      this.successMessage = 'No products selected';
+    } else {
+      this._supplierPriceList.importProducts(this.selectedProducts).subscribe(
+        (response: any) => {
+          console.log(response.message);
+          this.successMessage = response.message;
+          this.selectedProducts = [];
+        },
+        (error) => {
+          console.log('Error al importar productos', error);
+          this.errorMessage = error;
+        }
+      );
+    }
   }
 
   ngOnInit(): void {
@@ -121,6 +131,7 @@ export class SupplierPriceListComponent implements OnInit {
   }
 
   searchProducts(): void {
+    this.selectedProducts = [];
     this._supplierPriceList
       .getAllByFilter(
         this.selectedSupplierId,

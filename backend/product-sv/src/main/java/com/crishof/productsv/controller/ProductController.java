@@ -138,7 +138,10 @@ public class ProductController {
             }
         }
 
-        String message = "Products imported successfully";
+        String message = "Task completed successfully: ";
+        if(productList.isEmpty()){
+            message = "Product list is empty";
+        }
         if (importedCount > 0) {
             message += " " + importedCount + " products imported";
         }
