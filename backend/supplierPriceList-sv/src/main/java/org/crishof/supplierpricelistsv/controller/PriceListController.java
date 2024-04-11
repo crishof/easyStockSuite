@@ -41,7 +41,7 @@ public class PriceListController {
                 // Verificar si existe un producto con la misma marca y código para este proveedor
                 Product existingProduct = productService.findProductByBrandAndCodeAndSupplierId(product.getBrand(), product.getCode(), supplierId);
 
-                if (existingProduct != null) {
+                if (existingProduct != null && updateExistingProducts) {
                     // Actualizar los precios y stock del producto existente y fecha de actualizacion
                     existingProduct.setPrice(product.getPrice());
                     existingProduct.setTaxRate(product.getTaxRate());
@@ -67,6 +67,9 @@ public class PriceListController {
             }
             if (alreadyImportedCount > 0) {
                 message += " " + alreadyImportedCount + " existing products were updated";
+            }
+            if(importedCount == 0 && alreadyImportedCount == 0){
+                message += " " + alreadyImportedCount + " no products were updated";
             }
 
             return ResponseEntity.ok().body("{\"message\": \"" + message + "\"}");
