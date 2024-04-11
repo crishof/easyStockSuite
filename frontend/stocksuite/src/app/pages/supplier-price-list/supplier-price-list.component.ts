@@ -48,6 +48,7 @@ export class SupplierPriceListComponent implements OnInit {
 
   errorMessage: string = '';
   successMessage: string = '';
+  warningMessage: string = '';
 
   selectedFile: File | null = null;
   updateExistingProducts: boolean = false;
@@ -121,7 +122,7 @@ export class SupplierPriceListComponent implements OnInit {
 
   importSelectedProducts(): void {
     if (this.selectedProducts.length == 0) {
-      this.successMessage = 'No products selected';
+      this.warningMessage = 'No products selected';
     } else {
       this._supplierPriceList.importProducts(this.selectedProducts).subscribe(
         (response: any) => {

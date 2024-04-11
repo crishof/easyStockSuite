@@ -1,7 +1,10 @@
+<!-- NAVBAR A ELIMINAR -->
+<!--
 <nav
   class="navbar navbar-expand-lg bg-dark border-bottom border-body"
   data-bs-theme="dark"
 >
+
   <div class="container-fluid">
     <button
       class="navbar-toggler"
@@ -16,7 +19,7 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <!-- Importar Artículo -->
+        
         <li class="nav-item">
           <button
             class="btn btn-outline-info"
@@ -29,7 +32,7 @@
     </div>
   </div>
 </nav>
-
+-->
 <div class="container">
   <div class="row">
     <div class="col">
@@ -77,6 +80,10 @@
           </button>
         </div>
       </form>
+
+      <button class="btn btn-outline-success" (click)="importSelectedProducts()">
+        Import products
+      </button>
     </div>
 
     <div class="col">
@@ -98,6 +105,10 @@
       <div class="card bg-danger text-light">
         <h5>{{ errorMessage }}</h5>
       </div>
+      }@if(warningMessage){
+      <div class="card bg-warning text-light">
+        <h5>{{ warningMessage }}</h5>
+      </div>
       }
     </div>
 
@@ -108,14 +119,17 @@
         class="g-3"
         (submit)="uploadFile($event)"
       >
-      <div class="mb-3">
-        <select class="form-control form-control-sm mb-2" formControlName="supplierId">
-          <option value="">All Suppliers</option>
-          <option *ngFor="let supplier of suppliers" [value]="supplier.id">
-            {{ supplier.name }}
-          </option>
-        </select>
-      </div>
+        <div class="mb-3">
+          <select
+            class="form-control form-control-sm mb-2"
+            formControlName="supplierId"
+          >
+            <option value="">All Suppliers</option>
+            <option *ngFor="let supplier of suppliers" [value]="supplier.id">
+              {{ supplier.name }}
+            </option>
+          </select>
+        </div>
         <div class="mb-3">
           <label for="file" class="form-label">Upload Price List</label>
           <input
@@ -138,7 +152,7 @@
           >
         </div>
 
-        <button type="submit" class="btn btn-outline-primary btn-sm">
+        <button type="submit" class="btn btn-outline-success">
           Submit
         </button>
       </form>
