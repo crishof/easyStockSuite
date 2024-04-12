@@ -46,7 +46,7 @@ export class ProductsComponent implements OnInit {
 
   onKeyUp(event: KeyboardEvent) {
     if (event.key === 'Enter') {
-    this.onFormSubmit();
+      this.onFormSubmit();
     }
   }
 
