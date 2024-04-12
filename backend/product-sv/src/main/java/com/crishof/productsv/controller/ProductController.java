@@ -93,6 +93,7 @@ public class ProductController {
 
     @GetMapping("/getAllByFilter")
     public List<ProductResponse> getAllByFilter(@RequestParam String filter) {
+        System.out.println("filter = " + filter);
         return productService.getAllByFilter(filter);
     }
 

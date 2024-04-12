@@ -70,18 +70,27 @@ export class SupplierPriceListComponent implements OnInit {
         'updateExistingProducts'
       )?.value;
 
-      console.log('supplierId: ' + supplierId, 'check: ' + updateExistingProducts,'file: ' + this.selectedFile);
+      console.log(
+        'supplierId: ' + supplierId,
+        'check: ' + updateExistingProducts,
+        'file: ' + this.selectedFile
+      );
 
-      if (this.selectedFile != null && supplierId != null && updateExistingProducts != null) {
+      if (
+        this.selectedFile != null &&
+        supplierId != null &&
+        updateExistingProducts != null
+      ) {
         this._supplierPriceList
           .uploadFile(this.selectedFile, supplierId, updateExistingProducts)
           .subscribe(
             (response: any) => {
-              console.log(response);
+              this.successMessage = response.message;
+
               // Aquí puedes manejar la respuesta del backend si es necesario
             },
             (error: any) => {
-              console.error(error);
+              this.errorMessage = error;
               // Aquí puedes manejar los errores si es necesario
             }
           );
@@ -145,7 +154,7 @@ export class SupplierPriceListComponent implements OnInit {
     this.fileForm = this.formBuilder.group({
       supplierId: ['', Validators.required], // Inicializa los campos del formulario según tus necesidades
       updateExistingProducts: [false],
-      file: ['']
+      file: [''],
     });
   }
 

@@ -18,7 +18,7 @@ export class SupplierPriceListService {
   constructor() {}
 
   uploadFile(file: File, supplierId: string, updateExistingProducts: boolean) {
-    console.log('FILE: ' + file)
+    console.log('FILE: ' + file);
     const formData = new FormData();
     formData.append('file', file);
     formData.append('supplierId', supplierId);

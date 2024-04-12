@@ -107,12 +107,21 @@ public class ProductServiceImpl implements ProductService {
         List<Product> products = new ArrayList<>();
 
         if (!filter.isEmpty()) {
-            ResponseEntity<?> brandResponse = brandAPIClient.getIdByName(filter);
+            System.out.println("filter = " + filter);
+            ResponseEntity<?> brandResponse = brandAPIClient.getAllIdByFilter(filter);
+            System.out.println("brandResponse = " + brandResponse);
             if (brandResponse.getStatusCode() == HttpStatus.OK) {
-                String brandString = (String) brandResponse.getBody();
-                if (brandString != null && !brandString.isEmpty()) {
-                    UUID brandId = UUID.fromString(brandString);
-                    products.addAll(productRepository.findAllByBrandId(brandId));
+
+                List<String> brandIdList = (List<String>) brandResponse.getBody();
+
+                System.out.println("brandIdList = " + brandIdList);
+
+                if (brandIdList != null && !brandIdList.isEmpty()) {
+                    List<UUID> brandIds = brandIdList.stream().map(UUID::fromString).collect(Collectors.toList());
+                    System.out.println("brandIds = " + brandIds);
+                    for (UUID id : brandIds) {
+                        products.addAll(productRepository.findAllByBrandId(id));
+                    }
                 }
             }
         }

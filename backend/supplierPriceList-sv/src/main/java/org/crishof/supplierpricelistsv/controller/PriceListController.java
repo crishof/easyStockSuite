@@ -53,7 +53,7 @@ public class PriceListController {
 
                     productService.save(existingProduct);
                     alreadyImportedCount++;
-                } else {
+                } else if (existingProduct == null) {
                     // Asignar el ID del proveedor al producto y guardarlo
                     product.setSupplierId(supplierId);
                     productService.save(product);
@@ -61,15 +61,15 @@ public class PriceListController {
                 }
             }
 
-            String message = "Products updated successfully";
+            String message = "Task completed successfully";
             if (importedCount > 0) {
                 message += " " + importedCount + " products imported";
             }
             if (alreadyImportedCount > 0) {
                 message += " " + alreadyImportedCount + " existing products were updated";
             }
-            if(importedCount == 0 && alreadyImportedCount == 0){
-                message += " " + alreadyImportedCount + " no products were updated";
+            if (importedCount == 0 && alreadyImportedCount == 0) {
+                message += " " + " no products were updated";
             }
 
             return ResponseEntity.ok().body("{\"message\": \"" + message + "\"}");

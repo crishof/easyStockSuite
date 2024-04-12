@@ -44,15 +44,17 @@ export class ProductsComponent implements OnInit {
       .pipe(map((brand) => brand.name));
   }
 
-  onKeyUp(event: any){
+  onKeyUp(event: KeyboardEvent) {
+    if (event.key === 'Enter') {
     this.onFormSubmit();
+    }
   }
 
-  onFormSubmit(){
+  onFormSubmit() {
     this.isFormSubmitted = true;
-    if(this.searchTerm.length >= 3){
+    if (this.searchTerm.length >= 3) {
       this.searchProducts();
-    }else{
+    } else {
       this.productList = [];
     }
   }

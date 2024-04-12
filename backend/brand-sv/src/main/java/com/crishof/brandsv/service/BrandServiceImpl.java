@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -53,6 +54,24 @@ public class BrandServiceImpl implements BrandService {
         Brand brand = brandRepository.findByNameIgnoreCase(name).orElseThrow(
                 () -> new BrandNotFoundException("Brand not found with name: " + name));
         return BrandMapper.toBrandResponse(brand);
+    }
+
+    @Override
+    public BrandResponse getByFilter(String filter) {
+
+        Brand brand = brandRepository.findBrandByNameContainingIgnoreCase(filter).orElseThrow(
+                () -> new BrandNotFoundException("Brand not found with search term: " + filter));
+        return BrandMapper.toBrandResponse(brand);
+    }
+
+    @Override
+    public List<BrandResponse> getAllByFilter(String filter) {
+        List<Brand> brands = brandRepository.findAllByNameContainingIgnoreCase(filter);
+        List<BrandResponse> responses = new ArrayList<>();
+        for (Brand brand : brands) {
+            responses.add(BrandMapper.toBrandResponse(brand));
+        }
+        return responses;
     }
 
 

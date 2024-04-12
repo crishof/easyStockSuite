@@ -14,6 +14,10 @@ public interface BrandService {
 
     BrandResponse getByName(String name);
 
+    BrandResponse getByFilter(String filter);
+
+    List<BrandResponse> getAllByFilter(String filter);
+
     BrandResponse save(BrandRequest brandRequest);
 
     BrandResponse updateBrandName(UUID id, String name);

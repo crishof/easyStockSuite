@@ -17,8 +17,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 //@CrossOrigin(origins = "http://localhost:4200")
 @RestController
@@ -115,6 +117,21 @@ public class BrandController {
             BrandResponse brandResponse = brandService.save(brandRequest);
             return ResponseEntity.ok(brandResponse.getId());
         } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal server error");
+        }
+    }
+
+    @GetMapping("/getAllIdByFilter")
+    public ResponseEntity<?> getAllIdByFilter(@RequestParam String filter) {
+        try {
+            List<BrandResponse> brands = brandService.getAllByFilter(filter);
+            List<UUID> brandsId = brands.stream().map(BrandResponse::getId)
+                    .collect(Collectors.toList());
+
+            if (brandsId.isEmpty()) {
+                return ResponseEntity.ok(Collections.EMPTY_LIST);
+            } else return ResponseEntity.ok(brandsId);
+        } catch (BrandNotFoundException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal server error");
         }
     }
