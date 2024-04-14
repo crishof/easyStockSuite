@@ -3,3 +3,4 @@ stocksuite/node_modules/
 backend/.env
 
 backend/.env.save
+backend/invoice-sv/.env
