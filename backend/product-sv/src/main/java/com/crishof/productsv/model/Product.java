@@ -1,6 +1,5 @@
 package com.crishof.productsv.model;
 
-import com.crishof.productsv.dto.ProductRequest;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

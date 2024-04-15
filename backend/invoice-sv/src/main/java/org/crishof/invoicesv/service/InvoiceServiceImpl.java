@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import static org.crishof.invoicesv.enums.TransactionType.*;
+
 @Service("invoiceService")
 public class InvoiceServiceImpl implements InvoiceService {
 

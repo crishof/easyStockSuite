@@ -1,6 +1,7 @@
 package org.crishof.invoicesv.controller;
 
 import org.crishof.invoicesv.dto.InvoiceRequest;
+import org.crishof.invoicesv.dto.InvoiceResponse;
 import org.crishof.invoicesv.service.InvoiceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -15,8 +16,8 @@ public class InvoiceController {
 
     @Autowired
     InvoiceService invoiceService;
-    @Autowired
-    CustomerService customerService;
+//    @Autowired
+//    CustomerService customerService;
 
     @PostMapping("/save/purchase")
     public String savePurchaseInvoice(@RequestBody InvoiceRequest invoiceRequest) {
