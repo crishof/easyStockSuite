@@ -44,7 +44,7 @@ public class StockController {
         }
     }
 
-    @GetMapping("/getById")
+    @GetMapping("/getById/{stockId}")
     public ResponseEntity<?> getById(@PathVariable("stockId") UUID stockId) {
 
         try {
