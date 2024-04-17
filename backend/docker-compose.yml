@@ -58,17 +58,17 @@ services:
       - "9005:9005"
     networks:
       - 'stocksuite-network'
-  #supplierpricelist-sv:
-  #  build: supplierPriceList-sv
-  #  environment:
-  #    - POSTGRES_URL=${POSTGRES_URL}
-  #    - POSTGRES_USER=${POSTGRES_USER}
-  #    - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-  #  mem_limit: 512m
-  #  ports:
-  #    - "9007:9007"
-  #  networks:
-  #    - 'stocksuite-network'
+  supplierpricelist-sv:
+    build: supplierPriceList-sv
+    environment:
+      - POSTGRES_URL=${POSTGRES_DOCKER_URL}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    mem_limit: 512m
+    ports:
+      - "9007:9007"
+    networks:
+      - 'stocksuite-network'
 #  product-sv:
 #    build: product-sv
 #    mem_limit: 512m

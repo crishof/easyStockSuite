@@ -1,7 +1,7 @@
 eureka:
     client:
         service-url:
-            defaultZone: http://localhost:8761/eureka
+            defaultZone: http://eureka-sv:8761/eureka
     instance:
         lease-renewal-interval-in-seconds: 0
 server:
@@ -9,12 +9,15 @@ server:
 spring:
     application:
         name: supplierPriceList-sv
+    config:
+        import: optional:file:../.env[.properties]
     datasource:
+        driver-class-name: org.postgresql.Driver
         password: ${POSTGRES_PASSWORD}
-        url: ${POSTGRES_URL}
+        url: ${POSTGRES_DOCKER_URL}
         username: ${POSTGRES_USER}
     jpa:
-        database: POSTGRESQL
+        database: postgresql
         generate-ddl: true
         hibernate:
             ddl-auto: update
