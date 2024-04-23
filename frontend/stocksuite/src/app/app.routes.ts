@@ -12,11 +12,13 @@ import { BrandEditComponent } from './pages/brand/brand-edit/brand-edit.componen
 import { BrandCreateComponent } from './pages/brand/brand-create/brand-create.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { SupplierPriceListComponent } from './pages/supplier-price-list/supplier-price-list.component';
+import { ProductEditComponent } from './pages/product/product-edit/product-edit.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'products', component: ProductsComponent },
   { path: 'products/:id', component: ProductDetailsComponent },
+  { path: 'products/:id/edit', component: ProductEditComponent },
   { path: 'brand', component: BrandComponent },
   { path: 'brand/create', component: BrandCreateComponent },
   { path: 'brand/:id', component: BrandDetailsComponent },

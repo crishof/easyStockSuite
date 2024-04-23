@@ -1,0 +1,30 @@
+eureka:
+    client:
+        service-url:
+            defaultZone: http://eureka-sv:8761/eureka
+    instance:
+        lease-renewal-interval-in-seconds: 0
+server:
+    port: 9007
+spring:
+    application:
+        name: supplierPriceList-sv
+    config:
+        import: optional:file:../.env[.properties]
+    datasource:
+        driver-class-name: org.postgresql.Driver
+        password: ${POSTGRES_PASSWORD}
+        url: ${POSTGRES_DOCKER_URL}
+        username: ${POSTGRES_USER}
+    jpa:
+        database: postgresql
+        generate-ddl: true
+        hibernate:
+            ddl-auto: update
+        show-sql: true
+    servlet:
+        multipart:
+            max-file-size: 10MB
+    sql:
+        init:
+            platform: postgres

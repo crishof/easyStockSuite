@@ -33,6 +33,7 @@ export class ProductsComponent implements OnInit {
 
   brandName: string = '';
   searchTerm: string = '';
+  isFormSubmitted: boolean = false;
 
   selectedComponent: string = 'product';
   selectedProduct: IProduct | null = null;
@@ -41,6 +42,21 @@ export class ProductsComponent implements OnInit {
     return this._brandService
       .getBrand(brandId)
       .pipe(map((brand) => brand.name));
+  }
+
+  onKeyUp(event: KeyboardEvent) {
+    if (event.key === 'Enter') {
+      this.onFormSubmit();
+    }
+  }
+
+  onFormSubmit() {
+    this.isFormSubmitted = true;
+    if (this.searchTerm.length >= 3) {
+      this.searchProducts();
+    } else {
+      this.productList = [];
+    }
   }
 
   searchProducts(): void {

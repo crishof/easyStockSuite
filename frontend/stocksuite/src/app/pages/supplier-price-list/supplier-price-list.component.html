@@ -1,7 +1,10 @@
+<!-- NAVBAR A ELIMINAR -->
+<!--
 <nav
   class="navbar navbar-expand-lg bg-dark border-bottom border-body"
   data-bs-theme="dark"
 >
+
   <div class="container-fluid">
     <button
       class="navbar-toggler"
@@ -16,7 +19,7 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <!-- Importar Artículo -->
+        
         <li class="nav-item">
           <button
             class="btn btn-outline-info"
@@ -29,7 +32,7 @@
     </div>
   </div>
 </nav>
-
+-->
 <div class="container">
   <div class="row">
     <div class="col">
@@ -61,34 +64,99 @@
           </option>
         </select>
 
-        <input
-          type="text"
-          class="form-control-sm"
-          id="searchTerm"
-          placeholder="Enter search term and press enter to search"
-          [(ngModel)]="searchTerm"
-          name="searchTerm"
-          (keyup.enter)="searchProducts()"
-        />
+        <div class="form-group d-flex">
+          <input
+            type="text"
+            class="form-control row-8 flex-grow-1"
+            id="searchTerm"
+            placeholder="Enter search term and press enter to search"
+            [(ngModel)]="searchTerm"
+            name="searchTerm"
+            (keyup.enter)="searchProducts()"
+          />
 
-        <button type="submit" class="btn btn-outline-primary btn-sm">
-          Search
-        </button>
+          <button type="submit" class="btn btn-outline-primary btn-sm">
+            Search
+          </button>
+        </div>
       </form>
+
+      <button
+        class="btn btn-outline-success"
+        (click)="importSelectedProducts()"
+      >
+        Import products
+      </button>
     </div>
 
     <div class="col">
-      <div class="row-cols-4">
+      <div class="row">
+        <div class="row">
+          @if(selectedBrand.length > 0){
+          <p class="card bg-secondary text-light">{{ selectedBrand }}</p>
+          }
+        </div>
         @if(productList.length > 0){
-          <p>{{productList.length}} productos</p>
+        <p>{{ productList.length }} products found</p>
         }
       </div>
+      @if(successMessage){
+      <div class="card bg-success text-light">
+        <h5>{{ successMessage }}</h5>
+      </div>
+      } @if(errorMessage){
+      <div class="card bg-danger text-light">
+        <h5>{{ errorMessage }}</h5>
+      </div>
+      }@if(warningMessage){
+      <div class="card bg-warning text-light">
+        <h5>{{ warningMessage }}</h5>
+      </div>
+      }
     </div>
 
     <div class="col">
-      <div class="row-cols-4">
-        <p>Marca: {{selectedBrand}}</p>
-      </div>
+      <form
+        [formGroup]="fileForm"
+        enctype="multipart/form-data"
+        class="g-3"
+        (submit)="uploadFile($event)"
+      >
+        <div class="mb-3">
+          <select
+            class="form-control form-control-sm mb-2"
+            formControlName="supplierId"
+          >
+            <option value="">All Suppliers</option>
+            <option *ngFor="let supplier of suppliers" [value]="supplier.id">
+              {{ supplier.name }}
+            </option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label for="file" class="form-label">Upload Price List</label>
+          <input
+            type="file"
+            class="form-control"
+            id="file"
+            (change)="onFileSelected($event)"
+          />
+        </div>
+
+        <div class="mb-3 form-check">
+          <input
+            type="checkbox"
+            class="form-check-input"
+            id="updateExistingProducts"
+            formControlName="updateExistingProducts"
+          />
+          <label class="form-check-label" for="updateExistingProducts"
+            >Update existing products</label
+          >
+        </div>
+
+        <button type="submit" class="btn btn-outline-success">Submit</button>
+      </form>
     </div>
   </div>
 </div>
