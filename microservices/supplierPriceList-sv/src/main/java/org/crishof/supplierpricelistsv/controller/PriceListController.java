@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
@@ -26,10 +27,6 @@ public class PriceListController {
     @PostMapping("/importList")
     public ResponseEntity<String> importFile(@RequestParam MultipartFile file, @RequestParam UUID supplierId, @RequestParam boolean updateExistingProducts) {
 
-        System.out.println("file.getOriginalFilename() = " + file.getOriginalFilename());
-        System.out.println("supplierId = " + supplierId);
-        System.out.println("updateExistingProducts = " + updateExistingProducts);
-
         int importedCount = 0;
         int alreadyImportedCount = 0;
 
@@ -38,11 +35,11 @@ public class PriceListController {
             List<Product> products = productService.readExcel(file);
 
             for (Product product : products) {
-                // Verificar si existe un producto con la misma marca y código para este proveedor
+
                 Product existingProduct = productService.findProductByBrandAndCodeAndSupplierId(product.getBrand(), product.getCode(), supplierId);
 
                 if (existingProduct != null && updateExistingProducts) {
-                    // Actualizar los precios y stock del producto existente y fecha de actualizacion
+
                     existingProduct.setPrice(product.getPrice());
                     existingProduct.setTaxRate(product.getTaxRate());
                     existingProduct.setSuggestedPrice(product.getSuggestedPrice());
@@ -54,7 +51,6 @@ public class PriceListController {
                     productService.save(existingProduct);
                     alreadyImportedCount++;
                 } else if (existingProduct == null) {
-                    // Asignar el ID del proveedor al producto y guardarlo
                     product.setSupplierId(supplierId);
                     productService.save(product);
                     importedCount++;
@@ -73,7 +69,7 @@ public class PriceListController {
             }
 
             return ResponseEntity.ok().body("{\"message\": \"" + message + "\"}");
-        } catch (ImportFileException e) {
+        } catch (ImportFileException | IOException e) {
             return ResponseEntity.internalServerError().body("Error during import: " + e.getMessage());
         }
     }
@@ -81,14 +77,6 @@ public class PriceListController {
     @GetMapping("/getAllByFilter")
     public List<ProductResponse> getAllByFilter(@RequestParam(required = false) UUID supplierId, @RequestParam(required = false) String brand, @RequestParam(required = false) String filter) {
 
-        System.out.println("supplierId = " + supplierId);
-        System.out.println("brand = " + brand);
-        System.out.println("filter = " + filter);
-
-        List<ProductResponse> productResponses = productService.getAllByFilter(supplierId, brand, filter);
-
-        System.out.println("Resultado: " + productResponses.size());
-
-        return productResponses;
+        return productService.getAllByFilter(supplierId, brand, filter);
     }
 }
