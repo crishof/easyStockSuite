@@ -8,3 +8,5 @@ backend/invoice-sv/.env
 backend/.DS_Store
 
 .env
+
+postgres/
