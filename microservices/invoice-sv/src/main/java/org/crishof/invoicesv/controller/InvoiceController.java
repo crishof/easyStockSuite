@@ -14,9 +14,8 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/invoice")
-@CrossOrigin(origins = "http://localhost:4200")
 public class InvoiceController {
-
+    
     @Autowired
     InvoiceService invoiceService;
 

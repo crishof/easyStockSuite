@@ -25,6 +25,7 @@
         <module>address-sv</module>
         <module>api-gateway</module>
         <module>brand-sv</module>
+        <module>branch-sv</module>
         <module>category-sv</module>
         <module>config-server</module>
         <module>customer-sv</module>

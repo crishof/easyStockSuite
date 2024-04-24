@@ -92,4 +92,8 @@ public class InvoiceServiceImpl implements InvoiceService {
 //    public void deleteById(UUID id) {
 //        invoiceRepository.deleteById(id);
 //    }
+                }
+            }
+        }
+    }
 }
