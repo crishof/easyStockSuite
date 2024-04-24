@@ -68,4 +68,9 @@ public class StockController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(SERVER_ERROR);
         }
     }
+
+    @GetMapping("/getStockById")
+    public ResponseEntity<?> getStockById(UUID stockId) {
+        return ResponseEntity.status(HttpStatus.OK).body(stockService.getStockById(stockId));
+    }
 }

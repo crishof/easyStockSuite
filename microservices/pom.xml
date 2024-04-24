@@ -39,6 +39,7 @@
         <module>stock-sv</module>
         <module>supplier-sv</module>
         <module>supplierPriceList-sv</module>
+        <module>supplierInvoice-sv</module>
         <module>user-sv</module>
 
 

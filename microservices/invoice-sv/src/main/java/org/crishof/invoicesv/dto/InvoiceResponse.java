@@ -1,6 +1,7 @@
 package org.crishof.invoicesv.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.crishof.invoicesv.enums.TransactionType;
@@ -12,6 +13,7 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class InvoiceResponse {
 
     private UUID id;
@@ -19,7 +21,6 @@ public class InvoiceResponse {
     private LocalDate issueDate;
     private LocalDate receptionDate;
     private LocalDate dueDate;
-    private UUID entityId;
     private TransactionType transactionType;
 
     public InvoiceResponse(Invoice invoice) {
@@ -28,7 +29,6 @@ public class InvoiceResponse {
         this.issueDate = invoice.getIssueDate();
         this.receptionDate = invoice.getReceptionDate();
         this.dueDate = invoice.getDueDate();
-        this.entityId = invoice.getEntityId();
         this.transactionType = invoice.getTransactionType();
     }
 }
