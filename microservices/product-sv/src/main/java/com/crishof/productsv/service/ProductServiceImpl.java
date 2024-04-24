@@ -1,12 +1,7 @@
 package com.crishof.productsv.service;
 
-import com.crishof.productsv.apiCient.BrandAPIClient;
-import com.crishof.productsv.apiCient.CategoryAPIClient;
-import com.crishof.productsv.apiCient.PriceApiClient;
-import com.crishof.productsv.apiCient.SupplierAPIClient;
-import com.crishof.productsv.dto.PriceRequest;
-import com.crishof.productsv.dto.ProductRequest;
-import com.crishof.productsv.dto.ProductResponse;
+import com.crishof.productsv.apiClient.*;
+import com.crishof.productsv.dto.*;
 import com.crishof.productsv.exeption.ProductNotFoundException;
 import com.crishof.productsv.model.Product;
 import com.crishof.productsv.repository.ProductRepository;
@@ -32,11 +27,10 @@ public class ProductServiceImpl implements ProductService {
     private final PriceApiClient priceApiClient;
     private final BrandAPIClient brandAPIClient;
     private final SupplierAPIClient supplierAPIClient;
+    private final StockAPIClient stockAPIClient;
 
     @Override
     public ProductResponse save(ProductRequest productRequest) {
-
-
         Product product = new Product();
 
         product.setBrandId(this.getIdByName(productRequest.getBrandName(), BRAND_ENTITY));
@@ -68,6 +62,26 @@ public class ProductServiceImpl implements ProductService {
     public ProductResponse update(UUID id, ProductRequest productRequest) {
 
         return null;
+    }
+
+    @Override
+    public void updateFromInvoice(List<SupplierInvoiceItem> invoiceItems) {
+
+        for (SupplierInvoiceItem invoiceItem : invoiceItems) {
+
+            Product product = productRepository.getReferenceById(invoiceItem.getId());
+
+            StockRequest stockRequest = new StockRequest();
+            stockRequest.setQuantity(invoiceItem.getQuantity());
+            product.getStockIds().add(stockAPIClient.save(stockRequest).getBody());
+
+            PriceRequest priceRequest = new PriceRequest();
+            priceRequest.setPurchasePrice(invoiceItem.getPrice());
+            priceRequest.setTaxRate(invoiceItem.getTaxRate());
+            priceRequest.setDiscountRate(invoiceItem.getDiscountRate());
+            priceApiClient.update(product.getPriceId(), priceRequest);
+
+        }
     }
 
     @Override
@@ -142,7 +156,6 @@ public class ProductServiceImpl implements ProductService {
             productRepository.save(product);
         }
     }
-
 
     @Override
     public List<ProductResponse> getAll() {
