@@ -6,7 +6,7 @@ import com.crishof.supplier.exception.DuplicateNameException;
 import com.crishof.supplier.exception.SupplierNotFoundException;
 import com.crishof.supplier.model.Supplier;
 import com.crishof.supplier.service.SupplierService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,12 +16,11 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/supplier")
-//@CrossOrigin(origins = "http://localhost:4200")
+@RequiredArgsConstructor
 public class SupplierController {
 
-
-    @Autowired
-    SupplierService supplierService;
+    private static final String SERVER_ERROR = "Internal Server Error";
+    private final SupplierService supplierService;
 
     @GetMapping("/getAll")
     public List<Supplier> getAll() {
@@ -41,9 +40,9 @@ public class SupplierController {
         } catch (SupplierNotFoundException e) {
             SupplierRequest supplierRequest = new SupplierRequest(supplierName);
             SupplierResponse supplierResponse = supplierService.save(supplierRequest);
-            return ResponseEntity.ok(supplierResponse.getId());
+            return ResponseEntity.status(HttpStatus.OK).body(supplierResponse.getId());
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal server error");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(SERVER_ERROR);
         }
     }
 
@@ -56,7 +55,7 @@ public class SupplierController {
         } catch (DuplicateNameException | IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(SERVER_ERROR);
         }
     }
 

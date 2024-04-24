@@ -11,6 +11,7 @@ import com.crishof.productsv.exeption.ProductNotFoundException;
 import com.crishof.productsv.model.Product;
 import com.crishof.productsv.repository.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -18,29 +19,19 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
 
-    final
-    ProductRepository productRepository;
-    final
-    CategoryAPIClient categoryAPIClient;
-    final
-    PriceApiClient priceApiClient;
-    final
-    BrandAPIClient brandAPIClient;
-    final
-    SupplierAPIClient supplierAPIClient;
-
-    public ProductServiceImpl(ProductRepository productRepository, CategoryAPIClient categoryAPIClient, PriceApiClient priceApiClient, BrandAPIClient brandAPIClient, SupplierAPIClient supplierAPIClient) {
-        this.productRepository = productRepository;
-        this.categoryAPIClient = categoryAPIClient;
-        this.priceApiClient = priceApiClient;
-        this.brandAPIClient = brandAPIClient;
-        this.supplierAPIClient = supplierAPIClient;
-    }
+    private static final String BRAND_ENTITY = "Brand";
+    private static final String CATEGORY_ENTITY = "Category";
+    private static final String SUPPLIER_ENTITY = "Supplier";
+    private final ProductRepository productRepository;
+    private final CategoryAPIClient categoryAPIClient;
+    private final PriceApiClient priceApiClient;
+    private final BrandAPIClient brandAPIClient;
+    private final SupplierAPIClient supplierAPIClient;
 
     @Override
     public ProductResponse save(ProductRequest productRequest) {
@@ -48,12 +39,12 @@ public class ProductServiceImpl implements ProductService {
 
         Product product = new Product();
 
-        product.setBrandId(this.getIdByName(productRequest.getBrandName(), "brand"));
+        product.setBrandId(this.getIdByName(productRequest.getBrandName(), BRAND_ENTITY));
         product.setCode(productRequest.getCode());
         product.setModel(productRequest.getModel());
         product.setDescription(productRequest.getDescription());
         if (productRequest.getCategoryName() != null) {
-            product.setCategoryId(this.getIdByName(productRequest.getCategoryName(), "category"));
+            product.setCategoryId(this.getIdByName(productRequest.getCategoryName(), CATEGORY_ENTITY));
         }
         product.setSupplierId(productRequest.getSupplierId());
         product.setSupplierProductId(productRequest.getSupplierProductId());
@@ -97,7 +88,6 @@ public class ProductServiceImpl implements ProductService {
                 return "Not available";
             }
         } catch (Exception ex) {
-            // Manejar la excepción aquí
             return "Error fetching brand name";
         }
     }
@@ -107,18 +97,17 @@ public class ProductServiceImpl implements ProductService {
         List<Product> products = new ArrayList<>();
 
         if (!filter.isEmpty()) {
-            System.out.println("filter = " + filter);
+
             ResponseEntity<?> brandResponse = brandAPIClient.getAllIdByFilter(filter);
-            System.out.println("brandResponse = " + brandResponse);
+
             if (brandResponse.getStatusCode() == HttpStatus.OK) {
 
                 List<String> brandIdList = (List<String>) brandResponse.getBody();
 
-                System.out.println("brandIdList = " + brandIdList);
 
                 if (brandIdList != null && !brandIdList.isEmpty()) {
-                    List<UUID> brandIds = brandIdList.stream().map(UUID::fromString).collect(Collectors.toList());
-                    System.out.println("brandIds = " + brandIds);
+                    List<UUID> brandIds = brandIdList.stream().map(UUID::fromString).toList();
+
                     for (UUID id : brandIds) {
                         products.addAll(productRepository.findAllByBrandId(id));
                     }
@@ -128,7 +117,7 @@ public class ProductServiceImpl implements ProductService {
         products.addAll(productRepository.findAllByModelContainingIgnoreCase(filter));
         products.addAll(productRepository.findAllByDescriptionContainingIgnoreCase(filter));
 
-        return products.stream().map(this::toProductResponse).collect(Collectors.toList());
+        return products.stream().map(this::toProductResponse).toList();
     }
 
     @Override
@@ -161,7 +150,7 @@ public class ProductServiceImpl implements ProductService {
         List<Product> products = productRepository.findAll();
         return products.stream()
                 .map(this::toProductResponse)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
@@ -173,7 +162,6 @@ public class ProductServiceImpl implements ProductService {
     public ProductResponse toProductResponse(Product product) {
         ProductResponse productResponse = new ProductResponse();
 
-        // Mapea los atributos comunes entre Product y ProductResponse
         productResponse.setId(product.getId());
         productResponse.setCode(product.getCode());
         productResponse.setModel(product.getModel());
@@ -216,15 +204,15 @@ public class ProductServiceImpl implements ProductService {
         return switch (entityName) {
             case "brand" -> {
                 ResponseEntity<?> response = brandAPIClient.getIdByName(name);
-                yield handleResponse(response, name, "brand");
+                yield handleResponse(response, name, BRAND_ENTITY);
             }
             case "category" -> {
                 ResponseEntity<?> response = categoryAPIClient.getIdByName(name);
-                yield handleResponse(response, name, "category");
+                yield handleResponse(response, name, CATEGORY_ENTITY);
             }
             case "supplier" -> {
                 ResponseEntity<?> response = supplierAPIClient.getIdByName(name);
-                yield handleResponse(response, name, "supplier");
+                yield handleResponse(response, name, SUPPLIER_ENTITY);
             }
             default -> throw new IllegalArgumentException("Invalid entity name: " + entityName);
         };
@@ -244,7 +232,5 @@ public class ProductServiceImpl implements ProductService {
 
         return UUID.fromString(idString);
     }
-
-
 }
 

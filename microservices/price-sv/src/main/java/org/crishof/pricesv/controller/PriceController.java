@@ -1,5 +1,6 @@
 package org.crishof.pricesv.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.crishof.pricesv.dto.PriceRequest;
 import org.crishof.pricesv.dto.PriceResponse;
 import org.crishof.pricesv.service.PriceService;
@@ -11,15 +12,10 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/price")
-//@CrossOrigin(origins = "http://localhost:4200")
+@RequiredArgsConstructor
 public class PriceController {
 
-    final
-    PriceService priceService;
-
-    public PriceController(PriceService priceService) {
-        this.priceService = priceService;
-    }
+    private final PriceService priceService;
 
     @GetMapping("/getById/{id}")
     public PriceResponse getById(@PathVariable("id") UUID id) {

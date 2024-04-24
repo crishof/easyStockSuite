@@ -1,21 +1,21 @@
 package org.crishof.stocksv.service;
 
+import lombok.RequiredArgsConstructor;
 import org.crishof.stocksv.dto.StockRequest;
 import org.crishof.stocksv.dto.StockResponse;
 import org.crishof.stocksv.exception.StockNotFoundException;
 import org.crishof.stocksv.model.Stock;
 import org.crishof.stocksv.repository.StockRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class StockServiceImpl implements StockService {
 
-    @Autowired
-    StockRepository stockRepository;
+    private final StockRepository stockRepository;
 
     @Override
     public StockResponse save(StockRequest stockRequest) {
@@ -24,7 +24,6 @@ public class StockServiceImpl implements StockService {
         stock.setMax(stockRequest.getMax());
         stock.setQuantity(stockRequest.getQuantity());
         stock.setBranchId(stockRequest.getBranchId());
-
 
         return new StockResponse(stockRepository.save(stock));
     }
@@ -53,7 +52,6 @@ public class StockServiceImpl implements StockService {
         for (UUID stockId : stockIdList) {
             totalStock += getStockById(stockId).getQuantity();
         }
-
         return totalStock;
     }
 }
