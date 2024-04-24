@@ -33,4 +33,12 @@ public class PriceController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error");
         }
     }
+
+    @PutMapping("/update/{priceId}")
+    public ResponseEntity<?> update(@PathVariable("priceId") UUID priceId, @RequestBody PriceRequest priceRequest) {
+
+        priceService.updatePricesFromInvoice(priceId, priceRequest);
+
+        return ResponseEntity.status(HttpStatus.OK).body("Prices updated successfully");
+    }
 }

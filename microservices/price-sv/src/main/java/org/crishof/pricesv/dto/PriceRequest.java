@@ -13,4 +13,5 @@ public class PriceRequest {
     private double sellingPrice;
     private double webSellingPrice;
     private double taxRate;
+    private double discountRate;
 }
