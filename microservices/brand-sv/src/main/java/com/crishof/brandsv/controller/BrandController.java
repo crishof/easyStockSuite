@@ -108,7 +108,7 @@ public class BrandController {
         } catch (BrandNotFoundException e) {
             BrandRequest brandRequest = new BrandRequest(brandName);
             BrandResponse brandResponse = brandService.save(brandRequest);
-            return ResponseEntity.ok(brandResponse.getId());
+            return ResponseEntity.status(HttpStatus.OK).body(brandResponse.getId());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal server error");
         }

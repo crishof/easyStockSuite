@@ -14,6 +14,8 @@ public interface BrandService {
 
     BrandResponse getByName(String name);
 
+    BrandResponse getByNameOrCreateNew(String name);
+
     BrandResponse getByFilter(String filter);
 
     List<BrandResponse> getAllByFilter(String filter);

@@ -14,10 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -51,6 +48,20 @@ public class BrandServiceImpl implements BrandService {
         Brand brand = brandRepository.findByNameIgnoreCase(name).orElseThrow(
                 () -> new BrandNotFoundException("Brand not found with name: " + name));
         return BrandMapper.toBrandResponse(brand);
+    }
+
+    @Override
+    public BrandResponse getByNameOrCreateNew(String name) {
+
+        Optional<Brand> brand = brandRepository.findByNameIgnoreCase(name);
+        if (brand.isPresent()) {
+            return BrandMapper.toBrandResponse(brand.get());
+        }else {
+            Brand newBrand = new Brand();
+            newBrand.setName(name);
+            brandRepository.save(newBrand);
+            return BrandMapper.toBrandResponse(newBrand);
+        }
     }
 
     @Override
