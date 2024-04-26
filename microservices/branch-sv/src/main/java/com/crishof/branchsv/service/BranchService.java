@@ -14,4 +14,6 @@ public interface BranchService {
     BranchResponse createLocation(UUID branchId, String name);
 
     BranchResponse updateLocation(UUID branchId, UUID locationId, String name);
+
+    BranchResponse deleteLocation(UUID branchId, UUID locationId);
 }

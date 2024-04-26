@@ -82,6 +82,31 @@ public class BranchServiceImpl implements BranchService {
         return this.toBranchResponse(branchRepository.save(branch));
     }
 
+    @Override
+    public BranchResponse deleteLocation(UUID branchId, UUID locationId) {
+
+        Optional<Branch> optionalBranch = branchRepository.findById(branchId);
+
+        if (optionalBranch.isEmpty()) {
+            throw new EntityNotFoundException("Branch with ID " + branchId + " not found");
+        }
+
+        Branch branch = optionalBranch.get();
+
+        Optional<StockLocation> optionalLocation = branch.getLocations().stream()
+                .filter(stockLocation -> stockLocation.getId().equals(stockLocation))
+                .findAny();
+
+        if (optionalLocation.isEmpty()) {
+            throw new EntityNotFoundException("Location with ID " + locationId + " not found in branch " + branchId);
+        }
+
+        StockLocation location = optionalLocation.get();
+        branch.getLocations().remove(location);
+
+        return this.toBranchResponse(branchRepository.save(branch));
+    }
+
     private BranchResponse toBranchResponse(Branch branch) {
         BranchResponse branchResponse = new BranchResponse();
         branchResponse.setId(branch.getId());

@@ -5,10 +5,9 @@ import com.crishof.branchsv.service.BranchService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/branch")
@@ -17,8 +16,6 @@ public class BranchController {
 
     private final BranchService branchService;
 
-    //crea nueva branch
-
     @PostMapping("/save")
     public ResponseEntity<?> save(@RequestBody BranchRequest branchRequest) {
 
@@ -26,11 +23,23 @@ public class BranchController {
 
     }
 
-    // actualiza nombre de branch
+    @PutMapping("/updateBranchName")
+    public ResponseEntity<?> updateBranchName(UUID branchId, BranchRequest branchRequest) {
+        return ResponseEntity.status(HttpStatus.OK).body(branchService.updateBranchName(branchId, branchRequest));
+    }
 
-    // agrega location
+    @PostMapping("/createLocation")
+    public ResponseEntity<?> createLocation(UUID branchId, String name) {
+        return ResponseEntity.status(HttpStatus.OK).body(branchService.createLocation(branchId, name));
+    }
 
-    // elimina location
+    @PutMapping("/updateLocation")
+    public ResponseEntity<?> updateLocation(UUID branchId, UUID locationId, String name) {
+        return ResponseEntity.status(HttpStatus.OK).body(branchService.updateLocation(branchId, locationId, name));
+    }
 
-
+    @DeleteMapping("/deleteLocation")
+    public ResponseEntity<?> deleteLocation(UUID branchId, UUID locationId) {
+        return ResponseEntity.status(HttpStatus.OK).body(branchService.deleteLocation(branchId, locationId));
+    }
 }
