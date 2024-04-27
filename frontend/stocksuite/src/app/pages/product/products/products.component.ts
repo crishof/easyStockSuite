@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { IProduct } from '../../../model/product.model';
 import { Router } from '@angular/router';
 import { BrandService } from '../../../services/brand.service';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { ProductNavbarComponent } from '../product-navbar/product-navbar.component';
 import { ProductDetailsComponent } from '../product-details/product-details.component';
@@ -28,6 +28,8 @@ export class ProductsComponent implements OnInit {
   private _productService = inject(ProductService);
   private _brandService = inject(BrandService);
   private _router = inject(Router);
+
+  private subscription: Subscription;
 
   ngOnInit(): void {}
 
@@ -60,10 +62,15 @@ export class ProductsComponent implements OnInit {
   }
 
   searchProducts(): void {
-    this._productService
+
+    if(this.subscription){
+      this.subscription.unsubscribe();
+    }
+    this.subscription = this._productService
       .getAllByFilter(this.searchTerm)
       .subscribe((data: IProduct[]) => {
         this.productList = data;
+        console.log(this.productList);
       });
   }
 
