@@ -132,7 +132,5 @@ public class BranchServiceImpl implements BranchService {
         locationResponse.setName(stockLocation.getName());
         return locationResponse;
     }
-
-
 }
 

@@ -23,9 +23,6 @@ public class BranchController {
 
     @PostMapping("/createBranch")
     public ResponseEntity<?> createBranch(@RequestBody BranchRequest branchRequest) {
-
-        System.out.println("branchRequest = " + branchRequest);
-
         return ResponseEntity.status(HttpStatus.OK).body(branchService.createBranch(branchRequest));
 
     }
