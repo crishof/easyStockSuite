@@ -56,7 +56,7 @@ public class BrandServiceImpl implements BrandService {
         Optional<Brand> brand = brandRepository.findByNameIgnoreCase(name);
         if (brand.isPresent()) {
             return BrandMapper.toBrandResponse(brand.get());
-        }else {
+        } else {
             Brand newBrand = new Brand();
             newBrand.setName(name);
             brandRepository.save(newBrand);
