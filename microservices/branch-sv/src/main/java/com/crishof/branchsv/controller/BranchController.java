@@ -16,15 +16,22 @@ public class BranchController {
 
     private final BranchService branchService;
 
-    @PostMapping("/save")
-    public ResponseEntity<?> save(@RequestBody BranchRequest branchRequest) {
+    @GetMapping("/getAll")
+    public ResponseEntity<?> getAllBranches() {
+        return ResponseEntity.status(HttpStatus.OK).body(branchService.getAllBranches());
+    }
+
+    @PostMapping("/createBranch")
+    public ResponseEntity<?> createBranch(@RequestBody BranchRequest branchRequest) {
+
+        System.out.println("branchRequest = " + branchRequest);
 
         return ResponseEntity.status(HttpStatus.OK).body(branchService.createBranch(branchRequest));
 
     }
 
-    @PutMapping("/updateBranchName")
-    public ResponseEntity<?> updateBranchName(UUID branchId, BranchRequest branchRequest) {
+    @PutMapping("/updateBranch")
+    public ResponseEntity<?> updateBranch(UUID branchId, BranchRequest branchRequest) {
         return ResponseEntity.status(HttpStatus.OK).body(branchService.updateBranchName(branchId, branchRequest));
     }
 

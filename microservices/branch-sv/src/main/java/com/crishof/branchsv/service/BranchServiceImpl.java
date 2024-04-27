@@ -2,6 +2,7 @@ package com.crishof.branchsv.service;
 
 import com.crishof.branchsv.dto.BranchRequest;
 import com.crishof.branchsv.dto.BranchResponse;
+import com.crishof.branchsv.dto.LocationResponse;
 import com.crishof.branchsv.model.Branch;
 import com.crishof.branchsv.model.StockLocation;
 import com.crishof.branchsv.repository.BranchRepository;
@@ -26,11 +27,13 @@ public class BranchServiceImpl implements BranchService {
 
         Branch branch = new Branch();
         branch.setName(branchRequest.getName());
+
+        List<StockLocation> stockLocations = new ArrayList<>();
         StockLocation stockLocation = new StockLocation();
+        stockLocation.setBranch(branch);
         stockLocation.setName(DEFAULT_LOCATION);
-        List<StockLocation> locations = new ArrayList<>();
-        locations.add(stockLocation);
-        branch.setLocations(locations);
+        stockLocations.add(stockLocation);
+        branch.setLocations(stockLocations);
 
         return this.toBranchResponse(branchRepository.save(branch));
     }
@@ -94,7 +97,7 @@ public class BranchServiceImpl implements BranchService {
         Branch branch = optionalBranch.get();
 
         Optional<StockLocation> optionalLocation = branch.getLocations().stream()
-                .filter(stockLocation -> stockLocation.getId().equals(stockLocation))
+                .filter(stockLocation -> stockLocation.getId().equals(locationId))
                 .findAny();
 
         if (optionalLocation.isEmpty()) {
@@ -107,13 +110,27 @@ public class BranchServiceImpl implements BranchService {
         return this.toBranchResponse(branchRepository.save(branch));
     }
 
+    @Override
+    public List<BranchResponse> getAllBranches() {
+        List<Branch> branches = branchRepository.findAll();
+        return branches.stream()
+                .map(this::toBranchResponse).toList();
+    }
+
     private BranchResponse toBranchResponse(Branch branch) {
         BranchResponse branchResponse = new BranchResponse();
         branchResponse.setId(branch.getId());
         branchResponse.setName(branch.getName());
-        branchResponse.setLocations(branch.getLocations());
+        branchResponse.setLocations(branch.getLocations().stream().map(this::toLocationResponse).toList());
 
         return branchResponse;
+    }
+
+    private LocationResponse toLocationResponse(StockLocation stockLocation) {
+        LocationResponse locationResponse = new LocationResponse();
+        locationResponse.setId(stockLocation.getId());
+        locationResponse.setName(stockLocation.getName());
+        return locationResponse;
     }
 
 

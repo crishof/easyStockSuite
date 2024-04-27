@@ -18,9 +18,12 @@ import java.util.UUID;
 public class Branch {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue
+    @Column(name = "branch_id")
     private UUID id;
     private String name;
-    @OneToMany(mappedBy = "branch", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "branch", cascade = CascadeType.ALL)
     private List<StockLocation> locations;
+    private boolean active;
+
 }

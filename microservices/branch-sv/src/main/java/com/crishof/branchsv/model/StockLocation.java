@@ -22,7 +22,7 @@ public class StockLocation {
     private String name;
 
     @ManyToOne
-    @JoinColumn(name = "branch_id", nullable = false)
+    @JoinColumn(name = "branch_id")
     private Branch branch;
 
 }
