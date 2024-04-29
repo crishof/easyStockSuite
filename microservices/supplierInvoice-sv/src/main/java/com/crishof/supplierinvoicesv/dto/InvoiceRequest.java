@@ -1,6 +1,5 @@
 package com.crishof.supplierinvoicesv.dto;
 
-import com.crishof.supplierinvoicesv.model.InvoiceItem;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,7 +13,7 @@ import java.util.UUID;
 @NoArgsConstructor
 public class InvoiceRequest {
 
-    List<InvoiceItem> productRequests;
+    private List<InvoiceItemRequest> invoiceItemsRequest;
     private String invoiceNumber;
     private LocalDate invoiceDate;
     private LocalDate dueDate;
@@ -22,4 +21,6 @@ public class InvoiceRequest {
     private Double discount;
     private Double total;
     private UUID supplierId;
+    private UUID branchId;
+    private UUID locationId;
 }

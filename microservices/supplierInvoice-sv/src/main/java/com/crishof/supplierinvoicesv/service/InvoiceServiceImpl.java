@@ -1,13 +1,13 @@
 package com.crishof.supplierinvoicesv.service;
 
 import com.crishof.supplierinvoicesv.apiClient.ProductAPIClient;
-import com.crishof.supplierinvoicesv.dto.InvoiceRequest;
-import com.crishof.supplierinvoicesv.dto.InvoiceResponse;
+import com.crishof.supplierinvoicesv.dto.*;
 import com.crishof.supplierinvoicesv.model.Invoice;
+import com.crishof.supplierinvoicesv.model.InvoiceItem;
 import com.crishof.supplierinvoicesv.repository.InvoiceRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
@@ -31,29 +31,64 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
+    @Transactional
     public InvoiceResponse save(InvoiceRequest invoiceRequest) {
 
         Invoice invoice = this.toInvoice(invoiceRequest);
 
-        ResponseEntity.ok(productAPIClient.updateProductStockAndPrices(invoiceRequest.getProductRequests()));
+        invoice.getInvoiceItems().forEach(item -> item.setInvoice(invoice));
+
+        InvoiceUpdateRequest invoiceUpdateRequest = new InvoiceUpdateRequest();
+
+        invoiceUpdateRequest.setBranchId(invoiceRequest.getBranchId());
+        invoiceUpdateRequest.setLocationId(invoiceRequest.getLocationId());
+        invoiceUpdateRequest.setInvoiceItems(invoiceRequest.getInvoiceItemsRequest()
+                .stream()
+                .map(this::toSupplierInvoiceItem)
+                .toList());
+
+
+        productAPIClient.updateProductStockAndPrices(invoiceUpdateRequest);
 
         return this.toInvoiceResponse(invoiceRepository.save(invoice));
     }
 
-    private Invoice toInvoice(InvoiceRequest invoiceRequest) {
-        Invoice invoice = new Invoice();
+    private SupplierInvoiceItem toSupplierInvoiceItem(InvoiceItemRequest invoiceItem) {
 
-        invoice.setInvoiceNumber(invoiceRequest.getInvoiceNumber());
-        invoice.setInvoiceDate(invoiceRequest.getInvoiceDate());
-        invoice.setDueDate(invoiceRequest.getDueDate());
-        invoice.setReceivedDate(invoiceRequest.getReceivedDate());
-        invoice.setDiscount(invoiceRequest.getDiscount());
-        invoice.setTotal(invoiceRequest.getTotal());
-        invoice.setSupplierId(invoiceRequest.getSupplierId());
-        invoice.setProductRequests(invoiceRequest.getProductRequests());
-
-        return invoice;
+        SupplierInvoiceItem supplierInvoiceItem = new SupplierInvoiceItem();
+        supplierInvoiceItem.setId(invoiceItem.getId());
+        supplierInvoiceItem.setPrice(invoiceItem.getPrice());
+        supplierInvoiceItem.setQuantity(invoiceItem.getQuantity());
+        supplierInvoiceItem.setTaxRate(invoiceItem.getTaxRate());
+        supplierInvoiceItem.setDiscountRate(invoiceItem.getDiscountRate());
+        return supplierInvoiceItem;
     }
+
+    private Invoice toInvoice(InvoiceRequest invoiceRequest) {
+
+        return Invoice.builder()
+                .invoiceNumber(invoiceRequest.getInvoiceNumber())
+                .invoiceDate(invoiceRequest.getInvoiceDate())
+                .dueDate(invoiceRequest.getDueDate())
+                .receivedDate(invoiceRequest.getReceivedDate())
+                .discount(invoiceRequest.getDiscount())
+                .total(invoiceRequest.getTotal())
+                .supplierId(invoiceRequest.getSupplierId())
+                .invoiceItems(invoiceRequest.getInvoiceItemsRequest().stream()
+                        .map(this::toInvoiceItem).toList())
+                .build();
+    }
+
+    private InvoiceItem toInvoiceItem(InvoiceItemRequest invoiceItemRequest) {
+
+        return InvoiceItem.builder()
+                .price(invoiceItemRequest.getPrice())
+                .quantity(invoiceItemRequest.getQuantity())
+                .discountRate(invoiceItemRequest.getDiscountRate())
+                .taxRate(invoiceItemRequest.getTaxRate())
+                .build();
+    }
+
 
     private InvoiceResponse toInvoiceResponse(Invoice invoice) {
         InvoiceResponse invoiceResponse = new InvoiceResponse();
@@ -65,7 +100,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         invoiceResponse.setDiscount(invoice.getDiscount());
         invoiceResponse.setTotal(invoice.getTotal());
         invoiceResponse.setSupplierId(invoice.getSupplierId());
-        invoiceResponse.setProductRequests(invoice.getProductRequests());
+        invoiceResponse.setInvoiceItems(invoice.getInvoiceItems());
 
         return invoiceResponse;
 

@@ -24,7 +24,7 @@ public class StockController {
 
         try {
             StockResponse stockResponse = stockService.save(stockRequest);
-            return ResponseEntity.ok(stockResponse);
+            return ResponseEntity.status(HttpStatus.OK).body(stockResponse.getId());
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (Exception e) {
@@ -32,7 +32,7 @@ public class StockController {
         }
     }
 
-    @PutMapping("/updateQuantity")
+    @PutMapping("/updateQuantity/{stockId}")
     public ResponseEntity<?> updateQuantity(@PathVariable("stockId") UUID stockId, @RequestBody StockRequest stockRequest) {
         try {
             StockResponse stockResponse = stockService.updateQuantity(stockId, stockRequest);
@@ -69,8 +69,8 @@ public class StockController {
         }
     }
 
-    @GetMapping("/getStockById")
-    public ResponseEntity<?> getStockById(UUID stockId) {
+    @GetMapping("/getStockById/{stockId}")
+    public ResponseEntity<?> getStockById(@PathVariable(name = "stockId") UUID stockId) {
         return ResponseEntity.status(HttpStatus.OK).body(stockService.getStockById(stockId));
     }
 }

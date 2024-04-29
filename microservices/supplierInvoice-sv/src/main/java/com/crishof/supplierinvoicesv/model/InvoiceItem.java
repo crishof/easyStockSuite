@@ -2,6 +2,7 @@ package com.crishof.supplierinvoicesv.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,9 +13,11 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "invoice_item")
+@Builder
 public class InvoiceItem {
 
     @Id
+    @GeneratedValue
     private UUID id;
 
     private Integer quantity;

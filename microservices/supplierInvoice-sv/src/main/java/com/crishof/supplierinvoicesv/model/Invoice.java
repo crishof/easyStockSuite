@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -18,8 +19,8 @@ import java.util.UUID;
 @Table(name = "tbl_invoice")
 public class Invoice {
 
-    @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<InvoiceItem> productRequests;
+    @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL)
+    List<InvoiceItem> invoiceItems = new ArrayList<>();
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;

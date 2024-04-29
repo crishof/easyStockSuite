@@ -11,9 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -65,23 +63,40 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void updateFromInvoice(List<SupplierInvoiceItem> invoiceItems) {
+    public String updateFromInvoice(InvoiceUpdateRequest invoiceUpdateRequest) {
+
+        List<SupplierInvoiceItem> invoiceItems = invoiceUpdateRequest.getInvoiceItems();
 
         for (SupplierInvoiceItem invoiceItem : invoiceItems) {
 
-            Product product = productRepository.getReferenceById(invoiceItem.getId());
+            Product product = productRepository.findById(invoiceItem.getId())
+                    .orElseThrow(() -> new ProductNotFoundException(invoiceItem.getId()));
 
             StockRequest stockRequest = new StockRequest();
             stockRequest.setQuantity(invoiceItem.getQuantity());
-            product.getStockIds().add(stockAPIClient.save(stockRequest).getBody());
+            stockRequest.setBranchId(invoiceUpdateRequest.getBranchId());
+            stockRequest.setLocationId(invoiceUpdateRequest.getLocationId());
+
+            Set<UUID> stocks = new HashSet<>(product.getStockIds());
+
+            UUID stockId = stockAPIClient.save(stockRequest);
+            boolean isAdded = stocks.add(stockId);
+
+            if (isAdded) {
+                product.setStockIds(new ArrayList<>(stocks));
+            }
 
             PriceRequest priceRequest = new PriceRequest();
             priceRequest.setPurchasePrice(invoiceItem.getPrice());
             priceRequest.setTaxRate(invoiceItem.getTaxRate());
             priceRequest.setDiscountRate(invoiceItem.getDiscountRate());
+
             priceApiClient.update(product.getPriceId(), priceRequest);
 
+            productRepository.save(product);
         }
+
+        return "Products updated successfully";
     }
 
     @Override
@@ -98,7 +113,6 @@ public class ProductServiceImpl implements ProductService {
             if (response.getStatusCode().is2xxSuccessful()) {
                 return response.getBody();
             } else {
-                // Si la llamada no es exitosa, devuelve un valor predeterminado
                 return "Not available";
             }
         } catch (Exception ex) {
@@ -131,7 +145,7 @@ public class ProductServiceImpl implements ProductService {
         products.addAll(productRepository.findAllByModelContainingIgnoreCase(filter));
         products.addAll(productRepository.findAllByDescriptionContainingIgnoreCase(filter));
 
-        return products.stream().map(this::toProductResponse).toList();
+        return products.stream().map(this::toProductResponse).distinct().toList();
     }
 
     @Override
@@ -215,15 +229,15 @@ public class ProductServiceImpl implements ProductService {
     public UUID getIdByName(String name, String entityName) {
         // Manejar caso de entidad desconocida
         return switch (entityName) {
-            case "brand" -> {
+            case BRAND_ENTITY -> {
                 ResponseEntity<?> response = brandAPIClient.getIdByName(name);
                 yield handleResponse(response, name, BRAND_ENTITY);
             }
-            case "category" -> {
+            case CATEGORY_ENTITY -> {
                 ResponseEntity<?> response = categoryAPIClient.getIdByName(name);
                 yield handleResponse(response, name, CATEGORY_ENTITY);
             }
-            case "supplier" -> {
+            case SUPPLIER_ENTITY -> {
                 ResponseEntity<?> response = supplierAPIClient.getIdByName(name);
                 yield handleResponse(response, name, SUPPLIER_ENTITY);
             }
@@ -233,13 +247,11 @@ public class ProductServiceImpl implements ProductService {
 
     private UUID handleResponse(ResponseEntity<?> response, String name, String entityName) {
         if (response == null || response.getStatusCode() != HttpStatus.OK) {
-            // Manejar caso de respuesta nula o no exitosa
             throw new EntityNotFoundException("Error retrieving " + entityName + " ID for " + entityName + ": " + name);
         }
 
         String idString = (String) response.getBody();
         if (idString == null) {
-            // Manejar caso de respuesta con cuerpo nulo
             throw new EntityNotFoundException("No " + entityName + " ID found for " + entityName + ": " + name);
         }
 

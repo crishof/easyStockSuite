@@ -14,7 +14,7 @@ import java.util.UUID;
 @NoArgsConstructor
 public class InvoiceResponse {
 
-    List<InvoiceItem> productRequests;
+    private List<InvoiceItem> invoiceItems;
     private UUID id;
     private String invoiceNumber;
     private LocalDate invoiceDate;

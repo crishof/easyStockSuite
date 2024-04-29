@@ -2,6 +2,7 @@ package com.crishof.supplierinvoicesv.controller;
 
 import com.crishof.supplierinvoicesv.dto.InvoiceRequest;
 import com.crishof.supplierinvoicesv.dto.InvoiceResponse;
+import com.crishof.supplierinvoicesv.repository.InvoiceRepository;
 import com.crishof.supplierinvoicesv.service.InvoiceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,7 @@ import java.util.List;
 public class InvoiceController {
 
     private final InvoiceService invoiceService;
+    private final InvoiceRepository invoiceRepository;
 
     @GetMapping("/getAll")
     public ResponseEntity<List<InvoiceResponse>> getAll() {

@@ -18,12 +18,17 @@ public class StockServiceImpl implements StockService {
     private final StockRepository stockRepository;
 
     @Override
+
     public StockResponse save(StockRequest stockRequest) {
-        Stock stock = new Stock();
+        Stock stock = stockRepository.findByBranchIdAndLocationId(stockRequest.getBranchId(), stockRequest.getLocationId());
+        if (stock == null) {
+            stock = new Stock();
+        }
         stock.setMin(stockRequest.getMin());
         stock.setMax(stockRequest.getMax());
-        stock.setQuantity(stockRequest.getQuantity());
+        stock.setQuantity(stock.getQuantity() + stockRequest.getQuantity());
         stock.setBranchId(stockRequest.getBranchId());
+        stock.setLocationId(stockRequest.getLocationId());
 
         return new StockResponse(stockRepository.save(stock));
     }
@@ -34,7 +39,7 @@ public class StockServiceImpl implements StockService {
         Stock stock = stockRepository.findById(stockId)
                 .orElseThrow(() -> new StockNotFoundException(stockId));
 
-        stock.setQuantity(stockRequest.getQuantity());
+        stock.setQuantity(stock.getQuantity() + stockRequest.getQuantity());
         return new StockResponse(stockRepository.save(stock));
 
     }

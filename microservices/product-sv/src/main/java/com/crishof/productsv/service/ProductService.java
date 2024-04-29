@@ -1,8 +1,10 @@
 package com.crishof.productsv.service;
 
+import com.crishof.productsv.dto.InvoiceUpdateRequest;
 import com.crishof.productsv.dto.ProductRequest;
 import com.crishof.productsv.dto.ProductResponse;
 import com.crishof.productsv.dto.SupplierInvoiceItem;
+import com.crishof.productsv.model.Product;
 
 import java.util.List;
 import java.util.UUID;
@@ -32,5 +34,5 @@ public interface ProductService {
     void removeCategory(UUID categoryId);
 
 
-    void updateFromInvoice(List<SupplierInvoiceItem> invoiceItems);
+    String updateFromInvoice(InvoiceUpdateRequest invoiceUpdateRequest);
 }

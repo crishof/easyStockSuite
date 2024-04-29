@@ -1,5 +1,6 @@
 package org.crishof.supplierpricelistsv.service;
 
+import lombok.RequiredArgsConstructor;
 import org.crishof.supplierpricelistsv.model.Product;
 import org.crishof.supplierpricelistsv.repository.ProductRepository;
 import org.springframework.stereotype.Service;
@@ -8,14 +9,10 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class SupplierServiceImpl implements SupplierService {
 
-    final
-    ProductRepository productRepository;
-
-    public SupplierServiceImpl(ProductRepository productRepository) {
-        this.productRepository = productRepository;
-    }
+    private final ProductRepository productRepository;
 
     @Override
     public List<String> getBrandsBySupplier(UUID supplierId) {
@@ -24,7 +21,7 @@ public class SupplierServiceImpl implements SupplierService {
 
         return products.stream()
                 .map(Product::getBrand)
-                .distinct()
+                .distinct().sorted()
                 .toList();
     }
 
@@ -35,6 +32,7 @@ public class SupplierServiceImpl implements SupplierService {
         return products.stream()
                 .map(Product::getBrand)
                 .distinct()
+                .sorted()
                 .toList();
     }
 }

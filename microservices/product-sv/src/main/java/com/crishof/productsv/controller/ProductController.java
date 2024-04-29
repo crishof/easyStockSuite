@@ -1,9 +1,6 @@
 package com.crishof.productsv.controller;
 
-import com.crishof.productsv.dto.ProductRequest;
-import com.crishof.productsv.dto.ProductResponse;
-import com.crishof.productsv.dto.SupplierInvoiceItem;
-import com.crishof.productsv.dto.SupplierProductRequest;
+import com.crishof.productsv.dto.*;
 import com.crishof.productsv.exeption.ProductNotFoundException;
 import com.crishof.productsv.repository.ProductRepository;
 import com.crishof.productsv.service.ProductService;
@@ -65,11 +62,9 @@ public class ProductController {
     }
 
     @PutMapping("/invoice")
-    public ResponseEntity<?> updateProductStockAndPrices(List<SupplierInvoiceItem> invoiceItems) {
+    public String updateProductStockAndPrices(@RequestBody InvoiceUpdateRequest invoiceUpdateRequest) {
 
-        productService.updateFromInvoice(invoiceItems);
-
-        return ResponseEntity.ok("Products updated successfully");
+        return productService.updateFromInvoice(invoiceUpdateRequest);
     }
 
     @DeleteMapping("/delete/{id}")
@@ -116,6 +111,8 @@ public class ProductController {
         int alreadyImportedCount = 0;
 
         for (SupplierProductRequest request : productList) {
+
+
 
             if (productRepository.findBySupplierProductId(request.getId()) == null) {
                 ProductRequest productRequest = new ProductRequest(request);
