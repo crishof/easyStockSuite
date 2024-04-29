@@ -1,15 +1,11 @@
 package com.crishof.productsv.controller;
 
-import com.crishof.productsv.dto.ProductRequest;
-import com.crishof.productsv.dto.ProductResponse;
-import com.crishof.productsv.dto.SupplierProductRequest;
+import com.crishof.productsv.dto.*;
 import com.crishof.productsv.exeption.ProductNotFoundException;
 import com.crishof.productsv.repository.ProductRepository;
-import com.crishof.productsv.service.ImportFileService;
 import com.crishof.productsv.service.ProductService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,27 +15,15 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/product")
-//@CrossOrigin(origins = "http://localhost:4200")
+@RequiredArgsConstructor
 public class ProductController {
 
-    @Autowired
-    ProductService productService;
+    private final ProductService productService;
 
-    @Autowired
-    ImportFileService importFileService;
-
-    @Autowired
-    ProductRepository productRepository;
+    private final ProductRepository productRepository;
 
     @Value("${server.port}")
     private int serverPort;
-    @Autowired
-    private HttpMessageConverters messageConverters;
-
-//    @GetMapping("/test")
-//    public String LoadBalancerTest() {
-//        return "Estoy en el puerto: " + serverPort;
-//    }
 
     @GetMapping("/getAll")
     public List<ProductResponse> getAll() {
@@ -61,8 +45,6 @@ public class ProductController {
     @PostMapping("/save")
     public ResponseEntity<?> save(@RequestBody ProductRequest productRequest) {
 
-        System.out.println("productRequest = " + productRequest);
-
         try {
             ProductResponse productResponse = productService.save(productRequest);
             return ResponseEntity.ok(productResponse);
@@ -79,6 +61,12 @@ public class ProductController {
         return productService.update(id, productRequest);
     }
 
+    @PutMapping("/invoice")
+    public String updateProductStockAndPrices(@RequestBody InvoiceUpdateRequest invoiceUpdateRequest) {
+
+        return productService.updateFromInvoice(invoiceUpdateRequest);
+    }
+
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> delete(@PathVariable("id") UUID id) {
         productService.deleteById(id);
@@ -93,14 +81,13 @@ public class ProductController {
 
     @GetMapping("/getAllByFilter")
     public List<ProductResponse> getAllByFilter(@RequestParam String filter) {
-        System.out.println("filter = " + filter);
         return productService.getAllByFilter(filter);
     }
 
-//    @GetMapping("/getAllByFilterAndStock")
-//    public List<ProductResponse> getAllByFilterAndStock(@RequestParam String filter) {
-//        return productService.getAllByFilterAndStock(filter);
-//    }
+    @GetMapping("/getAllByFilterAndStock")
+    public List<ProductResponse> getAllByFilterAndStock(@RequestParam String filter) {
+        return productService.getAllByFilterAndStock(filter);
+    }
 
     @PutMapping("/removeCategory")
     public ResponseEntity<String> removeCategory(@RequestParam UUID categoryId) {
@@ -125,22 +112,19 @@ public class ProductController {
 
         for (SupplierProductRequest request : productList) {
 
-            System.out.println("is present: " + productRepository.findBySupplierProductId(request.getId()));
+
 
             if (productRepository.findBySupplierProductId(request.getId()) == null) {
                 ProductRequest productRequest = new ProductRequest(request);
                 productService.save(productRequest);
                 importedCount++;
-                System.out.println("importedCount = " + importedCount);
-                System.out.println("productRequest = " + productRequest);
             } else {
                 alreadyImportedCount++;
-                System.out.println("alreadyImportedCount = " + alreadyImportedCount);
             }
         }
 
         String message = "Task completed successfully: ";
-        if(productList.isEmpty()){
+        if (productList.isEmpty()) {
             message = "Product list is empty";
         }
         if (importedCount > 0) {

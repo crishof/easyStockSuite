@@ -1,29 +1,30 @@
 package org.crishof.invoicesv.service;
 
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.crishof.invoicesv.apiClient.ProductAPIClient;
+import org.crishof.invoicesv.apiClient.StockApiClient;
 import org.crishof.invoicesv.dto.InvoiceRequest;
 import org.crishof.invoicesv.dto.InvoiceResponse;
+import org.crishof.invoicesv.dto.OrderProductsRequest;
 import org.crishof.invoicesv.exception.InvoiceNotFoundException;
 import org.crishof.invoicesv.model.Invoice;
 import org.crishof.invoicesv.repository.InvoiceRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 
-import static org.crishof.invoicesv.enums.TransactionType.*;
-
 @Service("invoiceService")
+@Slf4j
+@RequiredArgsConstructor
 public class InvoiceServiceImpl implements InvoiceService {
 
-    @Autowired
-    InvoiceRepository invoiceRepository;
-    @Autowired
-    ProductAPIClient productAPIClient;
+    private final InvoiceRepository invoiceRepository;
+    private final ProductAPIClient productAPIClient;
+    private final StockApiClient stockApiClient;
 
     @Override
     public List<InvoiceResponse> getAll() {
@@ -36,25 +37,38 @@ public class InvoiceServiceImpl implements InvoiceService {
 
         Invoice invoice = invoiceRepository.findById(id).orElseThrow(InvoiceNotFoundException::new);
 
-        return new InvoiceResponse(invoice);
+        return this.toInvoiceResponse(invoice);
     }
 
-    @Override
-    @Transactional
-    public void save(InvoiceRequest invoiceRequest) {
+    private InvoiceResponse toInvoiceResponse(Invoice invoice) {
 
-        Invoice invoice = new Invoice(invoiceRequest);
-        switch (invoiceRequest.getTransactionType()) {
+        return InvoiceResponse.builder()
+                .id(invoice.getId())
+                .invoiceNumber(invoice.getInvoiceNumber())
+                .issueDate(invoice.getIssueDate())
+                .receptionDate(invoice.getReceptionDate())
+                .build();
+    }
 
-            case SALE, TRANSFER -> {
+//    @Override
+//    @Transactional
+//    public void save(InvoiceRequest invoiceRequest) {
+//
+//        Invoice invoice = new Invoice(invoiceRequest);
+//
+//        switch (invoiceRequest.getTransactionType()) {
+//
+//            case SALE, TRANSFER -> {
+//
+//                for (OrderProductsRequest product : invoiceRequest.getProductList()) {
 
-                for (Map.Entry<UUID, Integer> entry : invoiceRequest.getProductList().entrySet()) {
+//                    confirmar stock
+//                    modificar stock del producto
+//                    guardar stock modificado
+//                    int requiredUnits = entry.getValue();
 
-                    UUID productId = entry.getKey();
-                    int requiredUnits = entry.getValue();
-
-//                    Product product = productAPIClient.getById(productId);
-//                    int existingUnits = stockService.getStockForProduct(productId);
+//                    ProductRequest product = (ProductRequest) productAPIClient.getById(productId).getBody();
+//                    int existingUnits = stockApiClient.getStockById(product.getStockIds().get(0));
 //                    if (existingUnits < requiredUnits) {
 //                        throw new IllegalStateException("Not enough units in stock for product id: " + product.getId() + " - STOCK = " + existingUnits);
 //                    }
@@ -64,32 +78,32 @@ public class InvoiceServiceImpl implements InvoiceService {
 //                }
 //            }
 //            case PURCHASE, RETURN -> {
-
+//
 //                for (Map.Entry<UUID, Integer> entry : invoiceRequest.getProductList().entrySet()) {
 //                    UUID productId = entry.getKey();
-//                    Product product = productService.getProductById(productId);
+//                    ProductRequest product = productService.getProductById(productId);
 //                    Stock stock = stockService.save(product, entry.getValue());
 //                    product.getStocks().add(stock);
 //                }
 //            }
 //            default -> throw new IllegalStateException("Unexpected value: " + invoiceRequest.getTransactionType());
 //        }
-
+//
 //        invoiceRepository.save(invoice);
 //    }
 
 
-//    @Override
-//    @Transactional
-//    public InvoiceResponse update(UUID id, InvoiceRequest invoiceRequest) {
-//        Invoice invoice = invoiceRepository.getReferenceById(id);
-//        invoice.updateFromRequest(invoiceRequest);
-//        return new InvoiceResponse(invoiceRepository.save(invoice));
-//    }
+    @Override
+    @Transactional
+    public InvoiceResponse update(UUID id, InvoiceRequest invoiceRequest) {
+        Invoice invoice = invoiceRepository.getReferenceById(id);
+        invoice.updateFromRequest(invoiceRequest);
+        return new InvoiceResponse(invoiceRepository.save(invoice));
+    }
 
-//    @Override
-//    @Transactional
-//    public void deleteById(UUID id) {
-//        invoiceRepository.deleteById(id);
-//    }
+    @Override
+    @Transactional
+    public void deleteById(UUID id) {
+        invoiceRepository.deleteById(id);
+    }
 }

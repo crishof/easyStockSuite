@@ -10,4 +10,6 @@ public interface PriceService {
     PriceResponse getById(UUID uuid);
 
     UUID saveAndGetId(PriceRequest priceRequest);
+
+    void updatePricesFromInvoice(UUID priceId, PriceRequest priceRequest);
 }

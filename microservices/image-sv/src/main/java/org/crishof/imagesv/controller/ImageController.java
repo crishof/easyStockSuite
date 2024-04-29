@@ -1,8 +1,7 @@
 package org.crishof.imagesv.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.crishof.imagesv.service.CloudinaryService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
@@ -11,12 +10,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/image")
+@RequiredArgsConstructor
 public class ImageController {
 
-    @Autowired
-    Environment environment;
-    @Autowired
-    private CloudinaryService cloudinaryService;
+    private final CloudinaryService cloudinaryService;
 
 
     @PostMapping("/save")

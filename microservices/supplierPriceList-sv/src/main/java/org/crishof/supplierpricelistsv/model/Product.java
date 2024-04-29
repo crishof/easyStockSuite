@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.crishof.supplierpricelistsv.dto.ProductRequest;
 
 import java.time.LocalDate;
 import java.util.UUID;
@@ -36,23 +35,4 @@ public class Product {
     private String barcode;
     private String currency;
     private double taxRate;
-
-    public Product(ProductRequest productRequest) {
-        this.supplierId = productRequest.getSupplierId();
-        this.brand = productRequest.getBrand();
-        this.code = productRequest.getCode();
-        this.model = productRequest.getModel();
-        this.description = productRequest.getDescription();
-        this.category = productRequest.getCategory();
-        this.lastUpdate = productRequest.getLastUpdate();
-        this.price = productRequest.getPrice();
-        this.suggestedPrice = productRequest.getSuggestedPrice();
-        this.suggestedWebPrice = productRequest.getSuggestedWebPrice();
-        this.stockAvailable = productRequest.getStockAvailable();
-        this.barcode = productRequest.getBarcode();
-        this.currency = productRequest.getCurrency();
-        this.taxRate = productRequest.getTaxRate();
-    }
-
-
 }

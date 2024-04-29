@@ -1,0 +1,19 @@
+server.port: 443
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka-sv:8761/eureka
+#      defaultZone: http://localhost:8761/eureka
+  #Solucion al error CLAIMING INSTANCES
+  instance:
+    lease-renewal-interval-in-seconds: 0

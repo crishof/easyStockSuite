@@ -13,5 +13,12 @@ public class PriceRequest {
     private double sellingPrice;
     private double webSellingPrice;
     private double taxRate;
+    private Double discountRate;
 
+    public PriceRequest(double purchasePrice, double sellingPrice, double webSellingPrice, double taxRate) {
+        this.purchasePrice = purchasePrice;
+        this.sellingPrice = sellingPrice;
+        this.webSellingPrice = webSellingPrice;
+        this.taxRate = taxRate;
+    }
 }

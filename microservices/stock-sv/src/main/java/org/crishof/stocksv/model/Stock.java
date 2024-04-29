@@ -20,8 +20,10 @@ public class Stock {
     @GeneratedValue
     @Column(name = "stock_id")
     private UUID id;
-    private int quantity;
     private UUID branchId;
+    private UUID locationId;
+    private UUID productId;
+    private int quantity;
     private int max;
     private int min;
 

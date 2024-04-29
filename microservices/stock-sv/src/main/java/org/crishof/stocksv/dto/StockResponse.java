@@ -18,7 +18,7 @@ public class StockResponse {
     private int max;
     private int min;
 
-    public StockResponse(Stock stock){
+    public StockResponse(Stock stock) {
         this.id = stock.getId();
         this.quantity = stock.getQuantity();
         this.branchId = stock.getBranchId();

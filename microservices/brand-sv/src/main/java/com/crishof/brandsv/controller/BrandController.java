@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,21 +22,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
-//@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/brand")
+@RequiredArgsConstructor
 public class BrandController {
 
-    final
-    BrandService brandService;
+    private final BrandService brandService;
 
-    final
-    ImageAPIClient imageAPIClient;
-
-    public BrandController(BrandService brandService, ImageAPIClient imageAPIClient) {
-        this.brandService = brandService;
-        this.imageAPIClient = imageAPIClient;
-    }
+    private final ImageAPIClient imageAPIClient;
 
     @Operation(summary = "Get All Brands")
     @GetMapping(path = "/getAll")
@@ -114,7 +108,7 @@ public class BrandController {
         } catch (BrandNotFoundException e) {
             BrandRequest brandRequest = new BrandRequest(brandName);
             BrandResponse brandResponse = brandService.save(brandRequest);
-            return ResponseEntity.ok(brandResponse.getId());
+            return ResponseEntity.status(HttpStatus.OK).body(brandResponse.getId());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal server error");
         }

@@ -1,9 +1,9 @@
 package org.crishof.stocksv.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.crishof.stocksv.dto.StockRequest;
 import org.crishof.stocksv.dto.StockResponse;
 import org.crishof.stocksv.service.StockService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,26 +13,26 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/stock")
+@RequiredArgsConstructor
 public class StockController {
 
-
-    @Autowired
-    StockService stockService;
+    private static final String SERVER_ERROR = "Internal server error";
+    private final StockService stockService;
 
     @PostMapping("/save")
     public ResponseEntity<?> save(@RequestBody StockRequest stockRequest) {
 
         try {
             StockResponse stockResponse = stockService.save(stockRequest);
-            return ResponseEntity.ok(stockResponse);
+            return ResponseEntity.status(HttpStatus.OK).body(stockResponse.getId());
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(SERVER_ERROR);
         }
     }
 
-    @PutMapping("/updateQuantity")
+    @PutMapping("/updateQuantity/{stockId}")
     public ResponseEntity<?> updateQuantity(@PathVariable("stockId") UUID stockId, @RequestBody StockRequest stockRequest) {
         try {
             StockResponse stockResponse = stockService.updateQuantity(stockId, stockRequest);
@@ -40,7 +40,7 @@ public class StockController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(SERVER_ERROR);
         }
     }
 
@@ -53,7 +53,7 @@ public class StockController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(SERVER_ERROR);
         }
     }
 
@@ -65,8 +65,12 @@ public class StockController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(SERVER_ERROR);
         }
     }
 
+    @GetMapping("/getStockById/{stockId}")
+    public ResponseEntity<?> getStockById(@PathVariable(name = "stockId") UUID stockId) {
+        return ResponseEntity.status(HttpStatus.OK).body(stockService.getStockById(stockId));
+    }
 }

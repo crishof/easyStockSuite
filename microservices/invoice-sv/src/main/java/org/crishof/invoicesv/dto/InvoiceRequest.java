@@ -6,8 +6,7 @@ import lombok.NoArgsConstructor;
 import org.crishof.invoicesv.enums.TransactionType;
 
 import java.time.LocalDate;
-import java.util.Map;
-import java.util.UUID;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -18,7 +17,6 @@ public class InvoiceRequest {
     private LocalDate issueDate;
     private LocalDate receptionDate;
     private LocalDate dueDate;
-    private UUID entityId;
-    private Map<UUID, Integer> productList;
+    private List<OrderProductsRequest> productList;
     private TransactionType transactionType;
 }

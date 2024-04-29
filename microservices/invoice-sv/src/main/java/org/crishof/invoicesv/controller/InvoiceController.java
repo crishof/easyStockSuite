@@ -1,10 +1,10 @@
 package org.crishof.invoicesv.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.crishof.invoicesv.dto.InvoiceRequest;
 import org.crishof.invoicesv.dto.InvoiceResponse;
 import org.crishof.invoicesv.exception.InvoiceNotFoundException;
 import org.crishof.invoicesv.service.InvoiceService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,11 +14,10 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/invoice")
-@CrossOrigin(origins = "http://localhost:4200")
+@RequiredArgsConstructor
 public class InvoiceController {
 
-    @Autowired
-    InvoiceService invoiceService;
+    private final InvoiceService invoiceService;
 
     @GetMapping("/getAll")
     public List<InvoiceResponse> getAll() {
@@ -39,13 +38,13 @@ public class InvoiceController {
     }
 
     @PostMapping("/save/purchase")
-    public String savePurchaseInvoice(@RequestBody InvoiceRequest invoiceRequest) {
+    public ResponseEntity<?> savePurchaseInvoice(@RequestBody InvoiceRequest invoiceRequest) {
 
         try {
             invoiceService.save(invoiceRequest);
-            return "Invoice successfully saved";
+            return ResponseEntity.status(HttpStatus.OK).body("Invoice successfully saved");
         } catch (Exception e) {
-            return "Error saving invoice: " + e.getMessage();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error saving invoice: " + e.getMessage());
         }
     }
 
@@ -62,9 +61,9 @@ public class InvoiceController {
 //    }
 
     @DeleteMapping("/delete/{id}")
-    public String deleteById(@PathVariable("id") UUID id) {
+    public ResponseEntity<String> deleteById(@PathVariable("id") UUID id) {
         invoiceService.deleteById(id);
-        return "Invoice successfully deleted";
+        return ResponseEntity.status(HttpStatus.OK).body("Invoice successfully deleted");
     }
 }
 

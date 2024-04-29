@@ -7,7 +7,7 @@ import com.crishof.supplier.exception.SupplierNotFoundException;
 import com.crishof.supplier.model.Supplier;
 import com.crishof.supplier.modelMapper.SupplierMapper;
 import com.crishof.supplier.repository.SupplierRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,10 +15,10 @@ import java.util.Objects;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class SupplierServiceImpl implements SupplierService {
 
-    @Autowired
-    SupplierRepository supplierRepository;
+    private final SupplierRepository supplierRepository;
 
     @Override
     public List<Supplier> getAll() {
@@ -38,7 +38,8 @@ public class SupplierServiceImpl implements SupplierService {
     @Override
     public SupplierResponse getByName(String name) {
 
-        Supplier supplier = supplierRepository.findByNameIgnoreCase(name).orElseThrow(() -> new SupplierNotFoundException("Supplier with name " + name + " not found"));
+        Supplier supplier = supplierRepository.findByNameIgnoreCase(name).orElseThrow(
+                () -> new SupplierNotFoundException("Supplier with name " + name + " not found"));
         return SupplierMapper.toSupplierResponse(supplier);
     }
 

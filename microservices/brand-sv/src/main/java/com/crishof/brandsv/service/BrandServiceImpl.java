@@ -14,21 +14,16 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
-import java.util.stream.Collectors;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
 public class BrandServiceImpl implements BrandService {
 
 
+    private static final String BRAND_EMPTY = "Brand name cannot be empty";
     private final BrandRepository brandRepository;
-
     private final ImageAPIClient imageAPIClient;
-
     private final ProductApiClient productApiClient;
 
     @Override
@@ -36,7 +31,7 @@ public class BrandServiceImpl implements BrandService {
         List<Brand> brands = brandRepository.findAll();
         return brands.stream()
                 .map(BrandMapper::toBrandResponse)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
@@ -53,6 +48,20 @@ public class BrandServiceImpl implements BrandService {
         Brand brand = brandRepository.findByNameIgnoreCase(name).orElseThrow(
                 () -> new BrandNotFoundException("Brand not found with name: " + name));
         return BrandMapper.toBrandResponse(brand);
+    }
+
+    @Override
+    public BrandResponse getByNameOrCreateNew(String name) {
+
+        Optional<Brand> brand = brandRepository.findByNameIgnoreCase(name);
+        if (brand.isPresent()) {
+            return BrandMapper.toBrandResponse(brand.get());
+        } else {
+            Brand newBrand = new Brand();
+            newBrand.setName(name);
+            brandRepository.save(newBrand);
+            return BrandMapper.toBrandResponse(newBrand);
+        }
     }
 
     @Override
@@ -83,7 +92,7 @@ public class BrandServiceImpl implements BrandService {
             throw new DuplicateNameException("Brand with name " + brandRequest.getName() + " already exist");
         }
         if (Objects.equals(brand.getName(), "")) {
-            throw new IllegalArgumentException("Brand name cannot be empty");
+            throw new IllegalArgumentException(BRAND_EMPTY);
         }
         return new BrandResponse(brandRepository.save(brand));
 
@@ -96,7 +105,7 @@ public class BrandServiceImpl implements BrandService {
                 .orElseThrow(() -> new BrandNotFoundException(id));
 
         if (name == null || name.isEmpty()) {
-            throw new IllegalArgumentException("Brand name cannot be empty");
+            throw new IllegalArgumentException(BRAND_EMPTY);
         }
         brand.setName(name);
         return new BrandResponse(brandRepository.save(brand));
@@ -109,7 +118,7 @@ public class BrandServiceImpl implements BrandService {
                 .orElseThrow(() -> new BrandNotFoundException(uuid));
 
         if (brandName == null || brandName.isEmpty()) {
-            throw new IllegalArgumentException("Brand name cannot be empty");
+            throw new IllegalArgumentException(BRAND_EMPTY);
         }
         brand.setName(brandName);
         brand.setImageUrl(imageUrl);
