@@ -79,50 +79,50 @@ services:
       - "9005:9005"
     networks:
       - 'stockSuite-network'
-  supplierpricelist-sv:
-    build: supplierPriceList-sv
-    environment:
-      - POSTGRES_URL=${POSTGRES_DOCKER_URL}
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-    deploy:
-      resources:
-        limits:
-          memory: 512M
-    ports:
-      - "9007:9007"
-    networks:
-      - 'stockSuite-network'
-  product-sv:
-    build: product-sv
-    deploy:
-      resources:
-        limits:
-          memory: 512M
-    ports:
-      - "9001:9001"
-    networks:
-      - 'stockSuite-network'
-  brand-sv:
-    build: brand-sv
-    deploy:
-      resources:
-        limits:
-          memory: 512M
-    ports:
-      - "9002:9002"
-    networks:
-      - 'stockSuite-network'
-  category-sv:
-    build: category-sv
-    deploy:
-      resources:
-        limits:
-          memory: 512M
-    ports:
-      - "9003:9003"
-    networks:
-      - 'stockSuite-network'
+#  supplierpricelist-sv:
+#    build: supplierPriceList-sv
+#    environment:
+#      - POSTGRES_URL=${POSTGRES_DOCKER_URL}
+#      - POSTGRES_USER=${POSTGRES_USER}
+#      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+#    deploy:
+#      resources:
+#        limits:
+#          memory: 512M
+#    ports:
+#      - "9007:9007"
+#    networks:
+#      - 'stockSuite-network'
+#  product-sv:
+#    build: product-sv
+#    deploy:
+#      resources:
+#        limits:
+#          memory: 512M
+#    ports:
+#      - "9001:9001"
+#    networks:
+#      - 'stockSuite-network'
+#  brand-sv:
+#    build: brand-sv
+#    deploy:
+#      resources:
+#        limits:
+#          memory: 512M
+#    ports:
+#      - "9002:9002"
+#    networks:
+#      - 'stockSuite-network'
+#  category-sv:
+#    build: category-sv
+#    deploy:
+#      resources:
+#        limits:
+#          memory: 512M
+#    ports:
+#      - "9003:9003"
+#    networks:
+#      - 'stockSuite-network'
 networks:
   stockSuite-network:
     driver: bridge

@@ -247,7 +247,7 @@ public class ProductServiceImpl implements ProductService {
 
         productResponse.setPriceResponse(priceApiClient.getById(product.getPriceId()));
 
-        productResponse.setStockIds(product.getStockIds());
+        productResponse.setStockResponses(stockAPIClient.getAllProductStocks(product.getStockIds()));
 
         productResponse.setDimension(product.getDimensionId());
 

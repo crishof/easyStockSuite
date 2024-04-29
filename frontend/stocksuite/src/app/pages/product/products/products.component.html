@@ -109,12 +109,12 @@
       (ngSubmit)="onFormSubmit()"
       class="row mb-3 text-center col-md-8"
     >
-      <div class="col-md-10">
+      <div class="col-md-8">
         <input
           type="text"
           class="form-control"
           id="searchTerm"
-          placeholder="Enter search term and press enter to search"
+          placeholder="Enter search term and press enter"
           [(ngModel)]="searchTerm"
           name="searchTerm"
           (keyup)="onKeyUp($event)"
@@ -129,6 +129,11 @@
       <div class="col-md-2">
         <button type="submit" class="btn btn-outline-primary btn-sm">
           Search
+        </button>
+      </div>
+      <div class="col-md-2">
+        <button type="submit" class="btn btn-outline-success btn-sm">
+          with Stock
         </button>
       </div>
     </form>
@@ -165,7 +170,7 @@
 
           <td>{{ product.priceResponse.taxRate * 100 }}%</td>
           <td>{{ product.priceResponse.sellingPrice | currency }}</td>
-          <td>{{ product.stock }}</td>
+          <td>{{ getTotalStockQuantity(product.stockResponses) }}</td>
         </tr>
         }
       </tbody>

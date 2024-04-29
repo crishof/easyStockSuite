@@ -1,4 +1,5 @@
 import { IPrice } from './price.model';
+import { IStock } from './stock.model';
 
 export interface IProduct {
   id: string;
@@ -10,7 +11,7 @@ export interface IProduct {
   supplierId: string;
   hidden: boolean;
   imageId: string[];
-  stock: number;
   priceResponse: IPrice;
   dimensionId: string;
+  stockResponses: IStock[];
 }

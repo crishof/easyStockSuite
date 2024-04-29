@@ -24,7 +24,7 @@ public class ProductResponse {
     @ElementCollection
     private List<UUID> imageId;
     @ElementCollection
-    private List<UUID> stockIds;
+    private List<StockResponse> stockResponses;
     private PriceResponse priceResponse;
     private UUID dimension;
 

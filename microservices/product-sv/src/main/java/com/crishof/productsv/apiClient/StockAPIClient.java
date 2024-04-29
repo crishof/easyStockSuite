@@ -1,6 +1,7 @@
 package com.crishof.productsv.apiClient;
 
 import com.crishof.productsv.dto.StockRequest;
+import com.crishof.productsv.dto.StockResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,5 +19,8 @@ public interface StockAPIClient {
     UUID save(@RequestBody StockRequest stockRequest);
 
     @GetMapping("/stock/getTotalStockForProduct")
-    public ResponseEntity<?> getTotalStockForProduct(@RequestParam("stockIdList") List<UUID> stockIdList);
+    ResponseEntity<?> getTotalStockForProduct(@RequestParam("stockIdList") List<UUID> stockIdList);
+
+    @GetMapping("/stock/getAllProductStocks")
+    List<StockResponse> getAllProductStocks(@RequestParam List<UUID> stockIds);
 }
