@@ -17,6 +17,6 @@ public interface PriceApiClient {
     @PostMapping("/price/save")
     ResponseEntity<?> save(@RequestBody PriceRequest priceRequest);
 
-    @PutMapping("/update/{priceId}")
-    ResponseEntity<?> update(@PathVariable("priceId") UUID priceId, @RequestBody PriceRequest priceRequest);
+    @PutMapping("/price/update/{priceId}")
+    String update(@PathVariable("priceId") UUID priceId, @RequestBody PriceRequest priceRequest);
 }

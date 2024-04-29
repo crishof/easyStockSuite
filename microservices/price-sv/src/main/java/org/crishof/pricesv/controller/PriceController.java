@@ -35,10 +35,10 @@ public class PriceController {
     }
 
     @PutMapping("/update/{priceId}")
-    public ResponseEntity<?> update(@PathVariable("priceId") UUID priceId, @RequestBody PriceRequest priceRequest) {
+    public String update(@PathVariable("priceId") UUID priceId, @RequestBody PriceRequest priceRequest) {
 
         priceService.updatePricesFromInvoice(priceId, priceRequest);
 
-        return ResponseEntity.status(HttpStatus.OK).body("Prices updated successfully");
+        return "Prices updated successfully";
     }
 }

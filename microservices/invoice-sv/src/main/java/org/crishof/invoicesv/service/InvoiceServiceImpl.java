@@ -50,47 +50,47 @@ public class InvoiceServiceImpl implements InvoiceService {
                 .build();
     }
 
-    @Override
-    @Transactional
-    public void save(InvoiceRequest invoiceRequest) {
-
-        Invoice invoice = new Invoice(invoiceRequest);
-
-        switch (invoiceRequest.getTransactionType()) {
-
-            case SALE, TRANSFER -> {
-
-                for (OrderProductsRequest product : invoiceRequest.getProductList()) {
+//    @Override
+//    @Transactional
+//    public void save(InvoiceRequest invoiceRequest) {
+//
+//        Invoice invoice = new Invoice(invoiceRequest);
+//
+//        switch (invoiceRequest.getTransactionType()) {
+//
+//            case SALE, TRANSFER -> {
+//
+//                for (OrderProductsRequest product : invoiceRequest.getProductList()) {
 
 //                    confirmar stock
 //                    modificar stock del producto
 //                    guardar stock modificado
-                    int requiredUnits = entry.getValue();
+//                    int requiredUnits = entry.getValue();
 
-                    ProductRequest product = (ProductRequest) productAPIClient.getById(productId).getBody();
-                    int existingUnits = stockApiClient.getStockById(product.getStockIds().get(0));
-                    if (existingUnits < requiredUnits) {
-                        throw new IllegalStateException("Not enough units in stock for product id: " + product.getId() + " - STOCK = " + existingUnits);
-                    }
-
-                    Stock stock = stockService.save(product, entry.getValue() * -1);
-                    product.getStocks().add(stock);
-                }
-            }
-            case PURCHASE, RETURN -> {
-
-                for (Map.Entry<UUID, Integer> entry : invoiceRequest.getProductList().entrySet()) {
-                    UUID productId = entry.getKey();
-                    ProductRequest product = productService.getProductById(productId);
-                    Stock stock = stockService.save(product, entry.getValue());
-                    product.getStocks().add(stock);
-                }
-            }
-            default -> throw new IllegalStateException("Unexpected value: " + invoiceRequest.getTransactionType());
-        }
-
-        invoiceRepository.save(invoice);
-    }
+//                    ProductRequest product = (ProductRequest) productAPIClient.getById(productId).getBody();
+//                    int existingUnits = stockApiClient.getStockById(product.getStockIds().get(0));
+//                    if (existingUnits < requiredUnits) {
+//                        throw new IllegalStateException("Not enough units in stock for product id: " + product.getId() + " - STOCK = " + existingUnits);
+//                    }
+//
+//                    Stock stock = stockService.save(product, entry.getValue() * -1);
+//                    product.getStocks().add(stock);
+//                }
+//            }
+//            case PURCHASE, RETURN -> {
+//
+//                for (Map.Entry<UUID, Integer> entry : invoiceRequest.getProductList().entrySet()) {
+//                    UUID productId = entry.getKey();
+//                    ProductRequest product = productService.getProductById(productId);
+//                    Stock stock = stockService.save(product, entry.getValue());
+//                    product.getStocks().add(stock);
+//                }
+//            }
+//            default -> throw new IllegalStateException("Unexpected value: " + invoiceRequest.getTransactionType());
+//        }
+//
+//        invoiceRepository.save(invoice);
+//    }
 
 
     @Override

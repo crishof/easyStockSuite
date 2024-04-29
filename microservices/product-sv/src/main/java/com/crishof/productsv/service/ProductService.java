@@ -33,6 +33,5 @@ public interface ProductService {
 
     void removeCategory(UUID categoryId);
 
-
     String updateFromInvoice(InvoiceUpdateRequest invoiceUpdateRequest);
 }

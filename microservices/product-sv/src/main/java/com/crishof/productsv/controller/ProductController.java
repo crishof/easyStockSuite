@@ -84,10 +84,10 @@ public class ProductController {
         return productService.getAllByFilter(filter);
     }
 
-//    @GetMapping("/getAllByFilterAndStock")
-//    public List<ProductResponse> getAllByFilterAndStock(@RequestParam String filter) {
-//        return productService.getAllByFilterAndStock(filter);
-//    }
+    @GetMapping("/getAllByFilterAndStock")
+    public List<ProductResponse> getAllByFilterAndStock(@RequestParam String filter) {
+        return productService.getAllByFilterAndStock(filter);
+    }
 
     @PutMapping("/removeCategory")
     public ResponseEntity<String> removeCategory(@RequestParam UUID categoryId) {

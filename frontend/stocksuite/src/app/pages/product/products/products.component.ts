@@ -29,7 +29,7 @@ export class ProductsComponent implements OnInit {
   private _brandService = inject(BrandService);
   private _router = inject(Router);
 
-  private subscription: Subscription;
+  private subscription?: Subscription;
 
   ngOnInit(): void {}
 

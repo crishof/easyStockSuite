@@ -150,8 +150,47 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductResponse> getAllByFilterAndStock(String filter) {
-        return List.of();
+        List<Product> productsWithStock = new ArrayList<>();
+
+        if (!filter.isEmpty()) {
+            ResponseEntity<?> brandResponse = brandAPIClient.getAllIdByFilter(filter);
+
+            if (brandResponse.getStatusCode() == HttpStatus.OK) {
+                List<String> brandIdList = (List<String>) brandResponse.getBody();
+
+                if (brandIdList != null && !brandIdList.isEmpty()) {
+                    List<UUID> brandIds = brandIdList.stream().map(UUID::fromString).toList();
+
+                    for (UUID id : brandIds) {
+                        productsWithStock.addAll(productRepository.findAllByBrandId(id));
+                    }
+                }
+            }
+        }
+
+        // Add products from model and description search to the list
+        List<Product> additionalProducts = new ArrayList<>();
+        additionalProducts.addAll(productRepository.findAllByModelContainingIgnoreCase(filter));
+        additionalProducts.addAll(productRepository.findAllByDescriptionContainingIgnoreCase(filter));
+
+        // Check stock for all products and filter
+        for (Product product : additionalProducts) {
+            if (!productsWithStock.contains(product)) {  // Check if not already included
+                productsWithStock.add(product);
+            }
+        }
+
+        // Filter products to include only those with stock > 0
+        return productsWithStock.stream()
+                .filter(product -> {
+                    Integer stock = (Integer) stockAPIClient.getTotalStockForProduct(product.getStockIds()).getBody();
+                    return stock != null && stock > 0;
+                })
+                .map(this::toProductResponse)
+                .distinct()
+                .toList();
     }
+
 
     public boolean checkProductsByBrand(UUID brandId) {
         long productCount = productRepository.countByBrandId(brandId);

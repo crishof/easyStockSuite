@@ -37,9 +37,12 @@ public class PriceServiceImpl implements PriceService {
     @Override
     public void updatePricesFromInvoice(UUID priceId, PriceRequest priceRequest) {
 
-        Price price = priceRepository.findById(priceId).orElseThrow(() -> new PriceNotFoundException(priceId));
+        System.out.println("priceId = " + priceId);
+        System.out.println("priceRequest = " + priceRequest);
+        Price price = priceRepository.getReferenceById(priceId);
         price.setPurchasePrice(priceRequest.getPurchasePrice());
         price.setTaxRate(priceRequest.getTaxRate());
         price.setDiscount(priceRequest.getDiscountRate());
+        priceRepository.save(price);
     }
 }

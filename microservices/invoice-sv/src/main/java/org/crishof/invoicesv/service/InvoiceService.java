@@ -12,7 +12,7 @@ public interface InvoiceService {
 
     InvoiceResponse getById(UUID id);
 
-    void save(InvoiceRequest invoiceRequest);
+//    void save(InvoiceRequest invoiceRequest);
 
     InvoiceResponse update(UUID id, InvoiceRequest invoiceRequest);
 
