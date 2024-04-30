@@ -14,7 +14,6 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
 
     Product findProductByBrandAndCodeAndSupplierId(String brand, String code, UUID supplierId);
 
-    // Supplier null && brand null && filter
     @Query(value = "SELECT * FROM tbl_supplier_product " +
             "WHERE brand ILIKE CONCAT('%', :filter, '%') " +
             "OR model ILIKE CONCAT('%', :filter, '%') " +
@@ -22,10 +21,8 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
             nativeQuery = true)
     List<Product> findAllByBrandContainingOrModelContainingOrDescriptionContaining(@Param("filter") String filter);
 
-    // Supplier null && brand && filter null
     List<Product> findAllByBrand(String brand);
 
-    // Supplier null && brand && filter
     @Query(value = "SELECT * FROM tbl_supplier_product " +
             "WHERE brand LIKE :brand " +
             "AND (model ILIKE CONCAT('%', :filter, '%') " +
@@ -33,10 +30,8 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
             nativeQuery = true)
     List<Product> findAllByBrandAndModelContainingOrDescriptionContaining(@Param("brand") String brand, @Param("filter") String filter);
 
-    // Supplier && brand null && filter null
     List<Product> findAllBySupplierId(UUID supplierId);
 
-    // Supplier && brand null && filter
     @Query(value = "SELECT * FROM tbl_supplier_product " +
             "WHERE supplier_id = :supplierId " +
             "AND (brand ILIKE CONCAT('%', :filter, '%') " +
@@ -45,10 +40,8 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
             nativeQuery = true)
     List<Product> findAllBySupplierIdAndBrandContainingOrModelContainingOrDescriptionContaining(UUID supplierId, String filter);
 
-    // Supplier && brand && filter null
     List<Product> findAllBySupplierIdAndBrand(UUID supplierId, String brand);
 
-    // Supplier && brand && filter
     @Query(value = "SELECT * FROM tbl_supplier_product " +
             "WHERE supplier_id = :supplierId " +
             "AND (brand LIKE :brand " +

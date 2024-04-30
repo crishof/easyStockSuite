@@ -5,6 +5,7 @@ import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.ss.usermodel.*;
 import org.crishof.supplierpricelistsv.dto.ProductResponse;
 import org.crishof.supplierpricelistsv.exception.ImportFileException;
+import org.crishof.supplierpricelistsv.exception.ProductNotFoundException;
 import org.crishof.supplierpricelistsv.model.Product;
 import org.crishof.supplierpricelistsv.repository.ProductRepository;
 import org.springframework.stereotype.Service;
@@ -69,6 +70,14 @@ public class ProductServiceImpl implements ProductService {
             }
         }
         return products.stream().map(this::toProductResponse).toList();
+    }
+
+    @Override
+    public ProductResponse getById(UUID id) throws ProductNotFoundException {
+
+        Product product = productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException(id));
+
+        return this.toProductResponse(product);
     }
 
     public ProductResponse toProductResponse(Product product) {

@@ -1,7 +1,9 @@
 package org.crishof.supplierpricelistsv.service;
 
 import org.crishof.supplierpricelistsv.dto.ProductResponse;
+import org.crishof.supplierpricelistsv.exception.ProductNotFoundException;
 import org.crishof.supplierpricelistsv.model.Product;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -17,4 +19,6 @@ public interface ProductService {
     Product findProductByBrandAndCodeAndSupplierId(String brand, String code, UUID supplierId);
 
     List<ProductResponse> getAllByFilter(UUID supplierId, String brand, String filter);
+
+    ProductResponse getById(UUID id) throws ProductNotFoundException;
 }

@@ -2,8 +2,10 @@ package org.crishof.supplierpricelistsv.controller;
 
 import org.crishof.supplierpricelistsv.dto.ProductResponse;
 import org.crishof.supplierpricelistsv.exception.ImportFileException;
+import org.crishof.supplierpricelistsv.exception.ProductNotFoundException;
 import org.crishof.supplierpricelistsv.model.Product;
 import org.crishof.supplierpricelistsv.service.ProductService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -78,5 +80,11 @@ public class PriceListController {
     public List<ProductResponse> getAllByFilter(@RequestParam(required = false) UUID supplierId, @RequestParam(required = false) String brand, @RequestParam(required = false) String filter) {
 
         return productService.getAllByFilter(supplierId, brand, filter);
+    }
+
+    @GetMapping("/getById/{id}")
+    public ResponseEntity<ProductResponse> getById(@PathVariable(name = "id") UUID id) throws ProductNotFoundException {
+
+        return ResponseEntity.status(HttpStatus.OK).body(productService.getById(id));
     }
 }
