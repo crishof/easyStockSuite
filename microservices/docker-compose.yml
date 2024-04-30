@@ -79,20 +79,20 @@ services:
       - "9005:9005"
     networks:
       - 'stockSuite-network'
-#  supplierpricelist-sv:
-#    build: supplierPriceList-sv
-#    environment:
-#      - POSTGRES_URL=${POSTGRES_DOCKER_URL}
-#      - POSTGRES_USER=${POSTGRES_USER}
-#      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-#    deploy:
-#      resources:
-#        limits:
-#          memory: 512M
-#    ports:
-#      - "9007:9007"
-#    networks:
-#      - 'stockSuite-network'
+  supplierpricelist-sv:
+    build: supplierPriceList-sv
+    environment:
+      - SUPABASE_URL=${SUPABASE_URL}
+      - SUPABASE_USER=${SUPABASE_USER}
+      - SUPABASE_PASSWORD=${SUPABASE_PASSWORD}
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+    ports:
+      - "9007:9007"
+    networks:
+      - 'stockSuite-network'
 #  product-sv:
 #    build: product-sv
 #    deploy:
