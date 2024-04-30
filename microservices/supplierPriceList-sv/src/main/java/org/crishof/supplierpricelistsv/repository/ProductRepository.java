@@ -28,8 +28,8 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
     // Supplier null && brand && filter
     @Query(value = "SELECT * FROM tbl_supplier_product " +
             "WHERE brand LIKE :brand " +
-            "OR model ILIKE CONCAT('%', :filter, '%') " +
-            "OR description ILIKE CONCAT('%', :filter, '%')",
+            "AND (model ILIKE CONCAT('%', :filter, '%') " +
+            "OR description ILIKE CONCAT('%', :filter, '%'))",
             nativeQuery = true)
     List<Product> findAllByBrandAndModelContainingOrDescriptionContaining(@Param("brand") String brand, @Param("filter") String filter);
 
@@ -39,9 +39,9 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
     // Supplier && brand null && filter
     @Query(value = "SELECT * FROM tbl_supplier_product " +
             "WHERE supplier_id = :supplierId " +
-            "AND brand ILIKE CONCAT('%', :filter, '%') " +
+            "AND (brand ILIKE CONCAT('%', :filter, '%') " +
             "OR model ILIKE CONCAT('%', :filter, '%') " +
-            "OR description ILIKE CONCAT('%', :filter, '%')",
+            "OR description ILIKE CONCAT('%', :filter, '%'))",
             nativeQuery = true)
     List<Product> findAllBySupplierIdAndBrandContainingOrModelContainingOrDescriptionContaining(UUID supplierId, String filter);
 
@@ -51,9 +51,9 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
     // Supplier && brand && filter
     @Query(value = "SELECT * FROM tbl_supplier_product " +
             "WHERE supplier_id = :supplierId " +
-            "AND brand LIKE :brand " +
-            "AND model ILIKE CONCAT('%', :filter, '%') " +
-            "OR description ILIKE CONCAT('%', :filter, '%')",
+            "AND (brand LIKE :brand " +
+            "AND (model ILIKE CONCAT('%', :filter, '%') " +
+            "OR description ILIKE CONCAT('%', :filter, '%')))",
             nativeQuery = true)
     List<Product> findAllBySupplierIdAndBrandAndCodeContainingOrDescriptionContaining(UUID supplierId, String brand, String filter);
 }
