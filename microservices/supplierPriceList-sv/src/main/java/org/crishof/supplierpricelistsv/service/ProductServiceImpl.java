@@ -81,25 +81,26 @@ public class ProductServiceImpl implements ProductService {
     }
 
     public ProductResponse toProductResponse(Product product) {
-        ProductResponse productResponse = new ProductResponse();
 
-        productResponse.setId(product.getId());
-        productResponse.setSupplierId(product.getSupplierId());
-        productResponse.setBrand(product.getBrand());
-        productResponse.setCode(product.getCode());
-        productResponse.setModel(product.getModel());
-        productResponse.setDescription(product.getDescription());
-        productResponse.setCategory(product.getCategory());
-        productResponse.setLastUpdate(product.getLastUpdate());
-        productResponse.setPrice(product.getPrice());
-        productResponse.setSuggestedPrice(product.getSuggestedPrice());
-        productResponse.setSuggestedWebPrice(product.getSuggestedWebPrice());
-        productResponse.setStockAvailable(product.getStockAvailable());
-        productResponse.setBarcode(product.getBarcode());
-        productResponse.setCurrency(product.getCurrency());
-        productResponse.setTaxRate(product.getTaxRate());
+        new ProductResponse();
+        return ProductResponse.builder()
+                .id(product.getId())
+                .supplierId(product.getSupplierId())
+                .brand(product.getBrand())
+                .code(product.getCode())
+                .model(product.getModel())
+                .description(product.getDescription())
+                .category(product.getCategory())
+                .lastUpdate(product.getLastUpdate())
+                .price(product.getPrice())
+                .suggestedPrice(product.getSuggestedPrice())
+                .suggestedWebPrice(product.getSuggestedWebPrice())
+                .stockAvailable(product.getStockAvailable())
+                .barcode(product.getBarcode())
+                .currency(product.getCurrency())
+                .taxRate(product.getTaxRate())
+                .build();
 
-        return productResponse;
     }
 
     public List<Product> readExcel(MultipartFile file) throws IOException {
@@ -174,10 +175,10 @@ public class ProductServiceImpl implements ProductService {
                 product.setBrand(cellContent);
                 break;
             case "code":
-                product.setCode(cellContent.isBlank() ? null : cellContent);
+                product.setCode(determineValue(cellContent, null));
                 break;
             case "model":
-                product.setModel(cellContent.isBlank() ? null : cellContent);
+                product.setModel(determineValue(cellContent, null));
                 break;
             case "description":
                 if (!cellContent.isBlank() || !cellContent.isEmpty()) {
@@ -189,56 +190,70 @@ public class ProductServiceImpl implements ProductService {
                 } else product.setDescription(null);
                 break;
             case "category":
-                product.setCategory(cellContent.isBlank() ? null : cellContent);
+                product.setCategory(determineValue(cellContent, null));
                 break;
             case "price":
-                product.setPrice(parseDouble(cellContent.replace(",", "").replace(" ", "")));
+                product.setPrice(parsePrice(cellContent));
                 break;
             case "tax-rate":
-                cellContent = cellContent.trim().replace(",", "").replace(" ", "");
-
-                double taxRate = 0.21;
-
-                if (!cellContent.isBlank() || !cellContent.isEmpty()) {
-
-                    if (cellContent.endsWith("%")) {
-                        cellContent = cellContent.substring(0, cellContent.length() - 1);
-
-                        taxRate = parseDouble(cellContent) / 100.0;
-                    } else {
-                        taxRate = parseDouble(cellContent);
-                    }
-                    product.setTaxRate(taxRate);
-                } else {
-                    product.setTaxRate(taxRate);
-                }
+                product.setTaxRate(parseTaxRate(cellContent));
                 break;
-
             case "suggested-price":
-
-                if (!cellContent.isBlank() || !cellContent.isEmpty()) {
-                    product.setSuggestedPrice(parseDouble(cellContent.replace(",", "").replace(" ", "")));
-                } else product.setSuggestedPrice(0);
+                product.setSuggestedPrice(parsePrice(cellContent));
                 break;
-
             case "suggested-web-price":
-                if (!cellContent.isBlank() || !cellContent.isEmpty()) {
-                    product.setSuggestedWebPrice(parseDouble(cellContent.replace(",", "").replace(" ", "")));
-                } else product.setSuggestedWebPrice(0);
+                product.setSuggestedWebPrice(parsePrice(cellContent));
                 break;
-
             case "stock":
-                product.setStockAvailable(cellContent.isBlank() ? null : cellContent);
+                product.setStockAvailable(determineValue(cellContent, null));
                 break;
             case "bar-code":
-                product.setBarcode(cellContent.isBlank() ? null : cellContent);
+                product.setBarcode(determineValue(cellContent, null));
                 break;
             case "currency":
-                product.setCurrency(cellContent.isBlank() ? "$" : cellContent);
+                product.setCurrency(determineValue(cellContent, "$"));
                 break;
             default:
                 break;
         }
+    }
+
+    private double parseTaxRate(String cellContent) {
+
+        double defaultTaxRate = 0.21;
+
+        if (!cellContent.isBlank() || !cellContent.isEmpty()) {
+            return defaultTaxRate;
+        }
+
+        cellContent = cellContent.trim().replace(",", "").replace(" ", "");
+
+        if (cellContent.endsWith("%")) {
+            cellContent = cellContent.substring(0, cellContent.length() - 1);
+
+            try {
+                return Double.parseDouble(cellContent) / 100.0;
+            } catch (NumberFormatException e) {
+                return defaultTaxRate;
+            }
+        } else {
+            try {
+                return Double.parseDouble(cellContent);
+            } catch (NumberFormatException e) {
+                return defaultTaxRate;
+            }
+        }
+    }
+
+    private double parsePrice(String cellContent) {
+        if (cellContent.isBlank() || cellContent.isEmpty()) {
+            return parseDouble(cellContent.replace(",", "").replace(" ", ""));
+        }
+        return 0;
+    }
+
+    private String determineValue(String cellContent, String defaultValue) {
+        return cellContent.isBlank() ? defaultValue : cellContent;
     }
 
     private double parseDouble(String value) {
