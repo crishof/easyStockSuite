@@ -235,6 +235,7 @@ public class ProductServiceImpl implements ProductService {
         productResponse.setSupplierId(product.getSupplierId());
         productResponse.setHidden(product.isHidden());
         productResponse.setImageId(product.getImageId());
+        productResponse.setSupplierProductId(product.getSupplierProductId());
 
         String brandName = this.getBrandName(product.getBrandId());
         productResponse.setBrandName(brandName);
