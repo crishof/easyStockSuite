@@ -84,7 +84,12 @@ public class PriceListController {
 
     @GetMapping("/getById/{id}")
     public ResponseEntity<ProductResponse> getById(@PathVariable(name = "id") UUID id) throws ProductNotFoundException {
-
-        return ResponseEntity.status(HttpStatus.OK).body(productService.getById(id));
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(productService.getById(id));
+        } catch (ProductNotFoundException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
     }
 }
