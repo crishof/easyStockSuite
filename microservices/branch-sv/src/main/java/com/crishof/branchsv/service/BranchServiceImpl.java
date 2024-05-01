@@ -3,6 +3,7 @@ package com.crishof.branchsv.service;
 import com.crishof.branchsv.dto.BranchRequest;
 import com.crishof.branchsv.dto.BranchResponse;
 import com.crishof.branchsv.dto.LocationResponse;
+import com.crishof.branchsv.exception.BranchNotFoundException;
 import com.crishof.branchsv.model.Branch;
 import com.crishof.branchsv.model.StockLocation;
 import com.crishof.branchsv.repository.BranchRepository;
@@ -39,9 +40,9 @@ public class BranchServiceImpl implements BranchService {
     }
 
     @Override
-    public BranchResponse updateBranchName(UUID branchId, BranchRequest branchRequest) {
+    public BranchResponse updateBranchName(UUID branchId, BranchRequest branchRequest) throws BranchNotFoundException {
 
-        Branch branch = branchRepository.getReferenceById(branchId);
+        Branch branch = branchRepository.findById(branchId).orElseThrow(() -> new BranchNotFoundException(branchId));
         branch.setName(branchRequest.getName());
 
         return this.toBranchResponse(branchRepository.save(branch));
