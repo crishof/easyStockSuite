@@ -145,6 +145,10 @@
     <table class="table table-stripped table-hover align-middle table-sm">
       <thead class="table-dark">
         <tr>
+          <!-- TODO add price comparisson -->
+          <!--
+            <th scope="col"></th>
+          -->
           <th scope="col">#Id</th>
           <th scope="col">Code</th>
           <th scope="col">Brand</th>
@@ -161,6 +165,10 @@
       <tbody>
         @for (product of productList; track $index) {
         <tr (click)="selectProduct(product)">
+          
+          <!--
+            <td>{{ isPriceUpToDate(product.supplierProductId, product.priceResponse.purchasePrice) | async}}</td>
+          -->
           <td id="id">{{ product.id }}</td>
           <td>{{ product.code }}</td>
           <td>{{ product.brandName }}</td>

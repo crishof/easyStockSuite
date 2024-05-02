@@ -9,6 +9,7 @@ export interface IProduct {
   description: string;
   categoryName: string;
   supplierId: string;
+  supplierProductId: string;
   hidden: boolean;
   imageId: string[];
   priceResponse: IPrice;

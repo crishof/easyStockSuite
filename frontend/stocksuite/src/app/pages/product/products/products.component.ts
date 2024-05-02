@@ -4,14 +4,13 @@ import { CommonModule } from '@angular/common';
 import { IProduct } from '../../../model/product.model';
 import { Router } from '@angular/router';
 import { BrandService } from '../../../services/brand.service';
-import { Observable, Subscription } from 'rxjs';
-import { finalize, map, tap } from 'rxjs/operators';
+import { Observable, Subscription, of } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 import { ProductNavbarComponent } from '../product-navbar/product-navbar.component';
 import { ProductDetailsComponent } from '../product-details/product-details.component';
-import { ModalDialogService } from '../../../services/modal-dialog.service';
 import { FormsModule } from '@angular/forms';
 import { IStock } from '../../../model/stock.model';
-import { StockService } from '../../../services/stock.service';
+import { SupplierPriceListService } from '../../../services/supplier-price-list.service';
 
 @Component({
   selector: 'app-products',
@@ -29,7 +28,7 @@ export class ProductsComponent implements OnInit {
   productList: IProduct[] = [];
   private _productService = inject(ProductService);
   private _brandService = inject(BrandService);
-  private _stockService = inject(StockService);
+  private _supplierPriceListService = inject(SupplierPriceListService);
   private _router = inject(Router);
 
   private subscription?: Subscription;
@@ -75,7 +74,6 @@ export class ProductsComponent implements OnInit {
       .getAllByFilter(this.searchTerm)
       .subscribe((data: IProduct[]) => {
         this.productList = data;
-        console.log(this.productList);
       });
   }
 
@@ -95,5 +93,15 @@ export class ProductsComponent implements OnInit {
     );
     this.loading = false;
     return totalQuantity;
+  }
+
+  isPriceUpToDate(supplierProductId: string, purchasePrice: number): Observable<boolean> {
+    return this._supplierPriceListService.getSupplierProductById(supplierProductId).pipe(
+      map(supplierProduct => supplierProduct.price === purchasePrice),
+      catchError(err => {
+        console.error('Error fetching supplier product', err);
+        return of(false); // Retorna false en caso de error
+      })
+    );
   }
 }
