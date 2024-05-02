@@ -14,12 +14,15 @@ import { ISupplier } from '../../../model/supplier.model';
 })
 export class SupplierDetailsComponent implements OnInit {
   @Input() supplier: ISupplier | null = null;
+  /*
   loading: boolean = true;
 
   private _route = inject(ActivatedRoute);
   private _supplierService = inject(SupplierService);
+  */
 
   ngOnInit(): void {
+    /*
     this._route.params.subscribe((params) => {
       this._supplierService
         .getSupplier(params['id'])
@@ -28,5 +31,6 @@ export class SupplierDetailsComponent implements OnInit {
           this.loading = false;
         });
     });
+    */
   }
 }
