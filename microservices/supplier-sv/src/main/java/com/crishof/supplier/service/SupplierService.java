@@ -9,17 +9,17 @@ import java.util.UUID;
 
 public interface SupplierService {
 
-    List<Supplier> getAll();
+    List<SupplierResponse> getAll();
 
-    Supplier getById(UUID id);
+    SupplierResponse getById(UUID id);
 
-    SupplierResponse getByName(String name);
-
-    Supplier findByName(String name);
+    List<SupplierResponse> getAllByFilter(String filter);
 
     SupplierResponse save(SupplierRequest supplierRequest);
 
-    Supplier update(UUID id, SupplierRequest supplier);
+    SupplierResponse update(UUID id, SupplierRequest supplier);
 
     void deleteById(UUID id);
+
+    SupplierResponse getByName(String supplierName);
 }
