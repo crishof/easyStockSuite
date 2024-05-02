@@ -27,10 +27,9 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class BrandController {
 
+    private static final String SERVER_ERROR = "Internal Server Error";
     private final BrandService brandService;
     private final ImageAPIClient imageAPIClient;
-
-    private static final String SERVER_ERROR = "Internal Server Error";
 
     @Operation(summary = "Get All Brands")
     @GetMapping(path = "/getAll")
@@ -148,7 +147,7 @@ public class BrandController {
         } catch (DuplicateNameException | IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(SERVER_ERROR);
         }
     }
 
@@ -259,7 +258,7 @@ public class BrandController {
         } catch (IllegalStateException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Bad request: " + e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal server error: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(SERVER_ERROR + " " + e.getMessage());
 
         }
     }
