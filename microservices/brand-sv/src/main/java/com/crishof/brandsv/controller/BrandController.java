@@ -28,8 +28,9 @@ import java.util.UUID;
 public class BrandController {
 
     private final BrandService brandService;
-
     private final ImageAPIClient imageAPIClient;
+
+    private static final String SERVER_ERROR = "Internal Server Error";
 
     @Operation(summary = "Get All Brands")
     @GetMapping(path = "/getAll")
@@ -53,7 +54,7 @@ public class BrandController {
         } catch (BrandNotFoundException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
         } catch (Exception ex) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(SERVER_ERROR);
         }
     }
 
@@ -89,7 +90,7 @@ public class BrandController {
         } catch (BrandNotFoundException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
         } catch (Exception ex) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(SERVER_ERROR);
         }
     }
 
@@ -110,7 +111,7 @@ public class BrandController {
             BrandResponse brandResponse = brandService.save(brandRequest);
             return ResponseEntity.status(HttpStatus.OK).body(brandResponse.getId());
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal server error");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(SERVER_ERROR);
         }
     }
 
@@ -122,10 +123,10 @@ public class BrandController {
                     .toList();
 
             if (brandsId.isEmpty()) {
-                return ResponseEntity.ok(Collections.EMPTY_LIST);
+                return ResponseEntity.ok(Collections.emptyList());
             } else return ResponseEntity.ok(brandsId);
         } catch (BrandNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal server error");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(SERVER_ERROR);
         }
     }
 
