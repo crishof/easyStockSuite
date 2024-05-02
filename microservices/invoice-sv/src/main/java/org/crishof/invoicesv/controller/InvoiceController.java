@@ -41,7 +41,7 @@ public class InvoiceController {
     public ResponseEntity<?> savePurchaseInvoice(@RequestBody InvoiceRequest invoiceRequest) {
 
         try {
-            invoiceService.save(invoiceRequest);
+
             return ResponseEntity.status(HttpStatus.OK).body("Invoice successfully saved");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error saving invoice: " + e.getMessage());
