@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { IProduct } from '../model/product.model';
-import { Observable } from 'rxjs';
+import { Observable, catchError, throwError } from 'rxjs';
 import { ISupplierProduct } from '../model/supplierProduct';
 
 @Injectable({
@@ -68,6 +68,15 @@ export class SupplierPriceListService {
 
   getAllBrands(): Observable<String[]> {
     return this._http.get<String[]>(`${this._urlSupplier}/getAllBrands`);
+  }
+
+  getSupplierProductById(id: string): Observable<ISupplierProduct> {
+    return this._http.get<ISupplierProduct>(`${this._urlBase}/getById/${id}`).pipe(
+      catchError(() => {
+        console.error('Error getting supplier product');
+        return throwError(() => new Error('Error getting supplier product'));
+      })
+    );
   }
 
   importProducts(productList: ISupplierProduct[]): Observable<any> {
