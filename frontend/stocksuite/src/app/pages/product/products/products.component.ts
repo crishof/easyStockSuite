@@ -11,6 +11,8 @@ import { ProductDetailsComponent } from '../product-details/product-details.comp
 import { FormsModule } from '@angular/forms';
 import { IStock } from '../../../model/stock.model';
 import { SupplierPriceListService } from '../../../services/supplier-price-list.service';
+import { ProductListComponent } from '../product-list/product-list.component';
+import { ProductSearchComponent } from '../product-search/product-search.component';
 
 @Component({
   selector: 'app-products',
@@ -18,6 +20,8 @@ import { SupplierPriceListService } from '../../../services/supplier-price-list.
   imports: [
     CommonModule,
     ProductNavbarComponent,
+    ProductListComponent,
+    ProductSearchComponent,
     ProductDetailsComponent,
     FormsModule,
   ],
@@ -45,35 +49,45 @@ export class ProductsComponent implements OnInit {
   totalQuantity: number = 0;
   loading: boolean = false;
 
+  handleSearch(searchTerm: string): void {
+    console.log('handleSearch');
+    this.onFormSubmit(searchTerm);
+  }
+
+  handleSearchWithStock(searchTerm: string): void {
+    console.log('handleSearchWithStock');
+    this.handleSearch(searchTerm);
+  }
+
   getBrandName(brandId: string): Observable<string> {
     return this._brandService
       .getBrand(brandId)
       .pipe(map((brand) => brand.name));
   }
 
-  onKeyUp(event: KeyboardEvent) {
-    if (event.key === 'Enter') {
-      this.onFormSubmit();
-    }
-  }
-
-  onFormSubmit() {
+  onFormSubmit(searchTerm: string): void {
     this.isFormSubmitted = true;
-    if (this.searchTerm.length >= 3) {
-      this.searchProducts();
+    if (searchTerm.length >= 3) {
+      this.searchProducts(searchTerm);
     } else {
       this.productList = [];
     }
   }
 
-  searchProducts(): void {
+  searchProducts(searchTerm: string): void {
+    console.log('searchTerm' + searchTerm);
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
     this.subscription = this._productService
-      .getAllByFilter(this.searchTerm)
-      .subscribe((data: IProduct[]) => {
-        this.productList = data;
+      .getAllByFilter(searchTerm)
+      .subscribe({
+        next: (data: IProduct[]) => {
+          this.productList = data;
+        },
+        error: (err) => {
+          console.error('Failed to load products', err);
+        },
       });
   }
 
@@ -95,13 +109,18 @@ export class ProductsComponent implements OnInit {
     return totalQuantity;
   }
 
-  isPriceUpToDate(supplierProductId: string, purchasePrice: number): Observable<boolean> {
-    return this._supplierPriceListService.getSupplierProductById(supplierProductId).pipe(
-      map(supplierProduct => supplierProduct.price === purchasePrice),
-      catchError(err => {
-        console.error('Error fetching supplier product', err);
-        return of(false); // Retorna false en caso de error
-      })
-    );
+  isPriceUpToDate(
+    supplierProductId: string,
+    purchasePrice: number
+  ): Observable<boolean> {
+    return this._supplierPriceListService
+      .getSupplierProductById(supplierProductId)
+      .pipe(
+        map((supplierProduct) => supplierProduct.price === purchasePrice),
+        catchError((err) => {
+          console.error('Error fetching supplier product', err);
+          return of(false); // Retorna false en caso de error
+        })
+      );
   }
 }
