@@ -101,9 +101,20 @@
   </ng-container>
 </div>
 <hr />
-
-<app-product-search
-  (search)="handleSearch($event)"
-  (searchStock)="handleSearchWithStock($event)"
-></app-product-search>
-<app-product-list [productList]="productList"></app-product-list>
+<div class="container">
+  <app-product-search
+    (search)="handleSearch($event)"
+    (searchStock)="handleSearchWithStock($event)"
+  ></app-product-search>
+  @if(productList.length == 0 && isFormSubmitted){
+  <div class="card bg-light">
+    <h4>No elements found in this search</h4>
+  </div>
+  }@else{
+  <app-product-list
+    [productList]="productList"
+    (selectProduct)="selectProduct($event)"
+  >
+  </app-product-list>
+  }
+</div>

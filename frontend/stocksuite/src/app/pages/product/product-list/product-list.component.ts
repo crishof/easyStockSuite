@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { IProduct } from '../../../model/product.model';
 import { IStock } from '../../../model/stock.model';
 
@@ -14,6 +14,7 @@ export class ProductListComponent {
   selectedProduct: IProduct | null = null;
   loading: boolean = false;
   @Input() productList: IProduct[] = [];
+  @Output() selectProduct = new EventEmitter<IProduct>();
 
   getTotalStockQuantity(stocks: IStock[]): number {
     this.loading = true;
@@ -25,7 +26,7 @@ export class ProductListComponent {
     return totalQuantity;
   }
 
-  selectProduct(product: IProduct): void {
-    this.selectedProduct = product;
+  onProductClick(product: IProduct): void {
+    this.selectProduct.emit(product);
   }
 }

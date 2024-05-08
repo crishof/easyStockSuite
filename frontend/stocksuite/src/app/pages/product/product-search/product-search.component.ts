@@ -16,7 +16,10 @@ export class ProductSearchComponent {
   @Output() searchStock = new EventEmitter<string>();
 
   onSearch() {
-    this.search.emit(this.searchTerm);
+    this.isFormSubmitted = true;
+    if (this.searchTerm.length >= 3) {
+      this.search.emit(this.searchTerm);
+    }
   }
   searchWithStock() {
     this.searchStock.emit(this.searchTerm);
