@@ -22,7 +22,6 @@ import java.util.UUID;
 public class ProductController {
 
     private final ProductService productService;
-
     private final ProductRepository productRepository;
 
     @Value("${server.port}")

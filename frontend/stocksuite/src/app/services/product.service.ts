@@ -26,6 +26,16 @@ export class ProductService {
     });
   }
 
+  getAllByFilterAndStock(filter: string): Observable<IProduct[]> {
+    const params = new HttpParams().set('filter', filter);
+    return this._http.get<IProduct[]>(
+      `${this._urlBase}/getAllByFilterAndStock`,
+      {
+        params,
+      }
+    );
+  }
+
   getBrandProductsQuantity(id: string): Observable<number> {
     return this._http.get<number>(
       `${this._urlBase}/countProductsByBrand/${id}`
