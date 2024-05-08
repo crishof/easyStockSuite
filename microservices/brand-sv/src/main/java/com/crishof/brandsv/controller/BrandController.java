@@ -38,13 +38,7 @@ public class BrandController {
     }
 
     @Operation(summary = "Get Brand by ID")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Brand found",
-                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = Brand.class))}),
-            @ApiResponse(responseCode = "404", description = "Brand not found",
-                    content = @Content(mediaType = "text/plain")),
-            @ApiResponse(responseCode = "500", description = "Invalid Id",
-                    content = @Content)})
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Brand found", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = Brand.class))}), @ApiResponse(responseCode = "404", description = "Brand not found", content = @Content(mediaType = "text/plain")), @ApiResponse(responseCode = "500", description = "Invalid Id", content = @Content)})
     @GetMapping("/getById/{id}")
     public ResponseEntity<?> getById(@PathVariable("id") UUID id) {
         try {
@@ -58,29 +52,14 @@ public class BrandController {
     }
 
     @Operation(summary = "Get Brand Name by ID")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Brand name found",
-                    content = @Content(mediaType = "text/plain")),
-            @ApiResponse(responseCode = "404", description = "Brand not found",
-                    content = @Content(mediaType = "text/plain")),
-            @ApiResponse(responseCode = "500", description = "Internal Server Error",
-                    content = @Content(mediaType = "text/plain"))
-    })
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Brand name found", content = @Content(mediaType = "text/plain")), @ApiResponse(responseCode = "404", description = "Brand not found", content = @Content(mediaType = "text/plain")), @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(mediaType = "text/plain"))})
     @GetMapping("/getNameById")
     public ResponseEntity<String> getNameById(@RequestParam UUID uuid) {
         return ResponseEntity.ok(brandService.getById(uuid).getName());
     }
 
     @Operation(summary = "Get Brand by Name")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Brand found",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = BrandResponse.class))}),
-            @ApiResponse(responseCode = "404", description = "Brand not found",
-                    content = @Content(mediaType = "text/plain")),
-            @ApiResponse(responseCode = "500", description = "Internal Server Error",
-                    content = @Content(mediaType = "text/plain"))
-    })
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Brand found", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = BrandResponse.class))}), @ApiResponse(responseCode = "404", description = "Brand not found", content = @Content(mediaType = "text/plain")), @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(mediaType = "text/plain"))})
     @GetMapping("/getByName")
     public ResponseEntity<?> getByName(@RequestParam String name) {
         try {
@@ -94,12 +73,7 @@ public class BrandController {
     }
 
     @Operation(summary = "Get Brand ID by Name")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Brand ID found",
-                    content = {@Content(mediaType = "text/plain")}),
-            @ApiResponse(responseCode = "500", description = "Internal Server Error",
-                    content = @Content(mediaType = "text/plain"))
-    })
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Brand ID found", content = {@Content(mediaType = "text/plain")}), @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(mediaType = "text/plain"))})
     @GetMapping("/getIdByName")
     public ResponseEntity<?> getIdByName(@RequestParam String brandName) {
         try {
@@ -118,8 +92,7 @@ public class BrandController {
     public ResponseEntity<?> getAllIdByFilter(@RequestParam String filter) {
         try {
             List<BrandResponse> brands = brandService.getAllByFilter(filter);
-            List<UUID> brandsId = brands.stream().map(BrandResponse::getId)
-                    .toList();
+            List<UUID> brandsId = brands.stream().map(BrandResponse::getId).toList();
 
             if (brandsId.isEmpty()) {
                 return ResponseEntity.ok(Collections.emptyList());
@@ -130,14 +103,7 @@ public class BrandController {
     }
 
     @Operation(summary = "Save Brand")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Brand saved successfully",
-                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = BrandResponse.class))}),
-            @ApiResponse(responseCode = "400", description = "Bad Request",
-                    content = {@Content(mediaType = "text/plain")}),
-            @ApiResponse(responseCode = "500", description = "Internal Server Error",
-                    content = {@Content(mediaType = "text/plain")})
-    })
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Brand saved successfully", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = BrandResponse.class))}), @ApiResponse(responseCode = "400", description = "Bad Request", content = {@Content(mediaType = "text/plain")}), @ApiResponse(responseCode = "500", description = "Internal Server Error", content = {@Content(mediaType = "text/plain")})})
     @PostMapping("/save")
     public ResponseEntity<?> save(@RequestBody BrandRequest brandRequest) {
 
@@ -152,19 +118,9 @@ public class BrandController {
     }
 
     @Operation(summary = "Update Brand")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Brand updated successfully",
-                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = BrandResponse.class))}),
-            @ApiResponse(responseCode = "400", description = "Bad Request",
-                    content = {@Content(mediaType = "text/plain")}),
-            @ApiResponse(responseCode = "500", description = "Internal Server Error",
-                    content = {@Content(mediaType = "text/plain")})
-    })
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Brand updated successfully", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = BrandResponse.class))}), @ApiResponse(responseCode = "400", description = "Bad Request", content = {@Content(mediaType = "text/plain")}), @ApiResponse(responseCode = "500", description = "Internal Server Error", content = {@Content(mediaType = "text/plain")})})
     @PutMapping("/update/{id}")
-    public ResponseEntity<BrandResponse> updateBrand(
-            @PathVariable("id") UUID id,
-            @RequestParam(required = false) String brandName,
-            @RequestPart(required = false) MultipartFile file) {
+    public ResponseEntity<BrandResponse> updateBrand(@PathVariable("id") UUID id, @RequestParam(required = false) String brandName, @RequestPart(required = false) MultipartFile file) {
 
         try {
             if (brandName == null && (file == null || file.isEmpty())) {
@@ -194,26 +150,14 @@ public class BrandController {
     }
 
     @Operation(summary = "Update Brand Name")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Brand name updated successfully",
-                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = BrandResponse.class))}),
-            @ApiResponse(responseCode = "500", description = "Internal Server Error",
-                    content = {@Content(mediaType = "text/plain")})
-    })
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Brand name updated successfully", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = BrandResponse.class))}), @ApiResponse(responseCode = "500", description = "Internal Server Error", content = {@Content(mediaType = "text/plain")})})
     @PutMapping("/updateBrandName/{id}")
     public BrandResponse updateBrandName(@PathVariable("id") UUID id, @RequestParam(required = false) String name) {
         return brandService.updateBrandName(id, name);
     }
 
     @Operation(summary = "Update Brand Image")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Brand image updated successfully",
-                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = BrandResponse.class))}),
-            @ApiResponse(responseCode = "400", description = "Bad Request",
-                    content = {@Content(mediaType = "text/plain")}),
-            @ApiResponse(responseCode = "500", description = "Internal Server Error",
-                    content = {@Content(mediaType = "text/plain")})
-    })
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Brand image updated successfully", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = BrandResponse.class))}), @ApiResponse(responseCode = "400", description = "Bad Request", content = {@Content(mediaType = "text/plain")}), @ApiResponse(responseCode = "500", description = "Internal Server Error", content = {@Content(mediaType = "text/plain")})})
     @PutMapping("/updateImage/{id}")
     public ResponseEntity<BrandResponse> updateImage(@PathVariable("id") UUID id, @RequestParam("file") MultipartFile file) {
 
@@ -238,16 +182,7 @@ public class BrandController {
     }
 
     @Operation(summary = "Delete Brand")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Brand successfully deleted",
-                    content = {@Content(mediaType = "text/plain")}),
-            @ApiResponse(responseCode = "404", description = "Brand not found",
-                    content = {@Content(mediaType = "text/plain")}),
-            @ApiResponse(responseCode = "400", description = "Bad Request",
-                    content = {@Content(mediaType = "text/plain")}),
-            @ApiResponse(responseCode = "500", description = "Internal Server Error",
-                    content = {@Content(mediaType = "text/plain")})
-    })
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Brand successfully deleted", content = {@Content(mediaType = "text/plain")}), @ApiResponse(responseCode = "404", description = "Brand not found", content = {@Content(mediaType = "text/plain")}), @ApiResponse(responseCode = "400", description = "Bad Request", content = {@Content(mediaType = "text/plain")}), @ApiResponse(responseCode = "500", description = "Internal Server Error", content = {@Content(mediaType = "text/plain")})})
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> delete(@PathVariable("id") UUID id) {
         try {

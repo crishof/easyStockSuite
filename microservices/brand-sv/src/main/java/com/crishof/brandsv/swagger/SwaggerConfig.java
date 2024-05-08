@@ -20,8 +20,8 @@ public class SwaggerConfig {
                 .contact(new Contact().name("Cristian")
                         .url("https://www.stocksuite.com")
                         .email("www.info@stocksuite.com"))
-                .license(new License().url("https://www.google.com").name("Google"))
-                .termsOfService("https://www.google.com")
-                .description("Api de administración general"));
+                .license(new License().url("https://www.stocksuite.com/licence").name("Licence"))
+                .termsOfService("https://www.stocksuite/.com/termsofservice")
+                .description("General commercial management API"));
     }
 }
