@@ -3,7 +3,6 @@ package org.crishof.customersv.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.crishof.customersv.model.Customer;
 
 import java.util.UUID;
 
@@ -17,14 +16,5 @@ public class CustomerResponse {
     private String lastName;
     private String email;
     private String taxId;
-
-    public CustomerResponse(Customer customer) {
-
-        this.id = customer.getId();
-        this.name = customer.getFirstName();
-        this.lastName = customer.getLastName();
-        this.email = customer.getEmail();
-        this.taxId = customer.getTaxId();
-    }
 
 }

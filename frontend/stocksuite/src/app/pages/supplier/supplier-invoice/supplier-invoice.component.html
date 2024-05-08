@@ -1,0 +1,268 @@
+<div class="container">
+  <div class="row mb-3">
+    <!-- Columna 1 -->
+    <div class="col-md-4">
+      <p>Proveedor:</p>
+    </div>
+
+    <div class="col-md-4">
+      <form class="d-flex">
+        <div class="me-2">
+          <label for="searchBox" class="form-label visually-hidden"
+            >Search</label
+          >
+          <input
+            id="searchBox"
+            class="form-control"
+            type="search"
+            placeholder="Search"
+            aria-label="Search"
+          />
+        </div>
+        <button class="btn btn-outline-success btn-sm" type="submit">
+          Search
+        </button>
+        <div class="col-2 form-check me-2">
+          <input type="checkbox" class="form-check-input" id="thisSupplier" />
+          <label class="form-check-label" for="thisSupplier"
+            >Solo este proveedor</label
+          >
+        </div>
+      </form>
+    </div>
+    <div class="col-md-3">
+      <a class="nav-link" href="#">
+        <img
+          class="icon-small"
+          src="../../../../assets/icons/add-48.png"
+          alt="Add"
+        /><span>Alta de artículo</span>
+      </a>
+      <a class="nav-link" href="#">
+        <img
+          class="icon-small"
+          src="../../../../assets/icons/cancel-48.png"
+          alt="Delete"
+        /><span>Eliminar artículo</span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<hr />
+
+<!-- Pestañas -->
+
+<div
+  class="btn-group btn-group-sm mb-3"
+  role="group"
+  aria-label="Basic outlined example"
+>
+  <button
+    type="button"
+    class="btn btn-outline-secondary"
+    [ngClass]="{ active: selectedComponent === 'product' }"
+    (click)="selectedComponent = 'product'"
+  >
+    Product
+  </button>
+  <button
+    type="button"
+    class="btn btn-outline-secondary"
+    [ngClass]="{ active: selectedComponent === 'fichaTecnica' }"
+    (click)="selectedComponent = 'fichaTecnica'"
+  >
+    Ficha Tecnica
+  </button>
+  <button
+    type="button"
+    class="btn btn-outline-secondary"
+    [ngClass]="{ active: selectedComponent === 'proveedor' }"
+    (click)="selectedComponent = 'proveedor'"
+  >
+    Proveedor
+  </button>
+  <button
+    type="button"
+    class="btn btn-outline-secondary"
+    [ngClass]="{ active: selectedComponent === 'codigos' }"
+    (click)="selectedComponent = 'codigos'"
+  >
+    Codigos
+  </button>
+</div>
+
+<div class="container" id="tag-container">
+  <ng-container [ngSwitch]="selectedComponent">
+    <!-- 
+      <app-product-detail
+      *ngSwitchCase="'product'"
+      [product]="selectedProduct"
+      ></app-product-detail>
+    -->
+
+    <p>Producto</p>
+    <div *ngSwitchCase="'fichaTecnica'">
+      <p>Ficha Tecnica</p>
+    </div>
+    <div *ngSwitchCase="'proveedor'">
+      <p>Proveedor</p>
+    </div>
+    <div *ngSwitchCase="'codigos'">
+      <p>Codigos</p>
+    </div>
+  </ng-container>
+</div>
+
+<div class="container">
+  <div class="row mb-3">
+    <!-- Columna 1 -->
+    <div class="col-md-3">
+      <div class="mb-3">
+        <label for="tipoFactura" class="form-label">Tipo Factura</label>
+        <select class="form-select" id="tipoFactura">
+          <option value="A">Factura A</option>
+          <option value="B">Factura B</option>
+          <option value="C">Factura C</option>
+        </select>
+      </div>
+      <div class="mb-3">
+        <mat-form-field appearance="fill" class="dateInput">
+          <mat-label>Fecha de factura</mat-label>
+          <input
+            matInput
+            [matDatepicker]="picker1"
+            [formControl]="dateControl"
+          />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="picker1"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #picker1></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field appearance="fill" class="dateInput">
+          <mat-label>Fecha de recibida</mat-label>
+          <input
+            matInput
+            [matDatepicker]="picker2"
+            [formControl]="dateControl"
+          />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="picker2"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #picker2></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field appearance="fill" class="dateInput">
+          <mat-label>Fecha de asiento</mat-label>
+          <input
+            matInput
+            [matDatepicker]="picker3"
+            [formControl]="dateControl"
+          />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="picker3"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #picker3></mat-datepicker>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- Columna 2 -->
+
+    <div class="col-md-3">
+      <div class="mb-3">
+        <label for="ubicacion" class="form-label">Ubicacion</label>
+        <select class="form-select" id="ubicacion">
+          <option value="A">Ubicación A</option>
+        </select>
+      </div>
+      <div class="mb-3">
+        <label for="remitoPrefix" class="form-label">N° Remito</label>
+        <div class="input-group">
+          <input
+            type="text"
+            class="form-control me-3"
+            id="remitoPrefix"
+            formControlName="remitoPrefix"
+            placeholder="001"
+          />
+          <span> - </span>
+          <label for="remitoNumber" class="form-label"></label>
+          <input
+            type="text"
+            class="form-control ms-3"
+            id="remitoNumber"
+            formControlName="remitoNumber"
+            placeholder="0000001"
+          />
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="comprobantePrefix" class="form-label">N° Comprobante</label>
+        <div class="input-group">
+          <input
+            type="text"
+            class="form-control me-3"
+            id="comprobantePrefix"
+            formControlName="comprobantePrefix"
+            placeholder="001"
+          />
+          <span> - </span>
+          <label for="comprobanteNumber" class="form-label"></label>
+          <input
+            type="text"
+            class="form-control ms-3"
+            id="comprobanteNumber"
+            formControlName="comprobanteNumber"
+            placeholder="0000001"
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- Columna 3 -->
+
+    <div class="col-md-3">
+      <div class="mb-3 form-check">
+        <input type="checkbox" class="form-check-input" id="cargaStock" />
+        <label for="cargaStock" class="form-check-label">Cargar Stock</label>
+      </div>
+      <div class="mb-3 form-check">
+        <input type="checkbox" class="form-check-input" id="bn" />
+        <label for="bn" class="form-check-label">B/N</label>
+      </div>
+      <div class="mb-3 form-check">
+        <input type="checkbox" class="form-check-input" id="bienDeUso" />
+        <label for="bienDeUso" class="form-check-label">Bien De Uso</label>
+      </div>
+      <div class="mb-3 form-check">
+        <input
+          type="checkbox"
+          class="form-check-input"
+          id="preguntaCambioPrecio"
+        />
+        <label for="preguntaCambioPrecio" class="form-check-label"
+          >Pregunta cambio de precio</label
+        >
+      </div>
+      <div class="mb-3">
+        <p class="mb-3">Cantidad de items:</p>
+        <p class="mb-3">Cantidad de unidades:</p>
+      </div>
+    </div>
+
+    <!-- Columna 4 -->
+
+    <div class="col-md-3">
+      <div class="mb-3">
+        <label for="observaciones" class="form-label">Observaciones</label>
+        <textarea class="form-control" id="observaciones" rows="3"></textarea>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr />

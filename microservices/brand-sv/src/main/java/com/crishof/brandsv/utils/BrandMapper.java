@@ -8,6 +8,7 @@ public class BrandMapper {
     private static final ModelMapper modelMapper = new ModelMapper();
 
     public static BrandResponse toBrandResponse(Brand brand) {
+
         return modelMapper.map(brand, BrandResponse.class);
     }
 }

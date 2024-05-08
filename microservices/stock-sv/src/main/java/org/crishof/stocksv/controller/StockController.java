@@ -73,4 +73,9 @@ public class StockController {
     public ResponseEntity<?> getStockById(@PathVariable(name = "stockId") UUID stockId) {
         return ResponseEntity.status(HttpStatus.OK).body(stockService.getStockById(stockId));
     }
+
+    @GetMapping("/getAllProductStocks")
+    public List<StockResponse> getAllProductStocks(@RequestParam List<UUID> stockIds) {
+        return stockService.getAllProductStocks(stockIds);
+    }
 }

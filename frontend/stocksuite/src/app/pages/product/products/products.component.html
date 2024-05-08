@@ -101,74 +101,20 @@
   </ng-container>
 </div>
 <hr />
-
 <div class="container">
-  <div class="row">
-    <form
-      #brandForm="ngForm"
-      (ngSubmit)="onFormSubmit()"
-      class="row mb-3 text-center col-md-8"
-    >
-      <div class="col-md-10">
-        <input
-          type="text"
-          class="form-control"
-          id="searchTerm"
-          placeholder="Enter search term and press enter to search"
-          [(ngModel)]="searchTerm"
-          name="searchTerm"
-          (keyup)="onKeyUp($event)"
-        />
-        @if(isFormSubmitted && searchTerm.length < 3){
-        <div class="text-danger">
-          Search term must be at least 3 characters long
-        </div>
-        }
-      </div>
-
-      <div class="col-md-2">
-        <button type="submit" class="btn btn-outline-primary btn-sm">
-          Search
-        </button>
-      </div>
-    </form>
+  <app-product-search
+    (search)="handleSearch($event)"
+    (searchStock)="handleSearchWithStock($event)"
+  ></app-product-search>
+  @if(productList.length == 0 && isFormSubmitted){
+  <div class="card bg-light">
+    <h4>No elements found in this search</h4>
   </div>
-</div>
-
-<div class="container-fluid">
-  <div class="table-responsive" id="table-container">
-    <table class="table table-stripped table-hover align-middle table-sm">
-      <thead class="table-dark">
-        <tr>
-          <th scope="col">#Id</th>
-          <th scope="col">Code</th>
-          <th scope="col">Brand</th>
-          <th scope="col">Model</th>
-          <th scope="col">Description</th>
-          <th scope="col">Category</th>
-
-          <th class="nowrap" scope="col">Tax Rate</th>
-          <th scope="col">Selling Price</th>
-          <th scope="col">Stock</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        @for (product of productList; track $index) {
-        <tr (click)="selectProduct(product)">
-          <td id="id">{{ product.id }}</td>
-          <td>{{ product.code }}</td>
-          <td>{{ product.brandName }}</td>
-          <td>{{ product.model }}</td>
-          <td class="description-cell">{{ product.description }}</td>
-          <td>{{ product.categoryName }}</td>
-
-          <td>{{ product.priceResponse.taxRate * 100 }}%</td>
-          <td>{{ product.priceResponse.sellingPrice | currency }}</td>
-          <td>{{ product.stock }}</td>
-        </tr>
-        }
-      </tbody>
-    </table>
-  </div>
+  }@else{
+  <app-product-list
+    [productList]="productList"
+    (selectProduct)="selectProduct($event)"
+  >
+  </app-product-list>
+  }
 </div>

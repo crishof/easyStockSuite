@@ -8,6 +8,7 @@ import org.crishof.stocksv.model.Stock;
 import org.crishof.stocksv.repository.StockRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -58,5 +59,17 @@ public class StockServiceImpl implements StockService {
             totalStock += getStockById(stockId).getQuantity();
         }
         return totalStock;
+    }
+
+    @Override
+    public List<StockResponse> getAllProductStocks(List<UUID> stockIds){
+
+        return stockRepository.findAllById(stockIds).stream()
+                .map(this::toStockResponse)
+                .toList();
+    }
+
+    private StockResponse toStockResponse(Stock stock) {
+        return new StockResponse(stock);
     }
 }

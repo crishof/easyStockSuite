@@ -23,12 +23,17 @@ public class SupplierController {
     private final SupplierService supplierService;
 
     @GetMapping("/getAll")
-    public List<Supplier> getAll() {
+    public List<SupplierResponse> getAll() {
         return supplierService.getAll();
     }
 
+    @GetMapping("/getAllByFilter")
+    List<SupplierResponse> getAllByFilter(@RequestParam String filter) {
+        return supplierService.getAllByFilter(filter);
+    }
+
     @GetMapping("/getById/{id}")
-    public Supplier getById(@PathVariable("id") UUID id) {
+    public SupplierResponse getById(@PathVariable("id") UUID id) {
         return supplierService.getById(id);
     }
 
@@ -61,7 +66,7 @@ public class SupplierController {
 
 
     @PutMapping("/update/{id}")
-    public Supplier updateSupplier(@PathVariable("id") UUID id, @RequestBody SupplierRequest supplier) {
+    public SupplierResponse updateSupplier(@PathVariable("id") UUID id, @RequestBody SupplierRequest supplier) {
         return supplierService.update(id, supplier);
     }
 

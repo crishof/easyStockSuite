@@ -3,11 +3,20 @@ import { Component, OnInit, inject } from '@angular/core';
 import { ISupplier } from '../../../model/supplier.model';
 import { Router } from '@angular/router';
 import { SupplierService } from '../../../services/supplier.service';
+import { SupplierNavbarComponent } from '../supplier-navbar/supplier-navbar.component';
+import { SupplierDetailsComponent } from '../supplier-details/supplier-details.component';
+import { FormsModule } from '@angular/forms';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-supplier',
   standalone: true,
-  imports: [CommonModule],
+  imports: [
+  CommonModule,
+    SupplierNavbarComponent, 
+    SupplierDetailsComponent, 
+    FormsModule
+  ],
   templateUrl: './supplier.component.html',
   styleUrl: './supplier.component.css',
 })
@@ -16,10 +25,45 @@ export class SupplierComponent implements OnInit {
   private _supplierService = inject(SupplierService);
   private _router = inject(Router);
 
+  private subscription?: Subscription;
+
   ngOnInit(): void {
-    this._supplierService.getSuppliers().subscribe((data: ISupplier[]) => {
-      this.supplierList = data;
-    });
+  }
+
+  searchTerm: string = '';
+  isFormSubmitted: boolean = false;
+  selectedComponent: string = 'supplier'
+  selectedSupplier: ISupplier | null = null;
+
+  onKeyUp(event: KeyboardEvent) {
+    if (event.key === 'Enter') {
+      this.onFormSubmit();
+    }
+  }
+
+  onFormSubmit() {
+    console.log("FORM SUCCESS");
+    this.isFormSubmitted = true;
+    if (this.searchTerm.length > 0) {
+      this.searchSuppliers();
+    }else{
+      this.supplierList = [];
+    }
+  }
+  searchSuppliers(): void {
+    if(this.subscription){
+      this.subscription.unsubscribe();
+    }
+    this.subscription = this._supplierService
+      .getAllByFilter(this.searchTerm)
+      .subscribe((data: ISupplier[]) => {
+        this.supplierList = data;
+        console.log(this.supplierList)
+      });
+  }
+
+  selectSupplier(supplier: ISupplier): void {
+    this.selectedSupplier = supplier;
   }
 
   navegate(id: string): void {

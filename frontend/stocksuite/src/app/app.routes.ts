@@ -6,6 +6,7 @@ import { BrandComponent } from './pages/brand/brand/brand.component';
 import { CategoryComponent } from './pages/category/category/category.component';
 import { SupplierComponent } from './pages/supplier/supplier/supplier.component';
 import { SupplierDetailsComponent } from './pages/supplier/supplier-details/supplier-details.component';
+import { SupplierInvoiceComponent } from './pages/supplier/supplier-invoice/supplier-invoice.component';
 import { CategoryDetailsComponent } from './pages/category/category-details/category-details.component';
 import { BrandDetailsComponent } from './pages/brand/brand-details/brand-details.component';
 import { BrandEditComponent } from './pages/brand/brand-edit/brand-edit.component';
@@ -27,6 +28,7 @@ export const routes: Routes = [
   { path: 'category/:id', component: CategoryDetailsComponent },
   { path: 'supplier', component: SupplierComponent },
   { path: 'supplier/:id', component: SupplierDetailsComponent },
+  { path: 'supplierInvoice', component: SupplierInvoiceComponent },
   { path: 'dashboard', component: DashboardComponent },
   { path: 'supplierPriceList', component: SupplierPriceListComponent },
   { path: '**', redirectTo: '', pathMatch: 'full' },

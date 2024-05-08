@@ -7,14 +7,12 @@ import org.crishof.invoicesv.apiClient.ProductAPIClient;
 import org.crishof.invoicesv.apiClient.StockApiClient;
 import org.crishof.invoicesv.dto.InvoiceRequest;
 import org.crishof.invoicesv.dto.InvoiceResponse;
-import org.crishof.invoicesv.dto.OrderProductsRequest;
 import org.crishof.invoicesv.exception.InvoiceNotFoundException;
 import org.crishof.invoicesv.model.Invoice;
 import org.crishof.invoicesv.repository.InvoiceRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 @Service("invoiceService")

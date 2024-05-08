@@ -235,6 +235,7 @@ public class ProductServiceImpl implements ProductService {
         productResponse.setSupplierId(product.getSupplierId());
         productResponse.setHidden(product.isHidden());
         productResponse.setImageId(product.getImageId());
+        productResponse.setSupplierProductId(product.getSupplierProductId());
 
         String brandName = this.getBrandName(product.getBrandId());
         productResponse.setBrandName(brandName);
@@ -247,7 +248,7 @@ public class ProductServiceImpl implements ProductService {
 
         productResponse.setPriceResponse(priceApiClient.getById(product.getPriceId()));
 
-        productResponse.setStockIds(product.getStockIds());
+        productResponse.setStockResponses(stockAPIClient.getAllProductStocks(product.getStockIds()));
 
         productResponse.setDimension(product.getDimensionId());
 

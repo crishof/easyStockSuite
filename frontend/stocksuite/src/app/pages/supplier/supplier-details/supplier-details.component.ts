@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, Input, OnInit, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { CommonModule } from '@angular/common';
@@ -13,13 +13,16 @@ import { ISupplier } from '../../../model/supplier.model';
   styleUrl: './supplier-details.component.css',
 })
 export class SupplierDetailsComponent implements OnInit {
+  @Input() supplier: ISupplier | null = null;
+  /*
   loading: boolean = true;
-  public supplier?: ISupplier;
 
   private _route = inject(ActivatedRoute);
   private _supplierService = inject(SupplierService);
+  */
 
   ngOnInit(): void {
+    /*
     this._route.params.subscribe((params) => {
       this._supplierService
         .getSupplier(params['id'])
@@ -28,5 +31,6 @@ export class SupplierDetailsComponent implements OnInit {
           this.loading = false;
         });
     });
+    */
   }
 }

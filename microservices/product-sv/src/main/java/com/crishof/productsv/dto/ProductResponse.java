@@ -20,11 +20,12 @@ public class ProductResponse {
     private String description;
     private String categoryName;
     private UUID supplierId;
+    private UUID supplierProductId;
     private boolean hidden;
     @ElementCollection
     private List<UUID> imageId;
     @ElementCollection
-    private List<UUID> stockIds;
+    private List<StockResponse> stockResponses;
     private PriceResponse priceResponse;
     private UUID dimension;
 

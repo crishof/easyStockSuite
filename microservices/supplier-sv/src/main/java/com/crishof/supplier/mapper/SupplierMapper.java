@@ -1,4 +1,4 @@
-package com.crishof.supplier.modelMapper;
+package com.crishof.supplier.mapper;
 
 import com.crishof.supplier.dto.SupplierResponse;
 import com.crishof.supplier.model.Supplier;

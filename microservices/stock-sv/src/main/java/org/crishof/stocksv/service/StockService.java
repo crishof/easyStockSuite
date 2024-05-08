@@ -15,4 +15,6 @@ public interface StockService {
     StockResponse getStockById(UUID stockId);
 
     int getTotalStockForProduct(List<UUID> stockIdList);
+
+    List<StockResponse> getAllProductStocks(List<UUID> stockIds);
 }
