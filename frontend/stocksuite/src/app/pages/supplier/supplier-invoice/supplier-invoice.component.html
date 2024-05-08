@@ -51,6 +51,69 @@
 
 <hr />
 
+<!-- Pestañas -->
+
+<div
+  class="btn-group btn-group-sm mb-3"
+  role="group"
+  aria-label="Basic outlined example"
+>
+  <button
+    type="button"
+    class="btn btn-outline-secondary"
+    [ngClass]="{ active: selectedComponent === 'product' }"
+    (click)="selectedComponent = 'product'"
+  >
+    Product
+  </button>
+  <button
+    type="button"
+    class="btn btn-outline-secondary"
+    [ngClass]="{ active: selectedComponent === 'fichaTecnica' }"
+    (click)="selectedComponent = 'fichaTecnica'"
+  >
+    Ficha Tecnica
+  </button>
+  <button
+    type="button"
+    class="btn btn-outline-secondary"
+    [ngClass]="{ active: selectedComponent === 'proveedor' }"
+    (click)="selectedComponent = 'proveedor'"
+  >
+    Proveedor
+  </button>
+  <button
+    type="button"
+    class="btn btn-outline-secondary"
+    [ngClass]="{ active: selectedComponent === 'codigos' }"
+    (click)="selectedComponent = 'codigos'"
+  >
+    Codigos
+  </button>
+</div>
+
+<div class="container" id="tag-container">
+  <ng-container [ngSwitch]="selectedComponent">
+    <!-- 
+      <app-product-detail
+      *ngSwitchCase="'product'"
+      [product]="selectedProduct"
+      ></app-product-detail>
+    -->
+
+    <p>Producto</p>
+    <div *ngSwitchCase="'fichaTecnica'">
+      <p>Ficha Tecnica</p>
+    </div>
+    <div *ngSwitchCase="'proveedor'">
+      <p>Proveedor</p>
+    </div>
+    <div *ngSwitchCase="'codigos'">
+      <p>Codigos</p>
+    </div>
+  </ng-container>
+</div>
+
 <div class="container">
   <div class="row mb-3">
     <!-- Columna 1 -->
@@ -115,14 +178,48 @@
           <option value="A">Ubicación A</option>
         </select>
       </div>
+      <div class="mb-3">
+        <label for="remitoPrefix" class="form-label">N° Remito</label>
+        <div class="input-group">
+          <input
+            type="text"
+            class="form-control me-3"
+            id="remitoPrefix"
+            formControlName="remitoPrefix"
+            placeholder="001"
+          />
+          <span> - </span>
+          <label for="remitoNumber" class="form-label"></label>
+          <input
+            type="text"
+            class="form-control ms-3"
+            id="remitoNumber"
+            formControlName="remitoNumber"
+            placeholder="0000001"
+          />
+        </div>
+      </div>
 
       <div class="mb-3">
-        <label for="remito" class="form-label">N° Remito</label>
-        <input type="text" class="form-control" id="remito" />
-      </div>
-      <div class="mb-3">
-        <label for="comprobante" class="form-label">N° Comprobante</label>
-        <input type="text" class="form-control" id="comprobante" />
+        <label for="comprobantePrefix" class="form-label">N° Comprobante</label>
+        <div class="input-group">
+          <input
+            type="text"
+            class="form-control me-3"
+            id="comprobantePrefix"
+            formControlName="comprobantePrefix"
+            placeholder="001"
+          />
+          <span> - </span>
+          <label for="comprobanteNumber" class="form-label"></label>
+          <input
+            type="text"
+            class="form-control ms-3"
+            id="comprobanteNumber"
+            formControlName="comprobanteNumber"
+            placeholder="0000001"
+          />
+        </div>
       </div>
     </div>
 
@@ -167,3 +264,5 @@
     </div>
   </div>
 </div>
+
+<hr />

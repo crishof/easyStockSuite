@@ -4,7 +4,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatNativeDateModule } from '@angular/material/core';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-supplier-invoice',
@@ -23,6 +23,17 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 export class SupplierInvoiceComponent implements OnInit {
   dateControl = new FormControl(new Date());
 
+  selectedComponent: string = '';
+  /*
+  remitoForm: FormGroup = new FormGroup({
+    remitoPrefix: new FormControl(''),
+    remitoNumber: new FormControl(''),
+  });
+  comprobanteForm: FormGroup = new FormGroup({
+    comprobantePrefix: new FormControl(''),
+    comprobanteNumber: new FormControl(''),
+  });
+*/
   ngOnInit(): void {
     this.dateControl.setValue(new Date());
   }
