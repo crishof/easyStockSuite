@@ -1,5 +1,6 @@
 package org.crishof.customersv.service;
 
+import lombok.RequiredArgsConstructor;
 import org.crishof.customersv.dto.CustomerResponse;
 import org.crishof.customersv.exception.CustomerNotFoundException;
 import org.crishof.customersv.model.Customer;
@@ -11,31 +12,31 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class CustomerServiceImpl implements CustomerService {
 
-    @Autowired
-    CustomerRepository customerRepository;
+    private final CustomerRepository customerRepository;
 
     @Override
     public List<CustomerResponse> getAll() {
 
         List<Customer> customers = customerRepository.findAll();
-        return customers.stream().map(CustomerResponse::new).toList();
+        return customers.stream().map(this::toCustomerResponse).toList();
     }
 
     @Override
     public CustomerResponse getById(UUID id) {
-        return customerRepository.findById(id).map(CustomerResponse::new).orElseThrow(() -> new CustomerNotFoundException("Customer with id: " + id + "does not exist"));
+        return customerRepository.findById(id).map(this::toCustomerResponse).orElseThrow(() -> new CustomerNotFoundException("Customer with id: " + id + "does not exist"));
     }
 
     @Override
     public List<Customer> getByName(String name) {
-        return customerRepository.findAll().stream().filter(customer -> customer.getFirstName().equalsIgnoreCase(name)).toList();
+        return customerRepository.findAll().stream().filter(customer -> customer.getName().equalsIgnoreCase(name)).toList();
     }
 
     @Override
     public List<Customer> getByLastName(String lastName) {
-        return customerRepository.findAll().stream().filter(customer -> customer.getLastName().equalsIgnoreCase(lastName)).toList();
+        return customerRepository.findAll().stream().filter(customer -> customer.getLastname().equalsIgnoreCase(lastName)).toList();
     }
 
     @Override
@@ -56,10 +57,18 @@ public class CustomerServiceImpl implements CustomerService {
     public Customer save(String name, String lastName, String dni) {
 
         Customer customer = new Customer();
-        customer.setFirstName(name);
-        customer.setLastName(lastName);
+        customer.setName(name);
+        customer.setLastname(lastName);
         customer.setDni(dni);
 
         return customerRepository.save(customer);
+    }
+
+    private CustomerResponse toCustomerResponse(Customer customer) {
+        CustomerResponse response = new CustomerResponse();
+        response.setId(customer.getId());
+        response.setName(customer.getName());
+        response.setLastName(customer.getLastname());
+        return response;
     }
 }

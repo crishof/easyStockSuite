@@ -1,5 +1,9 @@
 package org.crishof.customersv.service;
 
+
+import org.crishof.customersv.dto.CustomerResponse;
+import org.crishof.customersv.model.Customer;
+
 import java.util.List;
 import java.util.UUID;
 

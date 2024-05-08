@@ -5,8 +5,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.util.UUID;
@@ -16,6 +16,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Entity
 @Table(name = "tbl_customer")
+@Builder
 public class Customer {
 
     @Id
@@ -23,6 +24,7 @@ public class Customer {
     private UUID id;
     private String name;
     private String lastname;
+    private String dni;
     private String taxId;
 
 }
