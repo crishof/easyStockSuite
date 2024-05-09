@@ -29,16 +29,16 @@ import { ProductSearchComponent } from '../product-search/product-search.compone
   styleUrl: './products.component.css',
 })
 export class ProductsComponent implements OnInit {
-  productList: IProduct[] = [];
   private _productService = inject(ProductService);
   private _brandService = inject(BrandService);
   private _supplierPriceListService = inject(SupplierPriceListService);
   private _router = inject(Router);
-
+  
   private subscription?: Subscription;
-
+  
   ngOnInit(): void {}
-
+  
+  productList: IProduct[] = [];
   brandName: string = '';
   searchTerm: string = '';
   isFormSubmitted: boolean = false;
