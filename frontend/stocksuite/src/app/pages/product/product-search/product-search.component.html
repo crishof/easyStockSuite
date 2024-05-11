@@ -1,10 +1,6 @@
-<div class="row">
-  <form
-    #searchForm="ngForm"
-    (ngSubmit)="onSearch()"
-    class="row mb-3 text-center col-md-8"
-  >
-    <div class="col-md-8">
+<div class="row mb-3 text-center">
+  <form #searchForm="ngForm" (ngSubmit)="onSearch()">
+    <div class="col-md-6 form-group align-items-center">
       <input
         type="text"
         class="form-control"
@@ -14,13 +10,8 @@
         name="searchTerm"
         (keyup)="onKeyUp($event)"
       />
-      @if(isFormSubmitted && searchTerm.length < 3){
-      <div class="text-danger">
-        Search term must be at least 3 characters long
-      </div>
-      }
     </div>
-    <div class="col-md-4">
+    <div class="col-md-6 form-group align-items-center">
       <button type="submit" class="btn btn-outline-primary btn-sm">
         Search
       </button>
@@ -32,5 +23,10 @@
         with Stock
       </button>
     </div>
+    @if(isFormSubmitted && searchTerm.length < 3){
+    <div class="text-danger">
+      Search term must be at least 3 characters long
+    </div>
+    }
   </form>
 </div>

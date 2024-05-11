@@ -15,4 +15,5 @@ export interface IProduct {
   priceResponse: IPrice;
   dimensionId: string;
   stockResponses: IStock[];
+  invoiceQuantity: number;
 }

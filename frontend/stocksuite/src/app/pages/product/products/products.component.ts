@@ -29,16 +29,16 @@ import { ProductSearchComponent } from '../product-search/product-search.compone
   styleUrl: './products.component.css',
 })
 export class ProductsComponent implements OnInit {
-  productList: IProduct[] = [];
   private _productService = inject(ProductService);
   private _brandService = inject(BrandService);
   private _supplierPriceListService = inject(SupplierPriceListService);
   private _router = inject(Router);
-
+  
   private subscription?: Subscription;
-
+  
   ngOnInit(): void {}
-
+  
+  productList: IProduct[] = [];
   brandName: string = '';
   searchTerm: string = '';
   isFormSubmitted: boolean = false;
@@ -50,28 +50,27 @@ export class ProductsComponent implements OnInit {
   loading: boolean = false;
 
   handleSearch(searchTerm: string): void {
-    console.log('handleSearch');
-    this.onFormSubmit(searchTerm);
-  }
-
-  handleSearchWithStock(searchTerm: string): void {
-    console.log('handleSearchWithStock');
-    this.handleSearch(searchTerm);
-  }
-
-  getBrandName(brandId: string): Observable<string> {
-    return this._brandService
-      .getBrand(brandId)
-      .pipe(map((brand) => brand.name));
-  }
-
-  onFormSubmit(searchTerm: string): void {
     this.isFormSubmitted = true;
     if (searchTerm.length >= 3) {
       this.searchProducts(searchTerm);
     } else {
       this.productList = [];
     }
+  }
+
+  handleSearchWithStock(searchTerm: string): void {
+    this.isFormSubmitted = true;
+    if (searchTerm.length >= 3) {
+      this.searchProductsWithStock(searchTerm);
+    } else {
+      this.productList = [];
+    }
+  }
+
+  getBrandName(brandId: string): Observable<string> {
+    return this._brandService
+      .getBrand(brandId)
+      .pipe(map((brand) => brand.name));
   }
 
   searchProducts(searchTerm: string): void {
@@ -81,6 +80,23 @@ export class ProductsComponent implements OnInit {
     }
     this.subscription = this._productService
       .getAllByFilter(searchTerm)
+      .subscribe({
+        next: (data: IProduct[]) => {
+          this.productList = data;
+        },
+        error: (err) => {
+          console.error('Failed to load products', err);
+        },
+      });
+  }
+
+  searchProductsWithStock(searchTerm: string): void {
+    console.log('searchTerm' + searchTerm);
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
+    this.subscription = this._productService
+      .getAllByFilterAndStock(searchTerm)
       .subscribe({
         next: (data: IProduct[]) => {
           this.productList = data;
