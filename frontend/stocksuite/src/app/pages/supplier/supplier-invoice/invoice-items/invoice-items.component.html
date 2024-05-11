@@ -13,15 +13,47 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let product of invoiceItems; let i = index">
-        <td>{{ invoiceItems.indexOf(product) + 1 }}</td>
-        <td>{{ product.brandName }}</td>
-        <td>{{ product.model }}</td>
-        <td class="description-cell">{{ product.description }}</td>
-        <td>{{ product.priceResponse.purchasePrice | currency }}</td>
-        <td>{{ product.priceResponse.taxRate * 100 }}%</td>
-        <td>descuento</td>
-        <td>Cantidad</td>
+      <tr
+        *ngFor="let item of invoiceItems; let i = index"
+        formGroup="invoiceItemFormGroups[i]"
+      >
+        <td>{{ invoiceItems.indexOf(item) + 1 }}</td>
+        <td>{{ item.brandName }}</td>
+        <td>{{ item.model }}</td>
+        <td class="description-cell">{{ item.description }}</td>
+
+        <td>
+          <input
+            formControlName="itemPrice"
+            type="text"
+            class="form-control"
+            placeholder="{{ item.price | currency }} "
+          />
+        </td>
+        <td>
+          <input
+            formControlName="itemTaxRate"
+            type="text"
+            class="form-control"
+            placeholder="{{ item.taxRate * 100 }}%"
+          />
+        </td>
+        <td>
+          <input
+            formControlName="itemDiscount"
+            type="text"
+            class="form-control"
+            placeholder="{{ item.discount }}%"
+          />
+        </td>
+        <td>
+          <input
+            formControlName="itemQuantity"
+            type="text"
+            class="form-control"
+            placeholder="{{ item.quantity }}"
+          />
+        </td>
       </tr>
     </tbody>
   </table>

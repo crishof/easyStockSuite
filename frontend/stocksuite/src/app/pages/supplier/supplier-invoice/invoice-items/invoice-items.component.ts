@@ -1,6 +1,6 @@
-import { CommonModule, NgFor } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
-import { IProduct } from '../../../../model/product.model';
+import { IInvoiceItem } from '../../../../model/invoice-item.model';
 
 @Component({
   selector: 'app-invoice-items',
@@ -10,5 +10,5 @@ import { IProduct } from '../../../../model/product.model';
   styleUrl: './invoice-items.component.css',
 })
 export class InvoiceItemsComponent {
-  @Input() invoiceItems: IProduct[] = [];
+  @Input() invoiceItems: IInvoiceItem[] = [];
 }

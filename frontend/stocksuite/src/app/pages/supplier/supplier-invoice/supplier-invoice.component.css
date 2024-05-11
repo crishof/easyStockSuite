@@ -4,7 +4,7 @@
 }
 .dateInput {
   width: 100%; /* Asegura que el campo ocupe todo el ancho de la columna */
-  box-sizing: border-box;  /*Incluye el padding y el borde en el ancho del elemento */
+  box-sizing: border-box; /*Incluye el padding y el borde en el ancho del elemento */
 
   height: 80px;
   font-size: small;
@@ -22,4 +22,8 @@
 .btn-group > button {
   flex: 1; /* Hace que los botones ocupen el mismo espacio dentro del contenedor */
   /* margin-right: 5px;  Agrega un margen entre los botones */
+}
+
+.custom-modal-width {
+  max-width: 90%;
 }
