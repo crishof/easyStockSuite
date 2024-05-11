@@ -297,7 +297,7 @@
         </div>
 
         <!-- ITEMS LIST -->
-        <app-invoice-items [invoiceItems]="invoiceItems"></app-invoice-items>
+        <app-invoice-items [invoiceItems]="invoiceItems" (invoiceItemsChange)="onInvoiceItemChange($event)"></app-invoice-items>
 
         <!-- SEARCH BOX -->
 

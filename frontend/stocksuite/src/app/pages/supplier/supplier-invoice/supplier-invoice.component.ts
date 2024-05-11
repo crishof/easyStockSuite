@@ -77,7 +77,6 @@ export class SupplierInvoiceComponent implements OnInit {
     this.initForm();
   }
 
-  // Método para inicializar el formulario
   initForm(): void {
     this.invoiceForm = this.formBuilder.group({
       supplierId: '',
@@ -101,9 +100,13 @@ export class SupplierInvoiceComponent implements OnInit {
     });
   }
 
+  onInvoiceItemChange(updatedItems: IInvoiceItem[]): void {
+    this.invoiceItems = updatedItems;
+  }
+
   saveInvoice() {
     const formData = this.invoiceForm.value;
-    formData.IInvoiceItem = this.invoiceItems;
+    formData.invoiceItem = this.invoiceItems;
 
     console.log(formData);
   }

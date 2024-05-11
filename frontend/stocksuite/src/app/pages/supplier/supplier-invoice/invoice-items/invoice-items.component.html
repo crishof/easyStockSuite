@@ -15,7 +15,7 @@
     <tbody>
       <tr
         *ngFor="let item of invoiceItems; let i = index"
-        formGroup="invoiceItemFormGroups[i]"
+        [formGroup]="itemsGroup"
       >
         <td>{{ invoiceItems.indexOf(item) + 1 }}</td>
         <td>{{ item.brandName }}</td>
@@ -24,34 +24,40 @@
 
         <td>
           <input
-            formControlName="itemPrice"
+            formControlName="price"
+            name="price"
             type="text"
             class="form-control"
             placeholder="{{ item.price | currency }} "
+            required
+            (ngModelChange)="setItemPrice(i, $event)"
           />
         </td>
         <td>
           <input
-            formControlName="itemTaxRate"
+            formControlName="taxRate"
             type="text"
             class="form-control"
             placeholder="{{ item.taxRate * 100 }}%"
+            (ngModelChange)="setTaxRate(i, $event)"
           />
         </td>
         <td>
           <input
-            formControlName="itemDiscount"
+            formControlName="discount"
             type="text"
             class="form-control"
             placeholder="{{ item.discount }}%"
+            (ngModelChange)="setDiscount(i, $event)"
           />
         </td>
         <td>
           <input
-            formControlName="itemQuantity"
+            formControlName="quantity"
             type="text"
             class="form-control"
             placeholder="{{ item.quantity }}"
+            (ngModelChange)="setQuantity(i, $event)"
           />
         </td>
       </tr>
