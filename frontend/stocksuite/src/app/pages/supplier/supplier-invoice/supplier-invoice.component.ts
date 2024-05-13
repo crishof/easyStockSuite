@@ -68,6 +68,8 @@ export class SupplierInvoiceComponent implements OnInit {
   isFormSubmitted: boolean = false;
   searchTerm: string = '';
 
+  totalInvoiceUnits: number = 0;
+
   invoiceItemsFormArray: FormArray<FormGroup> = new FormArray<FormGroup>([]);
 
   ngOnInit(): void {
@@ -102,6 +104,13 @@ export class SupplierInvoiceComponent implements OnInit {
 
   onInvoiceItemChange(updatedItems: IInvoiceItem[]): void {
     this.invoiceItems = updatedItems;
+    this.getTotalInvoiceUnits();
+  }
+
+  getTotalInvoiceUnits(): void {
+    this.totalInvoiceUnits = Number(
+      this.invoiceItems.reduce((total, item) => total + item.quantity, 0)
+    );
   }
 
   saveInvoice() {

@@ -236,7 +236,9 @@
               </div>
               <div class="mb-3">
                 <p class="mb-3">Cantidad de items: {{ invoiceItems.length }}</p>
-                <p class="mb-3">Cantidad de unidades:</p>
+                <p class="mb-3">
+                  Cantidad de unidades: {{ totalInvoiceUnits }}
+                </p>
               </div>
             </div>
 
@@ -297,7 +299,10 @@
         </div>
 
         <!-- ITEMS LIST -->
-        <app-invoice-items [invoiceItems]="invoiceItems" (invoiceItemsChange)="onInvoiceItemChange($event)"></app-invoice-items>
+        <app-invoice-items
+          [invoiceItems]="invoiceItems"
+          (invoiceItemsChange)="onInvoiceItemChange($event)"
+        ></app-invoice-items>
 
         <!-- SEARCH BOX -->
 
