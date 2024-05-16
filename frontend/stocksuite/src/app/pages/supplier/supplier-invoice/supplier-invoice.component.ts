@@ -22,6 +22,8 @@ import { ISupplier } from '../../../model/supplier.model';
 import { SupplierService } from '../../../services/supplier.service';
 import { ISupplierInvoice } from '../../../model/supplier-invoice.model';
 import { IInvoiceItem } from '../../../model/invoice-item.model';
+import { SupplierInvoiceService } from '../../../services/supplier-invoice.service';
+import { error } from 'console';
 
 @Component({
   selector: 'app-supplier-invoice',
@@ -60,6 +62,7 @@ export class SupplierInvoiceComponent implements OnInit {
   selectedSupplierId: string = '';
 
   _supplierInvoice?: ISupplierInvoice;
+  _supplierInvoiceService = inject(SupplierInvoiceService);
 
   productList: IProduct[] = [];
   invoiceItems: IInvoiceItem[] = [];
@@ -97,8 +100,30 @@ export class SupplierInvoiceComponent implements OnInit {
       fixedAsset: false,
       askForPriceUpdate: false,
       observations: '',
+
+      subtotal1: '',
       discount: '',
+      interest: '',
+      subtotal2: '',
+
+      netoIva21: '',
+      netoIva105: '',
+      netoIva27: '',
+      netoIva0: '',
+
+      iva21: '',
+      iva105: '',
+      iva27: '',
+      impuestoInterno: '',
+
+      rounding: '',
       totalPrice: '',
+      withholdingIva: '',
+      withholdingSuss: '',
+      withholdingIibb: '',
+      withholdingIncome: '',
+      stateTax: '',
+      localTax: '',
     });
   }
 
@@ -113,11 +138,72 @@ export class SupplierInvoiceComponent implements OnInit {
     );
   }
 
+  getSubtotal1(): number {
+    return this.invoiceItems.reduce(
+      (total, item) => total + item.price * item.quantity,
+      0
+    );
+  }
+
+  getSubtotal2(): number {
+    const subtotal1 = this.getSubtotal1();
+    const discount = this.invoiceForm.get('discount')?.value;
+    const interest = this.invoiceForm.get('interest')?.value;
+
+    let subtotal2 = subtotal1;
+
+    if (discount !== 0) {
+      const discountPercentage = Math.min(Math.max(discount, 0), 100) / 100;
+      subtotal2 *= 1 - discountPercentage;
+    }
+
+    if (interest !== 0) {
+      const interestPercentage = Math.min(Math.max(interest, 0), 100) / 100;
+      subtotal2 *= 1 + interestPercentage;
+    }
+    return subtotal2;
+  }
+
+  getNetoIva(iva: number): number {
+    return this.calculateNetoIva(iva);
+  }
+
+  calculateNetoIva(iva: number): number {
+    const total = this.invoiceItems.reduce((acc, item) => {
+      if (item.taxRate == iva) {
+        return acc + item.price;
+      } else {
+        return acc;
+      }
+    }, 0);
+    return total;
+  }
+
+  getIva(iva: number): number {
+    return this.calculateIva(iva);
+  }
+
+  calculateIva(iva: number): number {
+    const neto = this.getNetoIva(iva);
+    const total = neto * (1 + iva / 100);
+    return total - neto;
+  }
+  getImpuestoInterno() {}
+
   saveInvoice() {
     const formData = this.invoiceForm.value;
-    formData.invoiceItem = this.invoiceItems;
+    formData.invoiceItems = this.invoiceItems;
 
     console.log(formData);
+
+    this._supplierInvoiceService.saveInvoice(formData).subscribe(
+      (response) => {
+        console.log(response);
+      },
+      (error) => {
+        console.error(error);
+      }
+    );
   }
 
   selectProduct(product: IProduct): void {
