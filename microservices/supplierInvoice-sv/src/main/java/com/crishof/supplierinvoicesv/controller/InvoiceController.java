@@ -25,7 +25,11 @@ public class InvoiceController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<InvoiceResponse> save(@RequestBody InvoiceRequest invoiceRequest) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(invoiceService.save(invoiceRequest));
+    public ResponseEntity<String> save(@RequestBody InvoiceRequest invoiceRequest) {
+
+        System.out.println("invoiceRequest = " + invoiceRequest);
+//        return ResponseEntity.status(HttpStatus.CREATED).body(invoiceService.save(invoiceRequest));
+
+        return ResponseEntity.ok("Received");
     }
 }
