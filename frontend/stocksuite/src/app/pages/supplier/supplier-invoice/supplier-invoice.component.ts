@@ -144,11 +144,12 @@ export class SupplierInvoiceComponent implements OnInit {
   }
 
   getSubtotal1(): number {
-    const subtotal1 = this.invoiceItems.reduce(
-      (total, item) =>
-        total + item.price * ((100 - item.discount) / 100) * item.quantity,
-      0
-    );
+    const subtotal1 = this.invoiceItems.reduce((total, item) => {
+      const discount = item.discount ?? 0;
+      const discountedPrice = item.price * ((100 - discount) / 100);
+      return total + discountedPrice * item.quantity;
+    }, 0);
+
     this.invoiceForm.patchValue({
       subtotal1: subtotal1,
     });
@@ -173,9 +174,13 @@ export class SupplierInvoiceComponent implements OnInit {
       subtotal2 *= 1 + interestPercentage;
     }
 
+    console.log('Subt2: ' + subtotal2);
     this.invoiceForm.patchValue({
       subtotal2: subtotal2,
     });
+
+    console.log('Subt2FORM: ' + this.invoiceForm.get('subtotal2')?.value);
+
     return subtotal2;
   }
 
@@ -186,9 +191,11 @@ export class SupplierInvoiceComponent implements OnInit {
   calculateNetoIva(iva: number): number {
     const discount = parseFloat(this.invoiceForm.get('discount')?.value || '0');
     const interest = parseFloat(this.invoiceForm.get('interest')?.value || '0');
+    
     const total = this.invoiceItems.reduce((acc, item) => {
       if (item.taxRate == iva) {
-        return acc + item.price;
+        const ItemDiscount = item.discount ?? 0;
+        return acc + (item.price * ((100 - item.discount) / 100));
       } else {
         return acc;
       }
@@ -277,8 +284,6 @@ export class SupplierInvoiceComponent implements OnInit {
   saveInvoice() {
     const formData = this.invoiceForm.value;
     formData.invoiceItems = this.invoiceItems;
-
-    console.log(formData);
 
     this._supplierInvoiceService.saveInvoice(formData).subscribe(
       (response) => {
