@@ -75,6 +75,11 @@ export class SupplierInvoiceComponent implements OnInit {
 
   invoiceItemsFormArray: FormArray<FormGroup> = new FormArray<FormGroup>([]);
 
+  iva21: number = 0.21;
+  iva105: number = 0.105;
+  iva27: number = 0.27;
+  iva0: number = 0;
+
   ngOnInit(): void {
     this.loadSuppliers();
     this.dateControl.setValue(new Date());
@@ -139,14 +144,20 @@ export class SupplierInvoiceComponent implements OnInit {
   }
 
   getSubtotal1(): number {
-    return this.invoiceItems.reduce(
-      (total, item) => total + item.price * item.quantity,
+    const subtotal1 = this.invoiceItems.reduce(
+      (total, item) =>
+        total + item.price * ((100 - item.discount) / 100) * item.quantity,
       0
     );
+    this.invoiceForm.patchValue({
+      subtotal1: subtotal1,
+    });
+
+    return subtotal1;
   }
 
   getSubtotal2(): number {
-    const subtotal1 = this.getSubtotal1();
+    const subtotal1 = this.invoiceForm.get('subtotal1')?.value;
     const discount = this.invoiceForm.get('discount')?.value;
     const interest = this.invoiceForm.get('interest')?.value;
 
@@ -161,6 +172,10 @@ export class SupplierInvoiceComponent implements OnInit {
       const interestPercentage = Math.min(Math.max(interest, 0), 100) / 100;
       subtotal2 *= 1 + interestPercentage;
     }
+
+    this.invoiceForm.patchValue({
+      subtotal2: subtotal2,
+    });
     return subtotal2;
   }
 
@@ -169,6 +184,8 @@ export class SupplierInvoiceComponent implements OnInit {
   }
 
   calculateNetoIva(iva: number): number {
+    const discount = parseFloat(this.invoiceForm.get('discount')?.value || '0');
+    const interest = parseFloat(this.invoiceForm.get('interest')?.value || '0');
     const total = this.invoiceItems.reduce((acc, item) => {
       if (item.taxRate == iva) {
         return acc + item.price;
@@ -176,7 +193,33 @@ export class SupplierInvoiceComponent implements OnInit {
         return acc;
       }
     }, 0);
-    return total;
+
+    const netoIva = total * ((100 - discount) / 100) * ((100 + interest) / 100);
+
+    switch (iva) {
+      case this.iva21:
+        this.invoiceForm.patchValue({
+          netoIva21: netoIva,
+        });
+        break;
+      case this.iva105:
+        this.invoiceForm.patchValue({
+          netoIva105: netoIva,
+        });
+        break;
+      case this.iva27:
+        this.invoiceForm.patchValue({
+          netoIva27: netoIva,
+        });
+        break;
+      case this.iva0:
+        this.invoiceForm.patchValue({
+          netoIva0: netoIva,
+        });
+        break;
+    }
+
+    return netoIva;
   }
 
   getIva(iva: number): number {
@@ -184,11 +227,52 @@ export class SupplierInvoiceComponent implements OnInit {
   }
 
   calculateIva(iva: number): number {
-    const neto = this.getNetoIva(iva);
-    const total = neto * (1 + iva / 100);
-    return total - neto;
+    const netoIva: number = this.getNetoIva(iva);
+    const calculatedIva: number =
+      (netoIva * ((100 + iva) / 100) - netoIva) * 100;
+
+    switch (iva) {
+      case this.iva21:
+        this.invoiceForm.patchValue({
+          iva21: calculatedIva,
+        });
+        break;
+      case this.iva105:
+        this.invoiceForm.patchValue({
+          iva105: calculatedIva,
+        });
+        break;
+      case this.iva27:
+        this.invoiceForm.patchValue({
+          iva27: calculatedIva,
+        });
+        break;
+    }
+
+    return calculatedIva;
   }
+
   getImpuestoInterno() {}
+
+  getInvoiceTotal() {
+    const total: number =
+      parseFloat(this.invoiceForm.get('subtotal2')?.value || '0') +
+      parseFloat(this.invoiceForm.get('iva21')?.value || '0') +
+      parseFloat(this.invoiceForm.get('iva105')?.value || '0') +
+      parseFloat(this.invoiceForm.get('iva27')?.value || '0') +
+      parseFloat(this.invoiceForm.get('withholdingIva')?.value || '0') +
+      parseFloat(this.invoiceForm.get('withholdingSuss')?.value || '0') +
+      parseFloat(this.invoiceForm.get('withholdingIibb')?.value || '0') +
+      parseFloat(this.invoiceForm.get('withholdingIncome')?.value || '0') +
+      parseFloat(this.invoiceForm.get('stateTax')?.value || '0') +
+      parseFloat(this.invoiceForm.get('localTax')?.value || '0') +
+      parseFloat(this.invoiceForm.get('rounding')?.value || '0');
+
+    this.invoiceForm.patchValue({
+      totalPrice: total,
+    });
+    return total;
+  }
 
   saveInvoice() {
     const formData = this.invoiceForm.value;

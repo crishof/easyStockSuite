@@ -324,7 +324,7 @@
 
           <div class="col-md-2">
             <div class="mb-3">
-              <p>Subtotal: {{ getSubtotal1() }}</p>
+              <p>Subtotal: {{ getSubtotal1() | number : "1.2-2" }}</p>
             </div>
             <div class="mb-3 d-flex align-items-center gap-3">
               <label for="discount" class="form-label">Discount: </label>
@@ -351,36 +351,36 @@
               </div>
             </div>
             <div class="mb-3">
-              <p>Subtotal: {{ getSubtotal2() }}</p>
+              <p>Subtotal: {{ getSubtotal2() | number : "1.2-2" }}</p>
             </div>
           </div>
           <!-- Columna 2 -->
 
           <div class="col-md-3">
             <div class="mb-3">
-              <p>Neto Iva 21: {{ getNetoIva(0.21) }}</p>
+              <p>Neto Iva 21: {{ getNetoIva(iva21) | number : "1.2-2" }}</p>
             </div>
             <div class="mb-3">
-              <p>Neto iva 10,5: {{ getNetoIva(0.105) }}</p>
+              <p>Neto iva 10,5: {{ getNetoIva(iva105) | number : "1.2-2" }}</p>
             </div>
             <div class="mb-3">
-              <p>Neto iva 27: {{ getNetoIva(0.27) }}</p>
+              <p>Neto iva 27: {{ getNetoIva(iva27) | number : "1.2-2" }}</p>
             </div>
             <div class="mb-3">
-              <p>Neto no gravado: {{ getNetoIva(0) }}</p>
+              <p>Neto no gravado: {{ getNetoIva(iva0) | number : "1.2-2" }}</p>
             </div>
           </div>
           <!-- Columna 3 -->
 
           <div class="col-md-3">
             <div class="mb-3">
-              <p>Iva 21: {{ getIva(21) }}</p>
+              <p>Iva 21: {{ getIva(iva21) | number : "1.2-2" }}</p>
             </div>
             <div class="mb-3">
-              <p>Iva 10,5: {{ getIva(10.5) }}</p>
+              <p>Iva 10,5: {{ getIva(iva105) | number : "1.2-2" }}</p>
             </div>
             <div class="mb-3">
-              <p>Iva 27:: {{ getIva(27) }}</p>
+              <p>Iva 27:: {{ getIva(iva27) | number : "1.2-2" }}</p>
             </div>
             <div class="mb-3">
               <p>Impuesto interno: {{ getImpuestoInterno() }}</p>
@@ -490,7 +490,9 @@
               </div>
             </div>
 
-            <div class="mb-3"><p>Total:</p></div>
+            <div class="mb-3">
+              <h4>TOTAL: ${{ getInvoiceTotal() | number: '1.2-2' }}</h4>
+            </div>
           </div>
         </div>
       </div>
