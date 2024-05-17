@@ -194,8 +194,8 @@ export class SupplierInvoiceComponent implements OnInit {
     
     const total = this.invoiceItems.reduce((acc, item) => {
       if (item.taxRate == iva) {
-        const ItemDiscount = item.discountRate ?? 0;
-        return acc + (item.price * ((100 - item.discountRate) / 100));
+        const itemDiscount = item.discountRate ?? 0;
+        return acc + (item.price * ((100 - itemDiscount) / 100));
       } else {
         return acc;
       }
@@ -284,6 +284,8 @@ export class SupplierInvoiceComponent implements OnInit {
   saveInvoice() {
     const formData = this.invoiceForm.value;
     formData.invoiceItemsRequest = this.invoiceItems;
+
+    console.log(formData);
 
     this._supplierInvoiceService.saveInvoice(formData).subscribe(
       (response) => {
