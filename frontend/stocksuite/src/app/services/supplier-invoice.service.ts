@@ -10,13 +10,11 @@ export class SupplierInvoiceService {
   private _http = inject(HttpClient);
   private _urlBase = 'http://localhost:443/supplierinvoice-sv/invoice';
 
-  getAll(): Observable<ISupplierInvoice[]>{
+  getAll(): Observable<ISupplierInvoice[]> {
     return this._http.get<ISupplierInvoice[]>(`${this._urlBase}/getAll`);
   }
 
   saveInvoice(formData: FormData): Observable<any> {
-    console.log(formData);
     return this._http.post(`${this._urlBase}/save`, formData);
-    //return this._http.get(`${this._urlBase}/getAll`);
   }
 }

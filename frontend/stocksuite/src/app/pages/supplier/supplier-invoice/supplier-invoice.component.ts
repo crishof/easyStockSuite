@@ -145,7 +145,7 @@ export class SupplierInvoiceComponent implements OnInit {
 
   getSubtotal1(): number {
     const subtotal1 = this.invoiceItems.reduce((total, item) => {
-      const discount = item.discount ?? 0;
+      const discount = item.discountRate ?? 0;
       const discountedPrice = item.price * ((100 - discount) / 100);
       return total + discountedPrice * item.quantity;
     }, 0);
@@ -194,8 +194,8 @@ export class SupplierInvoiceComponent implements OnInit {
     
     const total = this.invoiceItems.reduce((acc, item) => {
       if (item.taxRate == iva) {
-        const ItemDiscount = item.discount ?? 0;
-        return acc + (item.price * ((100 - item.discount) / 100));
+        const ItemDiscount = item.discountRate ?? 0;
+        return acc + (item.price * ((100 - item.discountRate) / 100));
       } else {
         return acc;
       }
@@ -283,14 +283,14 @@ export class SupplierInvoiceComponent implements OnInit {
 
   saveInvoice() {
     const formData = this.invoiceForm.value;
-    formData.invoiceItems = this.invoiceItems;
+    formData.invoiceItemsRequest = this.invoiceItems;
 
     this._supplierInvoiceService.saveInvoice(formData).subscribe(
       (response) => {
-        console.log(response);
+        console.log(response.message);
       },
       (error) => {
-        console.error(error);
+        console.error(error.message);
       }
     );
   }
@@ -303,7 +303,7 @@ export class SupplierInvoiceComponent implements OnInit {
       description: product.description,
       price: product.priceResponse.purchasePrice,
       taxRate: product.priceResponse.taxRate,
-      discount: product.priceResponse.discount,
+      discountRate: product.priceResponse.discount,
       quantity: 1,
     };
     this.invoiceItems.push(invoiceItem);
