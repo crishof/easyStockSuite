@@ -361,7 +361,9 @@
               <p>Net value Vat 21: {{ getNetVat(vat21) | number : "1.2-2" }}</p>
             </div>
             <div class="mb-3">
-              <p>Net value Vat 10,5: {{ getNetVat(vat105) | number : "1.2-2" }}</p>
+              <p>
+                Net value Vat 10,5: {{ getNetVat(vat105) | number : "1.2-2" }}
+              </p>
             </div>
             <div class="mb-3">
               <p>Net value Vat 27: {{ getNetVat(vat27) | number : "1.2-2" }}</p>
@@ -377,13 +379,17 @@
               <p>Vat Amount 21: {{ getVatAmount(vat21) | number : "1.2-2" }}</p>
             </div>
             <div class="mb-3">
-              <p>Vat Amount 10,5: {{ getVatAmount(vat105) | number : "1.2-2" }}</p>
+              <p>
+                Vat Amount 10,5: {{ getVatAmount(vat105) | number : "1.2-2" }}
+              </p>
             </div>
             <div class="mb-3">
-              <p>Vat Amount 27:: {{ getVatAmount(vat27) | number : "1.2-2" }}</p>
+              <p>
+                Vat Amount 27:: {{ getVatAmount(vat27) | number : "1.2-2" }}
+              </p>
             </div>
             <div class="mb-3">
-              <p>Impuesto interno: {{ getImpuestoInterno() }}</p>
+              <p>Internal Tax: {{ getInternalTax() }}</p>
             </div>
           </div>
           <!-- Columna 4 -->
@@ -419,15 +425,15 @@
             </div>
 
             <div class="mb-3 d-flex align-items-center gap-3">
-              <label for="withholdingIibb" class="form-label"
-                >IIBB withholding:
+              <label for="withholdingGrossReceiptsTax" class="form-label"
+                >GrossReceiptsTax withholding:
               </label>
               <div class="input-group">
                 <input
-                  type="withholdingIibb"
+                  type="withholdingGrossReceiptsTax"
                   class="form-control me-3"
-                  id="withholdingIibb"
-                  formControlName="withholdingIibb"
+                  id="withholdingGrossReceiptsTax"
+                  formControlName="withholdingGrossReceiptsTax"
                   placeholder="0"
                 />
               </div>
@@ -491,7 +497,7 @@
             </div>
 
             <div class="mb-3">
-              <h4>TOTAL: ${{ getInvoiceTotal() | number: '1.2-2' }}</h4>
+              <h4>TOTAL: ${{ getInvoiceTotal() | number : "1.2-2" }}</h4>
             </div>
           </div>
         </div>

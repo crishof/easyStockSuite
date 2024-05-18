@@ -119,13 +119,13 @@ export class SupplierInvoiceComponent implements OnInit {
       vat21: '',
       vat105: '',
       vat27: '',
-      impuestoInterno: '',
+      internalTax: '',
 
       rounding: '',
       totalPrice: '',
       withholdingVat: '',
       withholdingSuss: '',
-      withholdingIibb: '',
+      withholdingGrossReceiptsTax: '',
       withholdingIncome: '',
       stateTax: '',
       localTax: '',
@@ -191,11 +191,11 @@ export class SupplierInvoiceComponent implements OnInit {
   calculateNetVat(vat: number): number {
     const discount = parseFloat(this.invoiceForm.get('discount')?.value || '0');
     const interest = parseFloat(this.invoiceForm.get('interest')?.value || '0');
-    
+
     const total = this.invoiceItems.reduce((acc, item) => {
       if (item.taxRate == vat) {
         const itemDiscount = item.discountRate ?? 0;
-        return acc + (item.price * ((100 - itemDiscount) / 100));
+        return acc + item.price * ((100 - itemDiscount) / 100);
       } else {
         return acc;
       }
@@ -235,8 +235,7 @@ export class SupplierInvoiceComponent implements OnInit {
 
   calculateVat(vat: number): number {
     const netVat: number = this.getNetVat(vat);
-    const calculatedVat: number =
-      (netVat * ((100 + vat) / 100) - netVat) * 100;
+    const calculatedVat: number = (netVat * ((100 + vat) / 100) - netVat) * 100;
 
     switch (vat) {
       case this.vat21:
@@ -259,7 +258,7 @@ export class SupplierInvoiceComponent implements OnInit {
     return calculatedVat;
   }
 
-  getImpuestoInterno() {}
+  getInternalTax() {}
 
   getInvoiceTotal() {
     const total: number =
@@ -269,7 +268,9 @@ export class SupplierInvoiceComponent implements OnInit {
       parseFloat(this.invoiceForm.get('vat27')?.value || '0') +
       parseFloat(this.invoiceForm.get('withholdingVat')?.value || '0') +
       parseFloat(this.invoiceForm.get('withholdingSuss')?.value || '0') +
-      parseFloat(this.invoiceForm.get('withholdingIibb')?.value || '0') +
+      parseFloat(
+        this.invoiceForm.get('withholdingGrossReceiptsTax')?.value || '0'
+      ) +
       parseFloat(this.invoiceForm.get('withholdingIncome')?.value || '0') +
       parseFloat(this.invoiceForm.get('stateTax')?.value || '0') +
       parseFloat(this.invoiceForm.get('localTax')?.value || '0') +
