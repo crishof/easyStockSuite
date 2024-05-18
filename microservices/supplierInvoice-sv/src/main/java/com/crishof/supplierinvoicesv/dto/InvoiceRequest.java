@@ -53,11 +53,11 @@ public class InvoiceRequest {
     private double vat27;
     private double netValue0;
 
-    private double impuestoInterno;
+    private double internalTax;
 
-    private double withholdingIva;
+    private double withholdingVat;
     private double withholdingSuss;
-    private double withholdingIibb;
+    private double withholdingGrossReceiptsTax;
     private double withholdingIncome;
     private double stateTax;
     private double localTax;
@@ -99,10 +99,10 @@ public class InvoiceRequest {
                 "  netValue27=" + netValue27 + ",\n" +
                 "  vat27=" + vat27 + ",\n" +
                 "  netValue0=" + netValue0 + ",\n" +
-                "  impuestoInterno=" + impuestoInterno + ",\n" +
-                "  withholdingIva=" + withholdingIva + ",\n" +
+                "  internalTax=" + internalTax + ",\n" +
+                "  withholdingVat=" + withholdingVat + ",\n" +
                 "  withholdingSuss=" + withholdingSuss + ",\n" +
-                "  withholdingIibb=" + withholdingIibb + ",\n" +
+                "  withholdingGrossReceiptsTax=" + withholdingGrossReceiptsTax + ",\n" +
                 "  withholdingIncome=" + withholdingIncome + ",\n" +
                 "  stateTax=" + stateTax + ",\n" +
                 "  localTax=" + localTax + ",\n" +

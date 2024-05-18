@@ -11,7 +11,7 @@ import java.util.UUID;
 @NoArgsConstructor
 public class SupplierInvoiceItem {
 
-    private UUID id;
+    private UUID productId;
     private Integer quantity;
     private Double price;
     private Double taxRate;

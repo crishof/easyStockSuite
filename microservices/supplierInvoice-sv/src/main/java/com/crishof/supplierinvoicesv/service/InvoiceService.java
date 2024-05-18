@@ -10,7 +10,11 @@ public interface InvoiceService {
 
     List<InvoiceResponse> getAll();
 
+    List<InvoiceResponse> getAllBySupplierId(UUID supplierId);
+
     InvoiceResponse getById(UUID id);
 
     InvoiceResponse save(InvoiceRequest invoiceRequest);
+
+    void deleteById(UUID id);
 }
