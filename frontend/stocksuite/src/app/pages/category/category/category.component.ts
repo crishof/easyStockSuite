@@ -38,7 +38,6 @@ export class CategoryComponent implements OnInit {
 
   subscribeToCategoryUpdatedEvent(): void {
     this._categoryService.getCategoryUpdatedObservable().subscribe(() => {
-      console.log('Evento categoryUpdated recibido en CategoryComponent');
       this.loadCategories();
     });
   }

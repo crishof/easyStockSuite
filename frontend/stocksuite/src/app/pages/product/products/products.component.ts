@@ -33,11 +33,11 @@ export class ProductsComponent implements OnInit {
   private _brandService = inject(BrandService);
   private _supplierPriceListService = inject(SupplierPriceListService);
   private _router = inject(Router);
-  
+
   private subscription?: Subscription;
-  
+
   ngOnInit(): void {}
-  
+
   productList: IProduct[] = [];
   brandName: string = '';
   searchTerm: string = '';
@@ -74,7 +74,6 @@ export class ProductsComponent implements OnInit {
   }
 
   searchProducts(searchTerm: string): void {
-    console.log('searchTerm' + searchTerm);
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
@@ -91,7 +90,6 @@ export class ProductsComponent implements OnInit {
   }
 
   searchProductsWithStock(searchTerm: string): void {
-    console.log('searchTerm' + searchTerm);
     if (this.subscription) {
       this.subscription.unsubscribe();
     }

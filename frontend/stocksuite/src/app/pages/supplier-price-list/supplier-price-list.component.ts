@@ -70,12 +70,6 @@ export class SupplierPriceListComponent implements OnInit {
         'updateExistingProducts'
       )?.value;
 
-      console.log(
-        'supplierId: ' + supplierId,
-        'check: ' + updateExistingProducts,
-        'file: ' + this.selectedFile
-      );
-
       if (
         this.selectedFile != null &&
         supplierId != null &&
@@ -87,11 +81,11 @@ export class SupplierPriceListComponent implements OnInit {
             (response: any) => {
               this.successMessage = response.message;
 
-              // Aquí puedes manejar la respuesta del backend si es necesario
+              // Manejar la respuesta del backend si es necesario
             },
             (error: any) => {
               this.errorMessage = error;
-              // Aquí puedes manejar los errores si es necesario
+              // Manejar los errores si es necesario
             }
           );
       } else {
@@ -140,7 +134,7 @@ export class SupplierPriceListComponent implements OnInit {
           this.selectedProducts = [];
         },
         (error) => {
-          console.log('Error al importar productos', error);
+          console.log('Error saving products', error);
           this.errorMessage = error;
         }
       );
@@ -208,7 +202,6 @@ export class SupplierPriceListComponent implements OnInit {
       )
       .subscribe((data: ISupplierProduct[]) => {
         this.productList = data;
-        console.log(this.productList);
       });
   }
 }

@@ -18,7 +18,6 @@ export class SupplierPriceListService {
   constructor() {}
 
   uploadFile(file: File, supplierId: string, updateExistingProducts: boolean) {
-    console.log('FILE: ' + file);
     const formData = new FormData();
     formData.append('file', file);
     formData.append('supplierId', supplierId);
@@ -71,16 +70,16 @@ export class SupplierPriceListService {
   }
 
   getSupplierProductById(id: string): Observable<ISupplierProduct> {
-    return this._http.get<ISupplierProduct>(`${this._urlBase}/getById/${id}`).pipe(
-      catchError(() => {
-        console.error('Error getting supplier product');
-        return throwError(() => new Error('Error getting supplier product'));
-      })
-    );
+    return this._http
+      .get<ISupplierProduct>(`${this._urlBase}/getById/${id}`)
+      .pipe(
+        catchError(() => {
+          return throwError(() => new Error('Error getting supplier product'));
+        })
+      );
   }
 
   importProducts(productList: ISupplierProduct[]): Observable<any> {
-    console.log('Product list: ' + productList.length);
     return this._http.post<any>(
       `${this._urlProductSv}/importProducts`,
       productList
