@@ -24,6 +24,9 @@ import { ISupplierInvoice } from '../../../model/supplier-invoice.model';
 import { IInvoiceItem } from '../../../model/invoice-item.model';
 import { SupplierInvoiceService } from '../../../services/supplier-invoice.service';
 import { error } from 'console';
+import { BranchService } from '../../../services/branch.service';
+import { ILocation } from '../../../model/location.model';
+import { IBranch } from '../../../model/branch.model';
 
 @Component({
   selector: 'app-supplier-invoice',
@@ -58,11 +61,15 @@ export class SupplierInvoiceComponent implements OnInit {
   selectedComponent: string = 'header';
 
   suppliers: any[] = [];
+  branches: IBranch[] = [];
+  locations: ILocation[] = [];
   supplierList: ISupplier[] = [];
   selectedSupplierId: string = '';
+  selectedBranchId: string = '';
 
   _supplierInvoice?: ISupplierInvoice;
   _supplierInvoiceService = inject(SupplierInvoiceService);
+  _branchService = inject(BranchService);
 
   productList: IProduct[] = [];
   invoiceItems: IInvoiceItem[] = [];
@@ -82,6 +89,7 @@ export class SupplierInvoiceComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadSuppliers();
+    this.loadBranches();
     this.dateControl.setValue(new Date());
 
     this.initForm();
@@ -95,7 +103,8 @@ export class SupplierInvoiceComponent implements OnInit {
       receptionDate: new Date(),
       dueDate: new Date(),
       savedDate: new Date(),
-      location: '',
+      branchId: '',
+      locationId: '',
       packingListPrefix: '',
       packingListNumber: '',
       invoicePrefix: '',
@@ -129,6 +138,11 @@ export class SupplierInvoiceComponent implements OnInit {
       withholdingIncome: '',
       stateTax: '',
       localTax: '',
+    });
+
+    // Suscribirse a los cambios en el control branchId
+    this.invoiceForm.get('branchId')!.valueChanges.subscribe((branchId) => {
+      this.onBranchChange(branchId);
     });
   }
 
@@ -174,12 +188,9 @@ export class SupplierInvoiceComponent implements OnInit {
       subtotal2 *= 1 + interestPercentage;
     }
 
-    console.log('Subt2: ' + subtotal2);
     this.invoiceForm.patchValue({
       subtotal2: subtotal2,
     });
-
-    console.log('Subt2FORM: ' + this.invoiceForm.get('subtotal2')?.value);
 
     return subtotal2;
   }
@@ -286,8 +297,6 @@ export class SupplierInvoiceComponent implements OnInit {
     const formData = this.invoiceForm.value;
     formData.invoiceItemsRequest = this.invoiceItems;
 
-    console.log(formData);
-
     this._supplierInvoiceService.saveInvoice(formData).subscribe(
       (response) => {
         console.log(response.message);
@@ -327,6 +336,28 @@ export class SupplierInvoiceComponent implements OnInit {
     this.selectedSupplierId = supplierId;
   }
 
+  loadBranches() {
+    this._branchService.getBranches().subscribe(
+      (branches: IBranch[]) => {
+        this.branches = branches;
+      },
+      (error) => {
+        console.log('Error loading branches list', error);
+      }
+    );
+  }
+
+  onBranchChange(branchId: string) {
+    this.selectedBranchId = branchId;
+    this.getLocations(branchId);
+    this.invoiceForm.get('locationId')!.setValue('');
+  }
+
+  getLocations(branchId: string) {
+    const branch = this.branches.find((branch) => branch.id == branchId);
+    this.locations = branch ? branch.locations : [];
+  }
+
   handleSearch(searchTerm: string): void {
     this.isFormSubmitted = true;
     if (searchTerm.length >= 3) {
@@ -362,7 +393,6 @@ export class SupplierInvoiceComponent implements OnInit {
   }
 
   searchProductsWithStock(searchTerm: string): void {
-    console.log('searchTerm' + searchTerm);
     if (this.subscription) {
       this.subscription.unsubscribe();
     }

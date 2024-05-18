@@ -129,13 +129,34 @@
 
             <div class="col-md-3">
               <div class="mb-3">
-                <label for="ubicacion" class="form-label">Ubicacion</label>
                 <select
-                  class="form-select"
-                  id="ubicacion"
-                  formControlName="location"
+                  class="form-control form-control-sm mb-2 col-md-4"
+                  name="branchId"
+                  id="branchId"
+                  formControlName="branchId"
+                  required
                 >
-                  <option value="A">Ubicación A</option>
+                  <option value="">Select Branch</option>
+                  <option *ngFor="let branch of branches" [value]="branch.id">
+                    {{ branch.name }}
+                  </option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <select
+                  class="form-control form-control-sm mb-2 col-md-4"
+                  name="locationId"
+                  id="locationId"
+                  formControlName="locationId"
+                  required
+                >
+                  <option value="">Select Location</option>
+                  <option
+                    *ngFor="let location of locations"
+                    [value]="location.id"
+                  >
+                    {{ location.name }}
+                  </option>
                 </select>
               </div>
               <div class="mb-3">
