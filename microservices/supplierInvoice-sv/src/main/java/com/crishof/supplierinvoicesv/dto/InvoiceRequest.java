@@ -45,13 +45,13 @@ public class InvoiceRequest {
     private double interest;
     private double subtotal2;
 
-    private double netoIva21;
-    private double iva21;
-    private double netoIva105;
-    private double iva105;
-    private double netoIva27;
-    private double iva27;
-    private double netoIva0;
+    private double netValue21;
+    private double vat21;
+    private double netValue105;
+    private double vat105;
+    private double netValue27;
+    private double vat27;
+    private double netValue0;
 
     private double impuestoInterno;
 
@@ -66,4 +66,48 @@ public class InvoiceRequest {
 
     private double totalPrice;
 
+    @Override
+    public String toString() {
+        return "InvoiceRequest {\n" +
+                "  supplierId=" + supplierId + ",\n" +
+                "  location='" + location + "',\n" +
+                "  branchId=" + branchId + ",\n" +
+                "  locationId=" + locationId + ",\n" +
+                "  invoiceDate=" + invoiceDate + ",\n" +
+                "  dueDate=" + dueDate + ",\n" +
+                "  receptionDate=" + receptionDate + ",\n" +
+                "  savedDate=" + savedDate + ",\n" +
+                "  invoiceType='" + invoiceType + "',\n" +
+                "  invoicePrefix='" + invoicePrefix + "',\n" +
+                "  invoiceNumber='" + invoiceNumber + "',\n" +
+                "  packingListPrefix='" + packingListPrefix + "',\n" +
+                "  packingListNumber='" + packingListNumber + "',\n" +
+                "  invoiceItemsRequest=" + invoiceItemsRequest + ",\n" +
+                "  saveStocks=" + saveStocks + ",\n" +
+                "  taxSave=" + taxSave + ",\n" +
+                "  fixedAsset=" + fixedAsset + ",\n" +
+                "  askForPriceUpdate=" + askForPriceUpdate + ",\n" +
+                "  observations='" + observations + "',\n" +
+                "  subtotal1=" + subtotal1 + ",\n" +
+                "  discount=" + discount + ",\n" +
+                "  interest=" + interest + ",\n" +
+                "  subtotal2=" + subtotal2 + ",\n" +
+                "  netValue21=" + netValue21 + ",\n" +
+                "  vat21=" + vat21 + ",\n" +
+                "  netValue105=" + netValue105 + ",\n" +
+                "  vat105=" + vat105 + ",\n" +
+                "  netValue27=" + netValue27 + ",\n" +
+                "  vat27=" + vat27 + ",\n" +
+                "  netValue0=" + netValue0 + ",\n" +
+                "  impuestoInterno=" + impuestoInterno + ",\n" +
+                "  withholdingIva=" + withholdingIva + ",\n" +
+                "  withholdingSuss=" + withholdingSuss + ",\n" +
+                "  withholdingIibb=" + withholdingIibb + ",\n" +
+                "  withholdingIncome=" + withholdingIncome + ",\n" +
+                "  stateTax=" + stateTax + ",\n" +
+                "  localTax=" + localTax + ",\n" +
+                "  rounding=" + rounding + ",\n" +
+                "  totalPrice=" + totalPrice + "\n" +
+                '}';
+    }
 }

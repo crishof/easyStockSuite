@@ -75,10 +75,10 @@ export class SupplierInvoiceComponent implements OnInit {
 
   invoiceItemsFormArray: FormArray<FormGroup> = new FormArray<FormGroup>([]);
 
-  iva21: number = 0.21;
-  iva105: number = 0.105;
-  iva27: number = 0.27;
-  iva0: number = 0;
+  vat21: number = 0.21;
+  vat105: number = 0.105;
+  vat27: number = 0.27;
+  vat0: number = 0;
 
   ngOnInit(): void {
     this.loadSuppliers();
@@ -111,19 +111,19 @@ export class SupplierInvoiceComponent implements OnInit {
       interest: '',
       subtotal2: '',
 
-      netoIva21: '',
-      netoIva105: '',
-      netoIva27: '',
-      netoIva0: '',
+      netValue21: '',
+      netValue105: '',
+      netValue27: '',
+      netValue0: '',
 
-      iva21: '',
-      iva105: '',
-      iva27: '',
+      vat21: '',
+      vat105: '',
+      vat27: '',
       impuestoInterno: '',
 
       rounding: '',
       totalPrice: '',
-      withholdingIva: '',
+      withholdingVat: '',
       withholdingSuss: '',
       withholdingIibb: '',
       withholdingIncome: '',
@@ -184,16 +184,16 @@ export class SupplierInvoiceComponent implements OnInit {
     return subtotal2;
   }
 
-  getNetoIva(iva: number): number {
-    return this.calculateNetoIva(iva);
+  getNetVat(vat: number): number {
+    return this.calculateNetVat(vat);
   }
 
-  calculateNetoIva(iva: number): number {
+  calculateNetVat(vat: number): number {
     const discount = parseFloat(this.invoiceForm.get('discount')?.value || '0');
     const interest = parseFloat(this.invoiceForm.get('interest')?.value || '0');
     
     const total = this.invoiceItems.reduce((acc, item) => {
-      if (item.taxRate == iva) {
+      if (item.taxRate == vat) {
         const itemDiscount = item.discountRate ?? 0;
         return acc + (item.price * ((100 - itemDiscount) / 100));
       } else {
@@ -201,62 +201,62 @@ export class SupplierInvoiceComponent implements OnInit {
       }
     }, 0);
 
-    const netoIva = total * ((100 - discount) / 100) * ((100 + interest) / 100);
+    const netVat = total * ((100 - discount) / 100) * ((100 + interest) / 100);
 
-    switch (iva) {
-      case this.iva21:
+    switch (vat) {
+      case this.vat21:
         this.invoiceForm.patchValue({
-          netoIva21: netoIva,
+          netVat21: netVat,
         });
         break;
-      case this.iva105:
+      case this.vat105:
         this.invoiceForm.patchValue({
-          netoIva105: netoIva,
+          netVat105: netVat,
         });
         break;
-      case this.iva27:
+      case this.vat27:
         this.invoiceForm.patchValue({
-          netoIva27: netoIva,
+          netVat27: netVat,
         });
         break;
-      case this.iva0:
+      case this.vat0:
         this.invoiceForm.patchValue({
-          netoIva0: netoIva,
+          netVat0: netVat,
         });
         break;
     }
 
-    return netoIva;
+    return netVat;
   }
 
-  getIva(iva: number): number {
-    return this.calculateIva(iva);
+  getVatAmount(vat: number): number {
+    return this.calculateVat(vat);
   }
 
-  calculateIva(iva: number): number {
-    const netoIva: number = this.getNetoIva(iva);
-    const calculatedIva: number =
-      (netoIva * ((100 + iva) / 100) - netoIva) * 100;
+  calculateVat(vat: number): number {
+    const netVat: number = this.getNetVat(vat);
+    const calculatedVat: number =
+      (netVat * ((100 + vat) / 100) - netVat) * 100;
 
-    switch (iva) {
-      case this.iva21:
+    switch (vat) {
+      case this.vat21:
         this.invoiceForm.patchValue({
-          iva21: calculatedIva,
+          vat21: calculatedVat,
         });
         break;
-      case this.iva105:
+      case this.vat105:
         this.invoiceForm.patchValue({
-          iva105: calculatedIva,
+          vat105: calculatedVat,
         });
         break;
-      case this.iva27:
+      case this.vat27:
         this.invoiceForm.patchValue({
-          iva27: calculatedIva,
+          vat27: calculatedVat,
         });
         break;
     }
 
-    return calculatedIva;
+    return calculatedVat;
   }
 
   getImpuestoInterno() {}
@@ -264,10 +264,10 @@ export class SupplierInvoiceComponent implements OnInit {
   getInvoiceTotal() {
     const total: number =
       parseFloat(this.invoiceForm.get('subtotal2')?.value || '0') +
-      parseFloat(this.invoiceForm.get('iva21')?.value || '0') +
-      parseFloat(this.invoiceForm.get('iva105')?.value || '0') +
-      parseFloat(this.invoiceForm.get('iva27')?.value || '0') +
-      parseFloat(this.invoiceForm.get('withholdingIva')?.value || '0') +
+      parseFloat(this.invoiceForm.get('vat21')?.value || '0') +
+      parseFloat(this.invoiceForm.get('vat105')?.value || '0') +
+      parseFloat(this.invoiceForm.get('vat27')?.value || '0') +
+      parseFloat(this.invoiceForm.get('withholdingVat')?.value || '0') +
       parseFloat(this.invoiceForm.get('withholdingSuss')?.value || '0') +
       parseFloat(this.invoiceForm.get('withholdingIibb')?.value || '0') +
       parseFloat(this.invoiceForm.get('withholdingIncome')?.value || '0') +

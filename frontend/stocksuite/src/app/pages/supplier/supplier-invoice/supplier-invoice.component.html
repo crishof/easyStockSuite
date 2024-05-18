@@ -358,29 +358,29 @@
 
           <div class="col-md-3">
             <div class="mb-3">
-              <p>Neto Iva 21: {{ getNetoIva(iva21) | number : "1.2-2" }}</p>
+              <p>Net value Vat 21: {{ getNetVat(vat21) | number : "1.2-2" }}</p>
             </div>
             <div class="mb-3">
-              <p>Neto iva 10,5: {{ getNetoIva(iva105) | number : "1.2-2" }}</p>
+              <p>Net value Vat 10,5: {{ getNetVat(vat105) | number : "1.2-2" }}</p>
             </div>
             <div class="mb-3">
-              <p>Neto iva 27: {{ getNetoIva(iva27) | number : "1.2-2" }}</p>
+              <p>Net value Vat 27: {{ getNetVat(vat27) | number : "1.2-2" }}</p>
             </div>
             <div class="mb-3">
-              <p>Neto no gravado: {{ getNetoIva(iva0) | number : "1.2-2" }}</p>
+              <p>Net exempt value: {{ getNetVat(vat0) | number : "1.2-2" }}</p>
             </div>
           </div>
           <!-- Columna 3 -->
 
           <div class="col-md-3">
             <div class="mb-3">
-              <p>Iva 21: {{ getIva(iva21) | number : "1.2-2" }}</p>
+              <p>Vat Amount 21: {{ getVatAmount(vat21) | number : "1.2-2" }}</p>
             </div>
             <div class="mb-3">
-              <p>Iva 10,5: {{ getIva(iva105) | number : "1.2-2" }}</p>
+              <p>Vat Amount 10,5: {{ getVatAmount(vat105) | number : "1.2-2" }}</p>
             </div>
             <div class="mb-3">
-              <p>Iva 27:: {{ getIva(iva27) | number : "1.2-2" }}</p>
+              <p>Vat Amount 27:: {{ getVatAmount(vat27) | number : "1.2-2" }}</p>
             </div>
             <div class="mb-3">
               <p>Impuesto interno: {{ getImpuestoInterno() }}</p>
@@ -390,15 +390,15 @@
 
           <div class="col-md-3">
             <div class="mb-3 d-flex align-items-center gap-3">
-              <label for="withholdingIva" class="form-label"
-                >IVA withholding:
+              <label for="withholdingVat" class="form-label"
+                >VAT withholding:
               </label>
               <div class="input-group">
                 <input
-                  type="withholdingIva"
+                  type="withholdingVat"
                   class="form-control me-3"
-                  id="withholdingIva"
-                  formControlName="withholdingIva"
+                  id="withholdingVat"
+                  formControlName="withholdingVat"
                   placeholder="0"
                 />
               </div>
