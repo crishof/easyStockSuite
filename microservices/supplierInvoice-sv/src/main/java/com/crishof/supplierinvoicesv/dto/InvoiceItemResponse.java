@@ -1,6 +1,7 @@
 package com.crishof.supplierinvoicesv.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -9,12 +10,12 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class SupplierInvoiceItem {
+@Builder
+public class InvoiceItemResponse {
 
-    private UUID id;
+    private UUID productId;
     private Integer quantity;
     private Double price;
     private Double taxRate;
     private Double discountRate;
-
 }

@@ -8,7 +8,7 @@ import { ICategory } from '../model/category.model';
 })
 export class CategoryService {
   private _http = inject(HttpClient);
-  
+
   private _urlBase = 'http://localhost:443/category-sv/category';
   private categoryUpdatedSubject = new Subject<void>();
 
@@ -21,7 +21,6 @@ export class CategoryService {
   }
 
   updateCategory(id: string, formData: FormData): Observable<ICategory> {
-    console.log('updateCategory', id);
     return this._http
       .put<ICategory>(`${this._urlBase}/update/${id}`, formData)
       .pipe(

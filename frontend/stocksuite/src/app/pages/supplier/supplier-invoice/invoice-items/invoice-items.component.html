@@ -26,7 +26,7 @@
           <input
             formControlName="price"
             name="price"
-            type="text"
+            type="number"
             class="form-control"
             placeholder="{{ item.price | currency }} "
             required
@@ -36,25 +36,25 @@
         <td>
           <input
             formControlName="taxRate"
-            type="text"
+            type="number"
             class="form-control"
             placeholder="{{ item.taxRate * 100 }}%"
-            (ngModelChange)="setTaxRate(i, $event)"
+            (ngModelChange)="setTaxRate(i, $event / 100)"
           />
         </td>
         <td>
           <input
-            formControlName="discount"
-            type="text"
+            formControlName="discountRate"
+            type="number"
             class="form-control"
-            placeholder="{{ item.discount }}%"
+            placeholder="{{ item.discountRate }}%"
             (ngModelChange)="setDiscount(i, $event)"
           />
         </td>
         <td>
           <input
             formControlName="quantity"
-            type="text"
+            type="number"
             class="form-control"
             placeholder="{{ item.quantity }}"
             (ngModelChange)="setQuantity(i, $event)"

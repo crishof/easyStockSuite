@@ -19,4 +19,5 @@ export interface ISupplierInvoice {
   invoiceItems: IInvoiceItem[];
   discount: number;
   totalPrice: number;
+  interest: number;
 }

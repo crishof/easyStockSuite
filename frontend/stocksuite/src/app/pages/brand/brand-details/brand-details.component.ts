@@ -113,7 +113,6 @@ export class BrandDetailsComponent implements OnInit {
     this._productService.getBrandProductsQuantity(brandId).subscribe(
       (quantity: number) => {
         this.productsQuantity = quantity;
-        console.log(this.productsQuantity);
       },
       (error) => {
         console.error('Error getting products quantity:', error);

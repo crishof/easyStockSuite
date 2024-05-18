@@ -58,9 +58,6 @@ export class CategoryDetailsComponent implements OnChanges {
 
   private subscribeToCategoryUpdatedEvent(): void {
     this._categoryService.getCategoryUpdatedObservable().subscribe(() => {
-      console.log(
-        'Evento categoryUpdated recibido en CategoryDetailsComponent'
-      );
       this.loadCategoryData();
     });
   }

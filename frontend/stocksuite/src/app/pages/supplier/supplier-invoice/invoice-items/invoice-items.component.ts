@@ -34,7 +34,7 @@ export class InvoiceItemsComponent {
       items: this.formBuilder.array([]),
       price: '',
       taxRate: '',
-      discount: '',
+      discountRate: '',
       quantity: '',
     });
 
@@ -49,7 +49,7 @@ export class InvoiceItemsComponent {
     return this.formBuilder.group({
       price: [item.price],
       taxRate: [item.taxRate],
-      discount: [item.discount],
+      discountRate: [item.discountRate],
       quantity: [item.quantity],
     });
   }
@@ -65,7 +65,7 @@ export class InvoiceItemsComponent {
   }
 
   setDiscount(index: number, discount: number): void {
-    this.invoiceItems[index].discount = discount;
+    this.invoiceItems[index].discountRate = discount;
     this.invoiceItemsChange.emit(this.invoiceItems);
   }
 

@@ -5,6 +5,6 @@ export interface IInvoiceItem {
   description: string;
   price: number;
   taxRate: number;
-  discount: number;
+  discountRate: number;
   quantity: number;
 }

@@ -42,6 +42,8 @@ public class ProductServiceImpl implements ProductService {
         product.setSupplierProductId(productRequest.getSupplierProductId());
         product.setHidden(false);
 
+        //TODO set stocks ids
+
         ResponseEntity<?> response = priceApiClient.save(new PriceRequest(
                 productRequest.getPurchasePrice(),
                 productRequest.getSellingPrice(),
@@ -69,8 +71,8 @@ public class ProductServiceImpl implements ProductService {
 
         for (SupplierInvoiceItem invoiceItem : invoiceItems) {
 
-            Product product = productRepository.findById(invoiceItem.getId())
-                    .orElseThrow(() -> new ProductNotFoundException(invoiceItem.getId()));
+            Product product = productRepository.findById(invoiceItem.getProductId())
+                    .orElseThrow(() -> new ProductNotFoundException(invoiceItem.getProductId()));
 
             StockRequest stockRequest = new StockRequest();
             stockRequest.setQuantity(invoiceItem.getQuantity());

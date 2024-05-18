@@ -19,7 +19,6 @@ export class BrandService {
   }
 
   updateBrand(id: string, formData: FormData): Observable<IBrand> {
-    console.log(`${this._urlBase}/update/${id}`);
     return this._http.put<IBrand>(`${this._urlBase}/update/${id}`, formData);
   }
 

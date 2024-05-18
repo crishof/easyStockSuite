@@ -1,15 +1,13 @@
 package com.crishof.supplierinvoicesv.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.UUID;
 
 @Entity
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "tbl_invoice_item")
@@ -17,9 +15,10 @@ import java.util.UUID;
 public class InvoiceItem {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    private UUID productId;
     private Integer quantity;
     private Double price;
     private Double taxRate;

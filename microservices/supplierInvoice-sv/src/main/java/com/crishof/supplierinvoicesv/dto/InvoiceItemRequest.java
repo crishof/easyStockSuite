@@ -12,7 +12,6 @@ import java.util.UUID;
 public class InvoiceItemRequest {
 
     private UUID id;
-
     private Integer quantity;
     private Double price;
     private Double taxRate;

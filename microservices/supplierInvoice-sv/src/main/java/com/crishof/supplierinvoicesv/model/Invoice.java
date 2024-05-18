@@ -19,17 +19,58 @@ import java.util.UUID;
 @Table(name = "tbl_invoice")
 public class Invoice {
 
-    @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL)
-    List<InvoiceItem> invoiceItems = new ArrayList<>();
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-    private String invoiceNumber;
+
+    private UUID supplierId;
+
+    private String location;
+
+    private UUID branchId;
+    private UUID locationId;
+
     private LocalDate invoiceDate;
     private LocalDate dueDate;
-    private LocalDate receivedDate;
+    private LocalDate receptionDate;
+    private LocalDate savedDate;
+
+    private String invoiceType;
+    private String invoiceNumber;
+    private String packingListNumber;
+
+    @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL)
+    List<InvoiceItem> invoiceItems = new ArrayList<>();
+
+    private boolean fixedAsset;
+
+    private String observations;
+
+    private double subtotal1;
     private Double discount;
-    private Double total;
-    private UUID supplierId;
+    private double interest;
+    private double subtotal2;
+
+    private double netValue21;
+    private double vat21;
+    private double netValue105;
+    private double vat105;
+    private double netValue27;
+    private double vat27;
+    private double netValue0;
+
+    private double internalTax;
+
+    private double withholdingVat;
+    private double withholdingSuss;
+    private double withholdingGrossReceiptsTax;
+    private double withholdingIncome;
+    private double stateTax;
+    private double localTax;
+
+    private double rounding;
+
+    private double totalPrice;
+
 
 }

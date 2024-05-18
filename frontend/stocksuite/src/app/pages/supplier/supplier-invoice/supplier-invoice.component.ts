@@ -22,6 +22,11 @@ import { ISupplier } from '../../../model/supplier.model';
 import { SupplierService } from '../../../services/supplier.service';
 import { ISupplierInvoice } from '../../../model/supplier-invoice.model';
 import { IInvoiceItem } from '../../../model/invoice-item.model';
+import { SupplierInvoiceService } from '../../../services/supplier-invoice.service';
+import { error } from 'console';
+import { BranchService } from '../../../services/branch.service';
+import { ILocation } from '../../../model/location.model';
+import { IBranch } from '../../../model/branch.model';
 
 @Component({
   selector: 'app-supplier-invoice',
@@ -56,10 +61,15 @@ export class SupplierInvoiceComponent implements OnInit {
   selectedComponent: string = 'header';
 
   suppliers: any[] = [];
+  branches: IBranch[] = [];
+  locations: ILocation[] = [];
   supplierList: ISupplier[] = [];
   selectedSupplierId: string = '';
+  selectedBranchId: string = '';
 
   _supplierInvoice?: ISupplierInvoice;
+  _supplierInvoiceService = inject(SupplierInvoiceService);
+  _branchService = inject(BranchService);
 
   productList: IProduct[] = [];
   invoiceItems: IInvoiceItem[] = [];
@@ -68,10 +78,18 @@ export class SupplierInvoiceComponent implements OnInit {
   isFormSubmitted: boolean = false;
   searchTerm: string = '';
 
+  totalInvoiceUnits: number = 0;
+
   invoiceItemsFormArray: FormArray<FormGroup> = new FormArray<FormGroup>([]);
+
+  vat21: number = 0.21;
+  vat105: number = 0.105;
+  vat27: number = 0.27;
+  vat0: number = 0;
 
   ngOnInit(): void {
     this.loadSuppliers();
+    this.loadBranches();
     this.dateControl.setValue(new Date());
 
     this.initForm();
@@ -85,7 +103,8 @@ export class SupplierInvoiceComponent implements OnInit {
       receptionDate: new Date(),
       dueDate: new Date(),
       savedDate: new Date(),
-      location: '',
+      branchId: '',
+      locationId: '',
       packingListPrefix: '',
       packingListNumber: '',
       invoicePrefix: '',
@@ -95,20 +114,197 @@ export class SupplierInvoiceComponent implements OnInit {
       fixedAsset: false,
       askForPriceUpdate: false,
       observations: '',
+
+      subtotal1: '',
       discount: '',
+      interest: '',
+      subtotal2: '',
+
+      netValue21: '',
+      netValue105: '',
+      netValue27: '',
+      netValue0: '',
+
+      vat21: '',
+      vat105: '',
+      vat27: '',
+      internalTax: '',
+
+      rounding: '',
       totalPrice: '',
+      withholdingVat: '',
+      withholdingSuss: '',
+      withholdingGrossReceiptsTax: '',
+      withholdingIncome: '',
+      stateTax: '',
+      localTax: '',
+    });
+
+    // Suscribirse a los cambios en el control branchId
+    this.invoiceForm.get('branchId')!.valueChanges.subscribe((branchId) => {
+      this.onBranchChange(branchId);
     });
   }
 
   onInvoiceItemChange(updatedItems: IInvoiceItem[]): void {
     this.invoiceItems = updatedItems;
+    this.getTotalInvoiceUnits();
+  }
+
+  getTotalInvoiceUnits(): void {
+    this.totalInvoiceUnits = Number(
+      this.invoiceItems.reduce((total, item) => total + item.quantity, 0)
+    );
+  }
+
+  getSubtotal1(): number {
+    const subtotal1 = this.invoiceItems.reduce((total, item) => {
+      const discount = item.discountRate ?? 0;
+      const discountedPrice = item.price * ((100 - discount) / 100);
+      return total + discountedPrice * item.quantity;
+    }, 0);
+
+    this.invoiceForm.patchValue({
+      subtotal1: subtotal1,
+    });
+
+    return subtotal1;
+  }
+
+  getSubtotal2(): number {
+    const subtotal1 = this.invoiceForm.get('subtotal1')?.value;
+    const discount = this.invoiceForm.get('discount')?.value;
+    const interest = this.invoiceForm.get('interest')?.value;
+
+    let subtotal2 = subtotal1;
+
+    if (discount !== 0) {
+      const discountPercentage = Math.min(Math.max(discount, 0), 100) / 100;
+      subtotal2 *= 1 - discountPercentage;
+    }
+
+    if (interest !== 0) {
+      const interestPercentage = Math.min(Math.max(interest, 0), 100) / 100;
+      subtotal2 *= 1 + interestPercentage;
+    }
+
+    this.invoiceForm.patchValue({
+      subtotal2: subtotal2,
+    });
+
+    return subtotal2;
+  }
+
+  getNetVat(vat: number): number {
+    return this.calculateNetVat(vat);
+  }
+
+  calculateNetVat(vat: number): number {
+    const discount = parseFloat(this.invoiceForm.get('discount')?.value || '0');
+    const interest = parseFloat(this.invoiceForm.get('interest')?.value || '0');
+
+    const total = this.invoiceItems.reduce((acc, item) => {
+      if (item.taxRate == vat) {
+        const itemDiscount = item.discountRate ?? 0;
+        return acc + item.price * ((100 - itemDiscount) / 100);
+      } else {
+        return acc;
+      }
+    }, 0);
+
+    const netVat = total * ((100 - discount) / 100) * ((100 + interest) / 100);
+
+    switch (vat) {
+      case this.vat21:
+        this.invoiceForm.patchValue({
+          netVat21: netVat,
+        });
+        break;
+      case this.vat105:
+        this.invoiceForm.patchValue({
+          netVat105: netVat,
+        });
+        break;
+      case this.vat27:
+        this.invoiceForm.patchValue({
+          netVat27: netVat,
+        });
+        break;
+      case this.vat0:
+        this.invoiceForm.patchValue({
+          netVat0: netVat,
+        });
+        break;
+    }
+
+    return netVat;
+  }
+
+  getVatAmount(vat: number): number {
+    return this.calculateVat(vat);
+  }
+
+  calculateVat(vat: number): number {
+    const netVat: number = this.getNetVat(vat);
+    const calculatedVat: number = (netVat * ((100 + vat) / 100) - netVat) * 100;
+
+    switch (vat) {
+      case this.vat21:
+        this.invoiceForm.patchValue({
+          vat21: calculatedVat,
+        });
+        break;
+      case this.vat105:
+        this.invoiceForm.patchValue({
+          vat105: calculatedVat,
+        });
+        break;
+      case this.vat27:
+        this.invoiceForm.patchValue({
+          vat27: calculatedVat,
+        });
+        break;
+    }
+
+    return calculatedVat;
+  }
+
+  getInternalTax() {}
+
+  getInvoiceTotal() {
+    const total: number =
+      parseFloat(this.invoiceForm.get('subtotal2')?.value || '0') +
+      parseFloat(this.invoiceForm.get('vat21')?.value || '0') +
+      parseFloat(this.invoiceForm.get('vat105')?.value || '0') +
+      parseFloat(this.invoiceForm.get('vat27')?.value || '0') +
+      parseFloat(this.invoiceForm.get('withholdingVat')?.value || '0') +
+      parseFloat(this.invoiceForm.get('withholdingSuss')?.value || '0') +
+      parseFloat(
+        this.invoiceForm.get('withholdingGrossReceiptsTax')?.value || '0'
+      ) +
+      parseFloat(this.invoiceForm.get('withholdingIncome')?.value || '0') +
+      parseFloat(this.invoiceForm.get('stateTax')?.value || '0') +
+      parseFloat(this.invoiceForm.get('localTax')?.value || '0') +
+      parseFloat(this.invoiceForm.get('rounding')?.value || '0');
+
+    this.invoiceForm.patchValue({
+      totalPrice: total,
+    });
+    return total;
   }
 
   saveInvoice() {
     const formData = this.invoiceForm.value;
-    formData.invoiceItem = this.invoiceItems;
+    formData.invoiceItemsRequest = this.invoiceItems;
 
-    console.log(formData);
+    this._supplierInvoiceService.saveInvoice(formData).subscribe(
+      (response) => {
+        console.log(response.message);
+      },
+      (error) => {
+        console.error(error.message);
+      }
+    );
   }
 
   selectProduct(product: IProduct): void {
@@ -119,7 +315,7 @@ export class SupplierInvoiceComponent implements OnInit {
       description: product.description,
       price: product.priceResponse.purchasePrice,
       taxRate: product.priceResponse.taxRate,
-      discount: product.priceResponse.discount,
+      discountRate: product.priceResponse.discount,
       quantity: 1,
     };
     this.invoiceItems.push(invoiceItem);
@@ -138,6 +334,28 @@ export class SupplierInvoiceComponent implements OnInit {
 
   onSupplierChange(supplierId: any) {
     this.selectedSupplierId = supplierId;
+  }
+
+  loadBranches() {
+    this._branchService.getBranches().subscribe(
+      (branches: IBranch[]) => {
+        this.branches = branches;
+      },
+      (error) => {
+        console.log('Error loading branches list', error);
+      }
+    );
+  }
+
+  onBranchChange(branchId: string) {
+    this.selectedBranchId = branchId;
+    this.getLocations(branchId);
+    this.invoiceForm.get('locationId')!.setValue('');
+  }
+
+  getLocations(branchId: string) {
+    const branch = this.branches.find((branch) => branch.id == branchId);
+    this.locations = branch ? branch.locations : [];
   }
 
   handleSearch(searchTerm: string): void {
@@ -175,7 +393,6 @@ export class SupplierInvoiceComponent implements OnInit {
   }
 
   searchProductsWithStock(searchTerm: string): void {
-    console.log('searchTerm' + searchTerm);
     if (this.subscription) {
       this.subscription.unsubscribe();
     }

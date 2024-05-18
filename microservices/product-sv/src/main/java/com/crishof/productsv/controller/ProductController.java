@@ -66,6 +66,8 @@ public class ProductController {
     @PutMapping("/invoice")
     public String updateProductStockAndPrices(@RequestBody InvoiceUpdateRequest invoiceUpdateRequest) {
 
+
+
         return productService.updateFromInvoice(invoiceUpdateRequest);
     }
 

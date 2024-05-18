@@ -52,18 +52,11 @@ export class CategoryEditComponent implements OnInit {
     const formData = new FormData();
     formData.append('name', updatedCategory.name);
 
-    console.log(
-      'Enviando evento categoryUpdated con la categoría actualizada:',
-      updatedCategory
-    );
-
-    console.log(updatedCategory.name);
-
     this._categoryService
       .updateCategory(updatedCategory.id, formData)
       .subscribe(
         (response) => {
-          console.log('Category actualizada: ', response);
+          console.log('Category updated: ', response);
           this.categoryUpdated.emit();
 
           this.categoryUpdatedSubject.next(response);
@@ -71,7 +64,7 @@ export class CategoryEditComponent implements OnInit {
           this.onSave.emit(response);
         },
         (error) => {
-          console.log('Error al actualizar:', error);
+          console.log('Error updating category:', error);
         }
       );
   }
@@ -88,14 +81,14 @@ export class CategoryEditComponent implements OnInit {
         .updateCategoryImage(this.category?.id, this.selectedFile)
         .subscribe(
           (response) => {
-            console.log('Image actualizado: ', response);
+            console.log('Image updated: ', response);
 
             this.categoryUpdatedSubject.next(response);
 
             this.onSave.emit(response);
           },
           (error) => {
-            console.log('Error al actualizar el image:', error);
+            console.log('Error updating image:', error);
           }
         );
     } else {

@@ -109,7 +109,6 @@ export class BrandComponent implements OnInit {
   }
 
   searchBrand() {
-    console.log('searchBrand Called' + this.searchTerm);
     this.filterBrands(this.searchTerm);
   }
 }

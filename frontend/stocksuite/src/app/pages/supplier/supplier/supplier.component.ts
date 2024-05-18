@@ -44,7 +44,6 @@ export class SupplierComponent implements OnInit {
   }
 
   onFormSubmit() {
-    console.log('FORM SUCCESS');
     this.isFormSubmitted = true;
     if (this.searchTerm.length > 0) {
       this.searchSuppliers();
@@ -60,7 +59,6 @@ export class SupplierComponent implements OnInit {
       .getAllByFilter(this.searchTerm)
       .subscribe((data: ISupplier[]) => {
         this.supplierList = data;
-        console.log(this.supplierList);
       });
   }
 
