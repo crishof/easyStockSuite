@@ -135,7 +135,7 @@ export class SupplierPriceListComponent implements OnInit {
         },
         (error) => {
           console.log('Error saving products', error);
-          this.errorMessage = error;
+          this.errorMessage = error.message;
         }
       );
     }

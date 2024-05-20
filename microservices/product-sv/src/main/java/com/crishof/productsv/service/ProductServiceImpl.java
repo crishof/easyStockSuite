@@ -42,7 +42,7 @@ public class ProductServiceImpl implements ProductService {
         product.setSupplierProductId(productRequest.getSupplierProductId());
         product.setHidden(false);
 
-        //TODO set stocks ids
+        product.setStockIds(new ArrayList<>());
 
         ResponseEntity<?> response = priceApiClient.save(new PriceRequest(
                 productRequest.getPurchasePrice(),
