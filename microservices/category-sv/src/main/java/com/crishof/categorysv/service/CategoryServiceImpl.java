@@ -8,7 +8,7 @@ import com.crishof.categorysv.exception.CategoryDeleteException;
 import com.crishof.categorysv.exception.CategoryNotFoundException;
 import com.crishof.categorysv.exception.DuplicateNameException;
 import com.crishof.categorysv.model.Category;
-import com.crishof.categorysv.modelMapper.CategoryMapper;
+import com.crishof.categorysv.modelmapper.CategoryMapper;
 import com.crishof.categorysv.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
