@@ -67,7 +67,6 @@ public class ProductController {
     public String updateProductStockAndPrices(@RequestBody InvoiceUpdateRequest invoiceUpdateRequest) {
 
 
-
         return productService.updateFromInvoice(invoiceUpdateRequest);
     }
 
@@ -84,7 +83,11 @@ public class ProductController {
     }
 
     @GetMapping("/getAllByFilter")
-    public List<ProductResponse> getAllByFilter(@RequestParam String filter) {
+    public List<ProductResponse> getAllByFilter(@RequestParam String filter, @RequestParam(required = false) UUID supplierId) {
+
+        if (supplierId != null) {
+            return productService.getAllByFilterAndSupplier(filter, supplierId);
+        }
         return productService.getAllByFilter(filter);
     }
 

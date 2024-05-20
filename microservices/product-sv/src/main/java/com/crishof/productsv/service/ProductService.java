@@ -23,6 +23,8 @@ public interface ProductService {
 
     List<ProductResponse> getAllByFilter(String filter);
 
+    List<ProductResponse> getAllByFilterAndSupplier(String filter, UUID supplierId);
+
     List<ProductResponse> getAllByFilterAndStock(String filter);
 
     boolean checkProductsByBrand(UUID brandId);

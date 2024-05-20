@@ -9,5 +9,5 @@ import java.util.UUID;
 @Repository
 public interface StockRepository extends JpaRepository<Stock, UUID> {
 
-    Stock findByBranchIdAndLocationId (UUID branchId, UUID locationId);
+    Stock findByBranchIdAndLocationId(UUID branchId, UUID locationId);
 }
