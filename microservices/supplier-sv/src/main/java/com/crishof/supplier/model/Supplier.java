@@ -1,6 +1,5 @@
 package com.crishof.supplier.model;
 
-import com.crishof.supplier.dto.SupplierRequest;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,11 +23,5 @@ public class Supplier {
     private String name;
     private String taxId;
     private String legalName;
-
-    public Supplier(SupplierRequest supplierRequest) {
-        this.name = supplierRequest.getName();
-        this.taxId = supplierRequest.getTaxId();
-        this.legalName = supplierRequest.getLegalName();
-    }
 }
 
