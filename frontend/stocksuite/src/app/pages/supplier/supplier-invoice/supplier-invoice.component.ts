@@ -11,6 +11,7 @@ import {
   FormGroup,
   FormsModule,
   ReactiveFormsModule,
+  Validators,
 } from '@angular/forms';
 import { ProductSearchComponent } from '../../product/product-search/product-search.component';
 import { ProductListComponent } from '../../product/product-list/product-list.component';
@@ -67,6 +68,8 @@ export class SupplierInvoiceComponent implements OnInit {
   selectedSupplierId: string = '';
   selectedBranchId: string = '';
 
+  filterByThisSupplier: boolean = false;
+
   _supplierInvoice?: ISupplierInvoice;
   _supplierInvoiceService = inject(SupplierInvoiceService);
   _branchService = inject(BranchService);
@@ -97,47 +100,47 @@ export class SupplierInvoiceComponent implements OnInit {
 
   initForm(): void {
     this.invoiceForm = this.formBuilder.group({
-      supplierId: '',
-      invoiceType: '',
-      invoiceDate: new Date(),
+      supplierId: ['', Validators.required],
+      invoiceType: ['', Validators.required],
+      invoiceDate: [new Date(), Validators.required],
       receptionDate: new Date(),
       dueDate: new Date(),
       savedDate: new Date(),
-      branchId: '',
-      locationId: '',
-      packingListPrefix: '',
-      packingListNumber: '',
-      invoicePrefix: '',
-      invoiceNumber: '',
+      branchId: ['', Validators.required],
+      locationId: ['', Validators.required],
+      packingListPrefix: 0,
+      packingListNumber: 0,
+      invoicePrefix: [0, Validators.required],
+      invoiceNumber: [0, Validators.required],
       saveStocks: true,
       taxSave: true,
       fixedAsset: false,
       askForPriceUpdate: false,
       observations: '',
 
-      subtotal1: '',
-      discount: '',
-      interest: '',
-      subtotal2: '',
+      subtotal1: 0,
+      discount: 0,
+      interest: 0,
+      subtotal2: 0,
 
-      netValue21: '',
-      netValue105: '',
-      netValue27: '',
-      netValue0: '',
+      netValue21: 0,
+      netValue105: 0,
+      netValue27: 0,
+      netValue0: 0,
 
-      vat21: '',
-      vat105: '',
-      vat27: '',
-      internalTax: '',
+      vat21: 0,
+      vat105: 0,
+      vat27: 0,
+      internalTax: 0,
 
-      rounding: '',
-      totalPrice: '',
-      withholdingVat: '',
-      withholdingSuss: '',
-      withholdingGrossReceiptsTax: '',
-      withholdingIncome: '',
-      stateTax: '',
-      localTax: '',
+      withholdingVat: 0,
+      withholdingSuss: 0,
+      withholdingGrossReceiptsTax: 0,
+      withholdingIncome: 0,
+      stateTax: 0,
+      localTax: 0,
+      rounding: 0,
+      totalPrice: 0,
     });
 
     // Suscribirse a los cambios en el control branchId
@@ -296,15 +299,32 @@ export class SupplierInvoiceComponent implements OnInit {
   saveInvoice() {
     const formData = this.invoiceForm.value;
     formData.invoiceItemsRequest = this.invoiceItems;
+    if (this.invoiceForm.valid && this.invoiceItems.length > 0) {
+      this._supplierInvoiceService.saveInvoice(formData).subscribe(
+        (response) => {
+          console.log(response.message);
+        },
+        (error) => {
+          console.error(error.message);
+        }
+      );
+    } else {
+      // El formulario no es válido, imprime los campos inválidos y sus errores
+      console.log('El formulario no es válido. Campos inválidos:');
+      Object.keys(this.invoiceForm.controls).forEach((key) => {
+        const control = this.invoiceForm.get(key);
+        if (control?.errors) {
+          console.log(key + ':', control.errors);
+        }
+      });
 
-    this._supplierInvoiceService.saveInvoice(formData).subscribe(
-      (response) => {
-        console.log(response.message);
-      },
-      (error) => {
-        console.error(error.message);
-      }
-    );
+      // Marca los campos inválidos como tocados para mostrar mensajes de error en el HTML
+      Object.values(this.invoiceForm.controls).forEach((control) => {
+        if (control instanceof FormControl) {
+          control.markAsTouched();
+        }
+      });
+    }
   }
 
   selectProduct(product: IProduct): void {
@@ -358,10 +378,24 @@ export class SupplierInvoiceComponent implements OnInit {
     this.locations = branch ? branch.locations : [];
   }
 
+  onThisSupplierChange(): void {
+    if (this.filterByThisSupplier) {
+      this.filterByThisSupplier = false;
+      this.selectedSupplierId = '';
+    } else {
+      this.filterByThisSupplier = true;
+      this.selectedSupplierId = this.invoiceForm.get('supplierId')?.value;
+    }
+  }
+
   handleSearch(searchTerm: string): void {
     this.isFormSubmitted = true;
     if (searchTerm.length >= 3) {
-      this.searchProducts(searchTerm);
+      if (this.filterByThisSupplier && this.selectedSupplierId) {
+        this.searchProducts(searchTerm, this.selectedSupplierId);
+      } else {
+        this.searchProducts(searchTerm);
+      }
     } else {
       this.productList = [];
     }
@@ -370,18 +404,22 @@ export class SupplierInvoiceComponent implements OnInit {
   handleSearchWithStock(searchTerm: string): void {
     this.isFormSubmitted = true;
     if (searchTerm.length >= 3) {
-      this.searchProductsWithStock(searchTerm);
+      if (this.filterByThisSupplier && this.selectedSupplierId) {
+        this.searchProductsWithStock(searchTerm, this.selectedSupplierId);
+      } else {
+        this.searchProductsWithStock(searchTerm);
+      }
     } else {
       this.productList = [];
     }
   }
 
-  searchProducts(searchTerm: string): void {
+  searchProducts(searchTerm: string, supplierId?: string): void {
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
     this.subscription = this._productService
-      .getAllByFilter(searchTerm)
+      .getAllByFilter(searchTerm, supplierId)
       .subscribe({
         next: (data: IProduct[]) => {
           this.productList = data;
@@ -392,12 +430,12 @@ export class SupplierInvoiceComponent implements OnInit {
       });
   }
 
-  searchProductsWithStock(searchTerm: string): void {
+  searchProductsWithStock(searchTerm: string, supplierId?: string): void {
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
     this.subscription = this._productService
-      .getAllByFilterAndStock(searchTerm)
+      .getAllByFilterAndStock(searchTerm, supplierId)
       .subscribe({
         next: (data: IProduct[]) => {
           this.productList = data;

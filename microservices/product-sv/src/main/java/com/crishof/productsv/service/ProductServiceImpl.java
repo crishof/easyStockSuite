@@ -75,6 +75,7 @@ public class ProductServiceImpl implements ProductService {
                     .orElseThrow(() -> new ProductNotFoundException(invoiceItem.getProductId()));
 
             StockRequest stockRequest = new StockRequest();
+            stockRequest.setProductId(invoiceItem.getProductId());
             stockRequest.setQuantity(invoiceItem.getQuantity());
             stockRequest.setBranchId(invoiceUpdateRequest.getBranchId());
             stockRequest.setLocationId(invoiceUpdateRequest.getLocationId());
@@ -148,6 +149,11 @@ public class ProductServiceImpl implements ProductService {
         products.addAll(productRepository.findAllByDescriptionContainingIgnoreCase(filter));
 
         return products.stream().map(this::toProductResponse).distinct().toList();
+    }
+
+    @Override
+    public List<ProductResponse> getAllByFilterAndSupplier(String filter, UUID supplierId) {
+        return this.getAllByFilter(filter).stream().filter(product -> product.getSupplierId().equals(supplierId)).toList();
     }
 
     @Override

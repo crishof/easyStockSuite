@@ -20,12 +20,15 @@ public class StockServiceImpl implements StockService {
     @Override
 
     public StockResponse save(StockRequest stockRequest) {
-        Stock stock = stockRepository.findByBranchIdAndLocationId(stockRequest.getBranchId(), stockRequest.getLocationId());
+
+        Stock stock = stockRepository.findByProductIdAndBranchIdAndLocationId(stockRequest.getProductId(), stockRequest.getBranchId(), stockRequest.getLocationId());
+
         if (stock == null) {
             stock = new Stock();
         }
         stock.setMin(stockRequest.getMin());
         stock.setMax(stockRequest.getMax());
+        stock.setProductId(stockRequest.getProductId());
         stock.setQuantity(stock.getQuantity() + stockRequest.getQuantity());
         stock.setBranchId(stockRequest.getBranchId());
         stock.setLocationId(stockRequest.getLocationId());

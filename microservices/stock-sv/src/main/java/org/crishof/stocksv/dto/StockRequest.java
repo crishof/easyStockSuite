@@ -11,6 +11,7 @@ import java.util.UUID;
 @NoArgsConstructor
 public class StockRequest {
 
+    private UUID productId;
     private int quantity;
     private UUID branchId;
     private UUID locationId;

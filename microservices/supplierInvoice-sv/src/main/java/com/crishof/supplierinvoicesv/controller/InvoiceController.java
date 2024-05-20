@@ -4,6 +4,7 @@ import com.crishof.supplierinvoicesv.dto.InvoiceRequest;
 import com.crishof.supplierinvoicesv.dto.InvoiceResponse;
 import com.crishof.supplierinvoicesv.repository.InvoiceRepository;
 import com.crishof.supplierinvoicesv.service.InvoiceService;
+import com.sun.tools.jconsole.JConsoleContext;
 import com.sun.tools.jconsole.JConsolePlugin;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -28,10 +29,9 @@ public class InvoiceController {
 
     @PostMapping("/save")
     public ResponseEntity<Object> save(@RequestBody InvoiceRequest invoiceRequest) {
-        try {
-            
-            InvoiceResponse invoiceResponse = invoiceService.save(invoiceRequest);
 
+        try {
+            InvoiceResponse invoiceResponse = invoiceService.save(invoiceRequest);
             return ResponseEntity.ok().body(Map.of("message", "Invoice saved successfully " + invoiceResponse ));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", "Failed to save invoice"));
