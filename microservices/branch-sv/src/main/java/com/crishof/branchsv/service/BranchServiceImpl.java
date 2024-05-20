@@ -62,15 +62,9 @@ public class BranchServiceImpl implements BranchService {
     }
 
     @Override
-    public BranchResponse updateLocation(UUID branchId, UUID locationId, String name) {
+    public BranchResponse updateLocation(UUID branchId, UUID locationId, String name) throws BranchNotFoundException {
 
-        Optional<Branch> optionalBranch = branchRepository.findById(branchId);
-
-        if (optionalBranch.isEmpty()) {
-            throw new EntityNotFoundException("Branch with ID " + branchId + " not found");
-        }
-
-        Branch branch = optionalBranch.get();
+        Branch branch = this.getBranchById(branchId);
 
         Optional<StockLocation> optionalLocation = branch.getLocations().stream()
                 .filter(location -> location.getId().equals(locationId))
@@ -87,15 +81,9 @@ public class BranchServiceImpl implements BranchService {
     }
 
     @Override
-    public BranchResponse deleteLocation(UUID branchId, UUID locationId) {
+    public BranchResponse deleteLocation(UUID branchId, UUID locationId) throws BranchNotFoundException {
 
-        Optional<Branch> optionalBranch = branchRepository.findById(branchId);
-
-        if (optionalBranch.isEmpty()) {
-            throw new EntityNotFoundException("Branch with ID " + branchId + " not found");
-        }
-
-        Branch branch = optionalBranch.get();
+        Branch branch = this.getBranchById(branchId);
 
         Optional<StockLocation> optionalLocation = branch.getLocations().stream()
                 .filter(stockLocation -> stockLocation.getId().equals(locationId))
@@ -118,20 +106,24 @@ public class BranchServiceImpl implements BranchService {
                 .map(this::toBranchResponse).toList();
     }
 
-    private BranchResponse toBranchResponse(Branch branch) {
-        BranchResponse branchResponse = new BranchResponse();
-        branchResponse.setId(branch.getId());
-        branchResponse.setName(branch.getName());
-        branchResponse.setLocations(branch.getLocations().stream().map(this::toLocationResponse).toList());
+    @Override
+    public Branch getBranchById(UUID branchId) throws BranchNotFoundException {
+        return branchRepository.findById(branchId).orElseThrow(BranchNotFoundException::new);
+    }
 
-        return branchResponse;
+    private BranchResponse toBranchResponse(Branch branch) {
+        return BranchResponse.builder()
+                .id(branch.getId())
+                .name(branch.getName())
+                .locations(branch.getLocations().stream().map(this::toLocationResponse).toList())
+                .build();
     }
 
     private LocationResponse toLocationResponse(StockLocation stockLocation) {
-        LocationResponse locationResponse = new LocationResponse();
-        locationResponse.setId(stockLocation.getId());
-        locationResponse.setName(stockLocation.getName());
-        return locationResponse;
+        return LocationResponse.builder()
+                .id(stockLocation.getId())
+                .name(stockLocation.getName())
+                .build();
     }
 }
 
