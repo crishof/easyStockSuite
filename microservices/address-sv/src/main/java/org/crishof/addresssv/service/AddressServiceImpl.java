@@ -47,8 +47,9 @@ public class AddressServiceImpl implements AddressService {
     }
 
     @Override
-    public AddressResponse deleteAddress(UUID addressId) {
-        return null;
+    public String deleteAddress(UUID addressId) {
+        addressRepository.deleteById(addressId);
+        return "Address successfully deleted";
     }
 
     private AddressResponse toAddressResponse(Address address) {

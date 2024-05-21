@@ -35,12 +35,19 @@ public class AddressController {
 
     @PostMapping("/save")
     public ResponseEntity<AddressResponse> save(@RequestBody AddressRequest addressRequest) {
+
+        System.out.println("addressRequest = " + addressRequest);
+
         return ResponseEntity.status(HttpStatus.CREATED).body(addressService.saveAddress(addressRequest));
+    }
+
+    @PostMapping("/createAndGetId")
+    public ResponseEntity<UUID> createAndGetId(@RequestBody(required = false) AddressRequest addressRequest) {
+        return ResponseEntity.status(HttpStatus.OK).body(addressService.saveAddress(addressRequest).getId());
     }
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> delete(@PathVariable UUID id) {
-        addressService.deleteAddress(id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Deleted Address");
+        return ResponseEntity.status(HttpStatus.OK).body(addressService.deleteAddress(id));
     }
 }

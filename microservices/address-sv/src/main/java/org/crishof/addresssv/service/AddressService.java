@@ -16,5 +16,5 @@ public interface AddressService {
 
     AddressResponse updateAddress(UUID addressId, AddressRequest addressRequest);
 
-    AddressResponse deleteAddress(UUID addressId);
+    String deleteAddress(UUID addressId);
 }
