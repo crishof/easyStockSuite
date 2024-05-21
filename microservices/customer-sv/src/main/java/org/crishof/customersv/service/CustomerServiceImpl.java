@@ -38,6 +38,11 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
+    public List<CustomerResponse> getAllByFilter(String filter) {
+        return customerRepository.findAllByFilter(filter).stream().map(this::toCustomerResponse).toList();
+    }
+
+    @Override
     public CustomerResponse getByEmail(String email) {
         return this.toCustomerResponse(customerRepository.findByEmail(email));
     }

@@ -16,6 +16,8 @@ public interface CustomerService {
 
     List<CustomerResponse> getAllByNameOrLastname(String name, String lastname);
 
+    List<CustomerResponse> getAllByFilter(String filter);
+
     CustomerResponse getByEmail(String email);
 
     CustomerResponse getByDni(String dni);
@@ -25,4 +27,5 @@ public interface CustomerService {
     CustomerResponse save(CustomerRequest customerRequest);
 
     String deleteById(UUID id);
+
 }

@@ -26,8 +26,18 @@ public class CustomerController {
     }
 
     @GetMapping("/getById/{id}")
-    public CustomerResponse getById(@PathVariable("id") UUID id) {
-        return customerService.getById(id);
+    public ResponseEntity<CustomerResponse> getById(@PathVariable("id") UUID id) {
+        return ResponseEntity.ok(customerService.getById(id));
+    }
+
+    @GetMapping("/getByDni")
+    public ResponseEntity<CustomerResponse> getByDni(@RequestParam("dni") String dni) {
+        return ResponseEntity.ok(customerService.getByDni(dni));
+    }
+
+    @GetMapping("/getAllByFilter")
+    public ResponseEntity<List<CustomerResponse>> getAllByFilter(@RequestParam("filter") String filter) {
+        return ResponseEntity.ok(customerService.getAllByFilter(filter));
     }
 
     @PostMapping("/save")
