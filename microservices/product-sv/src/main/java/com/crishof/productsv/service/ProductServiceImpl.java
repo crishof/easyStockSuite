@@ -305,5 +305,38 @@ public class ProductServiceImpl implements ProductService {
 
         return UUID.fromString(idString);
     }
+
+    @Override
+    public String importSupplierProducts(List<SupplierProductRequest> productList) {
+        int importedCount = 0;
+        int alreadyImportedCount = 0;
+
+        for (SupplierProductRequest request : productList) {
+
+            UUID brandId = this.getIdByName(request.getBrand(), BRAND_ENTITY);
+
+            if (productRepository.findByBrandIdAndAndModelAndDescriptionAndSupplierId(
+                    brandId, request.getModel(), request.getDescription(), request.getSupplierId()) == null) {
+
+                ProductRequest productRequest = new ProductRequest(request);
+                this.save(productRequest);
+                importedCount++;
+            } else {
+                alreadyImportedCount++;
+            }
+        }
+
+        String message = "Task completed successfully: ";
+        if (productList.isEmpty()) {
+            message = "Product list is empty";
+        }
+        if (importedCount > 0) {
+            message += " " + importedCount + " products imported";
+        }
+        if (alreadyImportedCount > 0) {
+            message += " " + alreadyImportedCount + " products already imported";
+        }
+        return message;
+    }
 }
 
