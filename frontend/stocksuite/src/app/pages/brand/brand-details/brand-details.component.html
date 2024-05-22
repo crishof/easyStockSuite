@@ -1,22 +1,26 @@
-<div class="container align-content-center">
-  <div class="container m-3 text-center">
+<div class="container">
+  <div>
     @if (loading) {
     <h5>Loading....</h5>
     } @if (!loading) { @if (!editingMode){ @if(!successMessage){
 
     <div class="card" style="width: 18rem">
-      @if (brand?.logo != null){
-      <img [src]="getLogoUrl(brand?.logo)" class="card-img-overlay" alt="..." />
+      @if (brand?.imageUrl != null){
+      <img [src]="brand?.imageUrl" alt="" class="card-img-overlay" />
+      } @else{
+      <img
+        src="../../../../assets/images/no-image-100.png"
+        alt=""
+        width="50px"
+        height="50px"
+      />
       }
+
       <div class="card-body">
         <hr />
         <h5 class="card-title">{{ brand?.name }}</h5>
+        <p>Number of Products: {{ productsQuantity }}</p>
         <hr />
-
-        <p class="card-text">
-          Some quick example text to build on the card title and make up the
-          bulk of the card's content.
-        </p>
 
         @if(brand != null && brand != undefined && !successMessage ){
         <div class="btn-group" role="group">
@@ -39,8 +43,7 @@
     </div>
 
     } @if(successMessage){
-
-    <div class="card bg-success text light">
+    <div class="card bg-success text-light">
       <h5>{{ successMessage }}</h5>
     </div>
     } @if(errorMessage){

@@ -1,0 +1,128 @@
+version: "3.8"
+services:
+  postgres:
+    image: postgres:latest
+    restart: always
+    ports:
+      - "5433:5432"
+    environment:
+      - DATABASE_HOST=127.0.0.1
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_URL=${POSTGRES_URL}
+#      - POSTGRES_DB=${POSTGRES_DB}
+#      - POSTGRES_MAX_CONNECTIONS=200
+    volumes:
+      - ../postgres:/var/lib/postgresql/data
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+    networks:
+      - 'stockSuite-network'
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "admin@admin.com"
+      PGADMIN_DEFAULT_PASSWORD: "admin"
+    ports:
+      - "80:80"
+    depends_on:
+      - postgres
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+    networks:
+      - 'stockSuite-network'
+  eureka-sv:
+    build: eureka-sv
+    ports:
+      - "8761:8761"
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+    networks:
+      - 'stockSuite-network'
+  api-gateway:
+    build: api-gateway
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+    ports:
+      - "443:443"
+    networks:
+      - 'stockSuite-network'
+#  config-server:
+#    build: config-server
+#    deploy:
+#      resources:
+#        limits:
+#          memory: 512M
+#    ports:
+#      - "8081:8081"
+#    networks:
+#      - 'stockSuite-network'
+  image-sv:
+    build: image-sv
+    environment:
+      - CLOUDINARY_CLOUD_NAME=${CLOUDINARY_CLOUD_NAME}
+      - CLOUDINARY_API_SECRET=${CLOUDINARY_API_SECRET}
+      - CLOUDINARY_API_KEY=${CLOUDINARY_API_KEY}
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+    ports:
+      - "9005:9005"
+    networks:
+      - 'stockSuite-network'
+  supplierpricelist-sv:
+    build: supplierPriceList-sv
+    environment:
+      - SUPABASE_URL=${SUPABASE_URL}
+      - SUPABASE_USER=${SUPABASE_USER}
+      - SUPABASE_PASSWORD=${SUPABASE_PASSWORD}
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+    ports:
+      - "9007:9007"
+    networks:
+      - 'stockSuite-network'
+#  product-sv:
+#    build: product-sv
+#    deploy:
+#      resources:
+#        limits:
+#          memory: 512M
+#    ports:
+#      - "9001:9001"
+#    networks:
+#      - 'stockSuite-network'
+#  brand-sv:
+#    build: brand-sv
+#    deploy:
+#      resources:
+#        limits:
+#          memory: 512M
+#    ports:
+#      - "9002:9002"
+#    networks:
+#      - 'stockSuite-network'
+#  category-sv:
+#    build: category-sv
+#    deploy:
+#      resources:
+#        limits:
+#          memory: 512M
+#    ports:
+#      - "9003:9003"
+#    networks:
+#      - 'stockSuite-network'
+networks:
+  stockSuite-network:
+    driver: bridge

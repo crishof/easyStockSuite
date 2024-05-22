@@ -1,0 +1,28 @@
+eureka:
+  client:
+    service-url:
+#      defaultZone: http://eureka-sv:8761/eureka
+      defaultZone: http://localhost:8761/eureka
+  instance:
+    lease-renewal-interval-in-seconds: 0
+
+server:
+  port: 8081
+
+spring:
+  application:
+    name: config-server
+    # Eliminar al usar el config en GIT
+  profiles:
+    active: native
+
+  cloud:
+    config:
+      server:
+        native:
+          search-locations: classpath:/configurations
+#        git:
+#          uri: https://github.com/crishof/easyStockSuite.git
+#          search-paths: /backend/config-data
+#          username: ${GIT_USER}
+#          password: ${GIT_PASSWORD}

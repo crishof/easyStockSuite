@@ -5,15 +5,20 @@ h1 {
   white-space: nowrap;
   font-size: small;
 }
-
-.table-container {
-  max-width: 100%;
-  overflow-x: auto;
-}
-#page-title {
-  margin: 30px;
+#tag-container {
+  height: 233px;
+  overflow: auto;
 }
 
-/*.table-responsive {
-  overflow: hidden;
-}*/
+.btn-group {
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 80%; /* Establece el ancho máximo al 100% del contenedor padre */
+  margin: 0 auto;
+  justify-content: space-between;
+}
+
+.btn-group > button {
+  flex: 1; /* Hace que los botones ocupen el mismo espacio dentro del contenedor */
+  /* margin-right: 5px;  Agrega un margen entre los botones */
+}

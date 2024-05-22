@@ -5,8 +5,9 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BrandEditComponent } from '../brand-edit/brand-edit.component';
 import { Subject } from 'rxjs';
-import { ConfirmDialogService } from '../../../services/confirm-dialog.service';
+import { ModalDialogService } from '../../../services/modal-dialog.service';
 import { DomSanitizer } from '@angular/platform-browser';
+import { ProductService } from '../../../services/product.service';
 
 @Component({
   selector: 'app-brand-details',
@@ -22,13 +23,16 @@ export class BrandDetailsComponent implements OnInit {
 
   private _route = inject(ActivatedRoute);
   private _brandService = inject(BrandService);
+  private _productService = inject(ProductService);
   private _router = inject(Router);
-  private _confirmDialogService = inject(ConfirmDialogService);
+  private _confirmDialogService = inject(ModalDialogService);
 
   private _sanitizer = inject(DomSanitizer);
 
   successMessage: string = '';
   errorMessage: string = '';
+
+  productsQuantity: number = 0;
 
   private brandUpdatedSubject: Subject<IBrand> = new Subject<IBrand>();
 
@@ -37,18 +41,22 @@ export class BrandDetailsComponent implements OnInit {
       this._brandService.getBrand(params['id']).subscribe((data: IBrand) => {
         this.brand = data;
         this.loading = false;
+        if (this.brand?.id) {
+          this.getBrandProductsQuantity();
+        }
       });
     });
 
     this.brandUpdatedSubject.subscribe((updatedBrand) => {
       if (updatedBrand) {
         this.brand = updatedBrand;
+        this.getBrandProductsQuantity();
       }
     });
   }
 
-  getLogoUrl(logo: any): any {
-    const base64Image = logo.content;
+  getImageUrl(image: any): any {
+    const base64Image = image.content;
     return this._sanitizer.bypassSecurityTrustResourceUrl(
       'data:image/jpeg;base64,' + base64Image
     );
@@ -60,10 +68,15 @@ export class BrandDetailsComponent implements OnInit {
 
   saveChanges(updatedBrand: IBrand): void {
     this.editingMode = false;
+    this.successMessage = 'Brand ' + updatedBrand.name + 'saved successfully';
     if (this.brandUpdatedSubject) {
       this.brandUpdatedSubject.next(updatedBrand);
     }
     this.brandUpdatedSubject.next(updatedBrand);
+  }
+
+  onSuccessMessageHandler(message: string) {
+    this.successMessage = message;
   }
 
   cancelEditing(): void {
@@ -91,6 +104,18 @@ export class BrandDetailsComponent implements OnInit {
       (error) => {
         this.errorMessage = error.error;
         this.successMessage = '';
+      }
+    );
+  }
+
+  getBrandProductsQuantity(): void {
+    const brandId = this.brand?.id ?? '';
+    this._productService.getBrandProductsQuantity(brandId).subscribe(
+      (quantity: number) => {
+        this.productsQuantity = quantity;
+      },
+      (error) => {
+        console.error('Error getting products quantity:', error);
       }
     );
   }

@@ -1,20 +1,21 @@
 <div class="container">
-  @if (loading) {
-  <h5>Loading....</h5>
-  } @if (!loading) {
-
-  <div class="card" style="width: 18rem">
-    <div class="card-header">
-      <h5 class="card-title">{{ product?.brandName }}</h5>
-      <h5 class="card-title">{{ product?.model }}</h5>
-      <h4>{{ product?.sellingPrice | currency }}</h4>
+  <div class="row">
+    <div class="col-md-6">
+      <p>{{ product?.id }}</p>
     </div>
-    <div class="card-body">
-      <p class="card-text">{{ product?.description }}</p>
-      <p class="card-text stock">Stock: {{ product?.stock }}</p>
-      <a href="#" class="btn btn-primary">Go somewhere</a>
+    <div class="col-md-6">
+      <p>Precio Oferta: {{ product?.priceResponse?.sellingPrice }}</p>
+      <p>Precio Lista: {{ product?.priceResponse?.sellingPrice }}</p>
     </div>
   </div>
 
-  }
+  <hr />
+
+  <div class="row">
+    <div>
+      <p>{{ product?.brandName }}</p>
+      <p>{{ product?.model }}</p>
+      <p>{{ product?.description }}</p>
+    </div>
+  </div>
 </div>

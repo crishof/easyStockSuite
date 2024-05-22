@@ -41,8 +41,8 @@ export class BrandComponent implements OnInit {
     this._router.navigate(['/brand/create']);
   }
 
-  getLogoUrl(logo: any): any {
-    const base64Image = logo.content;
+  getImageUrl(image: any): any {
+    const base64Image = image.content;
     return this._sanitizer.bypassSecurityTrustResourceUrl(
       'data:image/jpeg;base64,' + base64Image
     );
@@ -109,7 +109,6 @@ export class BrandComponent implements OnInit {
   }
 
   searchBrand() {
-    console.log('searchBrand Called' + this.searchTerm);
     this.filterBrands(this.searchTerm);
   }
 }

@@ -38,7 +38,7 @@ export class CategoryEditComponent implements OnInit {
   constructor(private formBuilder: FormBuilder) {
     this.categoryForm = formBuilder.group({
       categoryName: ['', [Validators.required]],
-      logo: [null],
+      image: [null],
     });
   }
   enviar(event: Event) {
@@ -52,18 +52,11 @@ export class CategoryEditComponent implements OnInit {
     const formData = new FormData();
     formData.append('name', updatedCategory.name);
 
-    console.log(
-      'Enviando evento categoryUpdated con la categoría actualizada:',
-      updatedCategory
-    );
-
-    console.log(updatedCategory.name);
-
     this._categoryService
       .updateCategory(updatedCategory.id, formData)
       .subscribe(
         (response) => {
-          console.log('Category actualizada: ', response);
+          console.log('Category updated: ', response);
           this.categoryUpdated.emit();
 
           this.categoryUpdatedSubject.next(response);
@@ -71,7 +64,7 @@ export class CategoryEditComponent implements OnInit {
           this.onSave.emit(response);
         },
         (error) => {
-          console.log('Error al actualizar:', error);
+          console.log('Error updating category:', error);
         }
       );
   }
@@ -82,20 +75,20 @@ export class CategoryEditComponent implements OnInit {
     this.selectedFile = event.target.files[0] as File;
   }
 
-  updateLogo(): void {
+  updateImage(): void {
     if (this.selectedFile && this.category?.id) {
       this._categoryService
-        .updateCategoryLogo(this.category?.id, this.selectedFile)
+        .updateCategoryImage(this.category?.id, this.selectedFile)
         .subscribe(
           (response) => {
-            console.log('Logo actualizado: ', response);
+            console.log('Image updated: ', response);
 
             this.categoryUpdatedSubject.next(response);
 
             this.onSave.emit(response);
           },
           (error) => {
-            console.log('Error al actualizar el logo:', error);
+            console.log('Error updating image:', error);
           }
         );
     } else {
@@ -106,7 +99,7 @@ export class CategoryEditComponent implements OnInit {
   ngOnInit(): void {
     this.categoryForm = this.formBuilder.group({
       categoryName: ['', Validators.required],
-      logo: [null],
+      image: [null],
     });
   }
 
