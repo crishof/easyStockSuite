@@ -5,55 +5,58 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.crishof.invoicesv.dto.InvoiceRequest;
-import org.crishof.invoicesv.dto.OrderProductsRequest;
-import org.crishof.invoicesv.enums.TransactionType;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
-@Data
+@Entity
 @AllArgsConstructor
 @NoArgsConstructor
+@Data
 @Builder
-@Entity
-@Table(name = "tbl_invoice")
+@Table(name = "tbl_customer_invoice")
 public class Invoice {
 
+    @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL)
+    List<InvoiceItem> invoiceItems = new ArrayList<>();
     @Id
-    @GeneratedValue
-    @Column(name = "invoice_id")
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
+    private UUID customerId;
+    private UUID branchId;
+    private LocalDate invoiceDate;
+    private String invoiceType;
+    private String invoiceNumber;
+    private String packingListNumber;
+    private boolean taxSave;
 
-    private Long invoiceNumber;
-    private LocalDate issueDate;
-    private LocalDate receptionDate;
-    private LocalDate dueDate;
+    private String observations;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "transaction_type")
-    private TransactionType transactionType;
+    private double subtotal1;
+    private Double discount;
+    private double interest;
+    private double subtotal2;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "tbl_invoice_product", joinColumns = @JoinColumn(name = "invoice_id"))
-    @MapKeyColumn(name = "product_id")
-    private List<OrderProductsRequest> productList;
+    private double netValue21;
+    private double vat21;
+    private double netValue105;
+    private double vat105;
+    private double netValue27;
+    private double vat27;
+    private double netValue0;
 
-    public Invoice(InvoiceRequest invoiceRequest) {
-        this.invoiceNumber = invoiceRequest.getInvoiceNumber();
-        this.issueDate = invoiceRequest.getIssueDate();
-        this.receptionDate = invoiceRequest.getReceptionDate();
-        this.dueDate = invoiceRequest.getReceptionDate();
-        this.transactionType = invoiceRequest.getTransactionType();
-    }
+    private double withholdingVat;
+    private double withholdingSuss;
+    private double withholdingGrossReceiptsTax;
+    private double withholdingIncome;
+    private double stateTax;
+    private double localTax;
 
-    public void updateFromRequest(InvoiceRequest invoiceRequest) {
-        this.setInvoiceNumber(invoiceRequest.getInvoiceNumber());
-        this.setDueDate(invoiceRequest.getDueDate());
-        this.setReceptionDate(invoiceRequest.getReceptionDate());
-        this.setIssueDate(invoiceRequest.getIssueDate());
-        this.setProductList(invoiceRequest.getProductList());
-    }
+    private double rounding;
+
+    private double totalPrice;
+
+
 }

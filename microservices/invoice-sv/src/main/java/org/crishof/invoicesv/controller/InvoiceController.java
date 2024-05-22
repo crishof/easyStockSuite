@@ -20,50 +20,30 @@ public class InvoiceController {
     private final InvoiceService invoiceService;
 
     @GetMapping("/getAll")
-    public List<InvoiceResponse> getAll() {
-        return invoiceService.getAll();
+    public ResponseEntity<List<InvoiceResponse>> getAll() {
+        return ResponseEntity.status(HttpStatus.OK).body(invoiceService.getAll());
     }
 
     @GetMapping("/getById/{id}")
-    public ResponseEntity<?> getById(@PathVariable("id") UUID id) {
-
+    public ResponseEntity<ApiResponse<InvoiceResponse>> getById(@PathVariable("id") UUID id) {
         try {
-            InvoiceResponse invoiceResponse = invoiceService.getById(id);
-            return ResponseEntity.ok(invoiceResponse);
+            return ResponseEntity.ok(new ApiResponse<>(invoiceService.getById(id)));
         } catch (InvoiceNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse<>(e.getMessage()));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponse<>(e.getMessage()));
         }
     }
 
-    @PostMapping("/save/purchase")
-    public ResponseEntity<?> savePurchaseInvoice(@RequestBody InvoiceRequest invoiceRequest) {
+    @PostMapping("/save")
+    public ResponseEntity<ApiResponse<InvoiceResponse>> savePurchaseInvoice(@RequestBody InvoiceRequest invoiceRequest) {
 
+        System.out.println("invoiceRequest = " + invoiceRequest);
         try {
-
-            return ResponseEntity.status(HttpStatus.OK).body("Invoice successfully saved");
+            return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse<>(invoiceService.save(invoiceRequest)));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error saving invoice: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponse<>("Error saving invoice: " + e.getMessage()));
         }
-    }
-
-//    @PostMapping("/save/sale")
-//    public String saveSaleInvoice(@RequestBody InvoiceRequest invoiceRequest, @RequestParam String customerName, @RequestParam String customerLastName, @RequestParam String customerDni) {
-//        try {
-//            Customer customer = customerService.save(customerName, customerLastName, customerDni);
-//            invoiceRequest.setEntityId(customer.getId());
-//            invoiceService.save(invoiceRequest);
-//            return "Invoice successfully saved";
-//        } catch (Exception e) {
-//            return "Error saving invoice: " + e.getMessage();
-//        }
-//    }
-
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> deleteById(@PathVariable("id") UUID id) {
-        invoiceService.deleteById(id);
-        return ResponseEntity.status(HttpStatus.OK).body("Invoice successfully deleted");
     }
 }
 
