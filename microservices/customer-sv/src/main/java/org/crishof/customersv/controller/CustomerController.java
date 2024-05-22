@@ -42,7 +42,9 @@ public class CustomerController {
 
     @PostMapping("/save")
     public ResponseEntity<CustomerResponse> save(@RequestBody CustomerRequest customerRequest) {
+
         System.out.println("customerRequest = " + customerRequest);
+
         return ResponseEntity.status(HttpStatus.CREATED).body(customerService.save(customerRequest));
     }
 

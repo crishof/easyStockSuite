@@ -71,13 +71,15 @@ public class CustomerServiceImpl implements CustomerService {
 
         Customer customer = this.toCustomer(customerRequest);
 
-        UUID addressId = addressAPIClient.createAndGetId(customerRequest.getAddressRequest()).getBody();
+        if(customerRequest.getAddressRequest() != null) {
 
-        System.out.println("customerRequest = " + customerRequest.getAddressRequest());
-        System.out.println("addressId = " + addressId);
+            UUID addressId = addressAPIClient.createAndGetId(customerRequest.getAddressRequest()).getBody();
 
-        customer.setAddressId(addressId);
+            System.out.println("customerRequest = " + customerRequest.getAddressRequest());
+            System.out.println("addressId = " + addressId);
 
+            customer.setAddressId(addressId);
+        }
         System.out.println("customer = " + customer.getAddressId());
 
         return this.toCustomerResponse(customerRepository.save(customer));
