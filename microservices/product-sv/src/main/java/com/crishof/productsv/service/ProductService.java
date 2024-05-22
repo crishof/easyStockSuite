@@ -36,5 +36,7 @@ public interface ProductService {
 
     String updateFromInvoice(InvoiceUpdateRequest invoiceUpdateRequest);
 
+    String updateFromCustomerInvoice(InvoiceUpdateRequest invoiceUpdateRequest);
+
     String importSupplierProducts(List<SupplierProductRequest> productList);
 }

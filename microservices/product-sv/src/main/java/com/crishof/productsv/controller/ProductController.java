@@ -63,9 +63,13 @@ public class ProductController {
 
     @PutMapping("/invoice")
     public String updateProductStockAndPrices(@RequestBody InvoiceUpdateRequest invoiceUpdateRequest) {
-
-
         return productService.updateFromInvoice(invoiceUpdateRequest);
+    }
+
+    @PutMapping("/customerInvoice")
+    public String updateProductStock(@RequestBody InvoiceUpdateRequest invoiceUpdateRequest) {
+        System.out.println("invoiceUpdateRequest = " + invoiceUpdateRequest);
+        return productService.updateFromCustomerInvoice(invoiceUpdateRequest);
     }
 
     @DeleteMapping("/delete/{id}")

@@ -103,6 +103,32 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public String updateFromCustomerInvoice(InvoiceUpdateRequest invoiceUpdateRequest) {
+
+        List<SupplierInvoiceItem> invoiceItems = invoiceUpdateRequest.getInvoiceItems();
+
+        for (SupplierInvoiceItem invoiceItem : invoiceItems) {
+
+            Product product = productRepository.findById(invoiceItem.getProductId())
+                    .orElseThrow(() -> new ProductNotFoundException(invoiceItem.getProductId()));
+
+            Optional<StockResponse> stockResponse = stockAPIClient.getAllProductStocks(product.getStockIds()).stream()
+                    .filter(s -> s.getBranchId().equals(invoiceUpdateRequest.getBranchId()) && s.getLocationId().equals(invoiceUpdateRequest.getLocationId()))
+                    .findFirst();
+
+            if (stockResponse.isPresent()) {
+
+                StockRequest stockRequest = new StockRequest();
+                stockRequest.setProductId(invoiceItem.getProductId());
+                stockRequest.setQuantity(invoiceItem.getQuantity() * -1);
+                stockAPIClient.updateQuantity(stockResponse.get().getId(), stockRequest);
+            }
+            productRepository.save(product);
+        }
+        return "Products updated successfully";
+    }
+
+    @Override
     public void deleteById(UUID id) {
 
         productRepository.deleteById(id);

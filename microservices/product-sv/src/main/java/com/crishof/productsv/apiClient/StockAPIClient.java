@@ -4,23 +4,23 @@ import com.crishof.productsv.dto.StockRequest;
 import com.crishof.productsv.dto.StockResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
 
-@FeignClient(name = "stock-sv", url = "http://localhost:9009")
+@FeignClient(name = "stock-sv", url = "http://localhost:9009/stock")
 public interface StockAPIClient {
 
-    @PostMapping("/stock/save")
+    @PostMapping("/save")
     UUID save(@RequestBody StockRequest stockRequest);
 
-    @GetMapping("/stock/getTotalStockForProduct")
+    @GetMapping("/getTotalStockForProduct")
     ResponseEntity<?> getTotalStockForProduct(@RequestParam("stockIdList") List<UUID> stockIdList);
 
-    @GetMapping("/stock/getAllProductStocks")
+    @GetMapping("/getAllProductStocks")
     List<StockResponse> getAllProductStocks(@RequestParam List<UUID> stockIds);
+
+    @PutMapping("/updateQuantity/{stockId}")
+    ResponseEntity<?> updateQuantity(@PathVariable("stockId") UUID stockId, @RequestBody StockRequest stockRequest);
 }
