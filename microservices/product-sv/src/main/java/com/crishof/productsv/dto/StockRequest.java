@@ -14,6 +14,7 @@ public class StockRequest {
     private int quantity;
     private UUID branchId;
     private UUID locationId;
+    private UUID productId;
     private int max;
     private int min;
 }

@@ -38,13 +38,11 @@ public class SupplierServiceImpl implements SupplierService {
     @Override
     public SupplierResponse getByName(String supplierName) {
         Supplier supplier = supplierRepository.findByName(supplierName).orElseThrow(() -> new SupplierNotFoundException(supplierName));
-
         return SupplierMapper.toSupplierResponse(supplier);
     }
 
     @Override
     public List<SupplierResponse> getAllByFilter(String filter) {
-
         return supplierRepository.searchByFilter(filter).stream()
                 .map(SupplierMapper::toSupplierResponse)
                 .toList();
@@ -53,7 +51,7 @@ public class SupplierServiceImpl implements SupplierService {
     @Override
     public SupplierResponse save(SupplierRequest supplierRequest) {
 
-        Supplier supplier = new Supplier(supplierRequest);
+        Supplier supplier = this.toSupplier(supplierRequest);
 
         if (supplierRepository.findByName(supplierRequest.getName()).isPresent()) {
             throw new DuplicateNameException("Supplier with name " + supplierRequest.getName() + " already exist");
@@ -63,6 +61,14 @@ public class SupplierServiceImpl implements SupplierService {
         }
         return new SupplierResponse(supplierRepository.save(supplier));
 
+    }
+
+    private Supplier toSupplier(SupplierRequest supplierRequest) {
+        return Supplier.builder()
+                .name(supplierRequest.getName())
+                .taxId(supplierRequest.getTaxId())
+                .legalName(supplierRequest.getLegalName())
+                .build();
     }
 
     @Override

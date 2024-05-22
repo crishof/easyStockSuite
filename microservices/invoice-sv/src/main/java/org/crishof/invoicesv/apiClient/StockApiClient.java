@@ -1,4 +1,4 @@
-package org.crishof.invoicesv.apiClient;
+package org.crishof.invoicesv.apiclient;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;

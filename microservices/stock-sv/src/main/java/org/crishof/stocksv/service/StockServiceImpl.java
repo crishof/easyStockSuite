@@ -8,7 +8,6 @@ import org.crishof.stocksv.model.Stock;
 import org.crishof.stocksv.repository.StockRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -21,17 +20,20 @@ public class StockServiceImpl implements StockService {
     @Override
 
     public StockResponse save(StockRequest stockRequest) {
-        Stock stock = stockRepository.findByBranchIdAndLocationId(stockRequest.getBranchId(), stockRequest.getLocationId());
+
+        Stock stock = stockRepository.findByProductIdAndBranchIdAndLocationId(stockRequest.getProductId(), stockRequest.getBranchId(), stockRequest.getLocationId());
+
         if (stock == null) {
             stock = new Stock();
         }
         stock.setMin(stockRequest.getMin());
         stock.setMax(stockRequest.getMax());
+        stock.setProductId(stockRequest.getProductId());
         stock.setQuantity(stock.getQuantity() + stockRequest.getQuantity());
         stock.setBranchId(stockRequest.getBranchId());
         stock.setLocationId(stockRequest.getLocationId());
 
-        return new StockResponse(stockRepository.save(stock));
+        return this.toStockResponse(stockRepository.save(stock));
     }
 
     @Override
@@ -41,14 +43,13 @@ public class StockServiceImpl implements StockService {
                 .orElseThrow(() -> new StockNotFoundException(stockId));
 
         stock.setQuantity(stock.getQuantity() + stockRequest.getQuantity());
-        return new StockResponse(stockRepository.save(stock));
+        return this.toStockResponse(stockRepository.save(stock));
 
     }
 
     @Override
     public StockResponse getStockById(UUID stockId) {
-
-        return new StockResponse(stockRepository.getReferenceById(stockId));
+        return this.toStockResponse(stockRepository.findById(stockId).orElseThrow(() -> new StockNotFoundException(stockId)));
     }
 
     @Override
@@ -62,7 +63,7 @@ public class StockServiceImpl implements StockService {
     }
 
     @Override
-    public List<StockResponse> getAllProductStocks(List<UUID> stockIds){
+    public List<StockResponse> getAllProductStocks(List<UUID> stockIds) {
 
         return stockRepository.findAllById(stockIds).stream()
                 .map(this::toStockResponse)
@@ -70,6 +71,14 @@ public class StockServiceImpl implements StockService {
     }
 
     private StockResponse toStockResponse(Stock stock) {
-        return new StockResponse(stock);
+
+        return StockResponse.builder()
+                .id(stock.getId())
+                .branchId(stock.getBranchId())
+                .locationId(stock.getLocationId())
+                .quantity(stock.getQuantity())
+                .max(stock.getMax())
+                .min(stock.getMin())
+                .build();
     }
 }

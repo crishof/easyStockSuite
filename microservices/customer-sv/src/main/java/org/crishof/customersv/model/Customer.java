@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.boot.autoconfigure.amqp.RabbitConnectionDetails;
 
 import java.util.UUID;
 
@@ -26,5 +27,8 @@ public class Customer {
     private String lastname;
     private String dni;
     private String taxId;
+    private String email;
+    private String phone;
+    private UUID addressId;
 
 }

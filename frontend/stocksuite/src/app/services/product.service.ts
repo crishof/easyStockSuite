@@ -19,15 +19,22 @@ export class ProductService {
     return this._http.get<IProduct>(`${this._urlBase}/getById/${id}`);
   }
 
-  getAllByFilter(filter: string): Observable<IProduct[]> {
-    const params = new HttpParams().set('filter', filter);
+  getAllByFilter(filter: string, supplierId?: string): Observable<IProduct[]> {
+    let params = new HttpParams().set('filter', filter);
+    if (supplierId) {
+      params = params.set('supplierId', supplierId);
+    }
     return this._http.get<IProduct[]>(`${this._urlBase}/getAllByFilter`, {
       params,
     });
   }
 
-  getAllByFilterAndStock(filter: string): Observable<IProduct[]> {
-    const params = new HttpParams().set('filter', filter);
+  getAllByFilterAndStock(
+    filter: string,
+    supplierId?: string
+  ): Observable<IProduct[]> {
+    let params = new HttpParams().set('filter', filter);
+    if (supplierId) params.set('supplierId', supplierId);
     return this._http.get<IProduct[]>(
       `${this._urlBase}/getAllByFilterAndStock`,
       {

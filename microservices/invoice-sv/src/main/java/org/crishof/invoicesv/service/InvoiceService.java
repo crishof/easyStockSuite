@@ -12,9 +12,5 @@ public interface InvoiceService {
 
     InvoiceResponse getById(UUID id);
 
-//    void save(InvoiceRequest invoiceRequest);
-
-    InvoiceResponse update(UUID id, InvoiceRequest invoiceRequest);
-
-    void deleteById(UUID id);
+    InvoiceResponse save(InvoiceRequest invoiceRequest);
 }

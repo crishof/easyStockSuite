@@ -5,15 +5,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import java.util.UUID;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
 public class SupplierRequest {
 
-    private UUID id;
     private String name;
     private String taxId;
     private String legalName;

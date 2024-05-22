@@ -10,7 +10,7 @@ import java.util.UUID;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "tbl_invoice_item")
+@Table(name = "tbl_supplier_invoice_item")
 @Builder
 public class InvoiceItem {
 

@@ -1,6 +1,7 @@
 package org.crishof.customersv.service;
 
 
+import org.crishof.customersv.dto.CustomerRequest;
 import org.crishof.customersv.dto.CustomerResponse;
 import org.crishof.customersv.model.Customer;
 
@@ -13,13 +14,18 @@ public interface CustomerService {
 
     CustomerResponse getById(UUID id);
 
-    List<Customer> getByName(String name);
+    List<CustomerResponse> getAllByNameOrLastname(String name, String lastname);
 
-    List<Customer> getByLastName(String lastName);
+    List<CustomerResponse> getAllByFilter(String filter);
 
-    Customer getByDni(String dni);
+    CustomerResponse getByEmail(String email);
 
-    Customer update(UUID id, Customer customer);
+    CustomerResponse getByDni(String dni);
 
-    Customer save(String name, String lastName, String dni);
+    CustomerResponse update(UUID customerId, CustomerRequest customerRequest);
+
+    CustomerResponse save(CustomerRequest customerRequest);
+
+    String deleteById(UUID id);
+
 }

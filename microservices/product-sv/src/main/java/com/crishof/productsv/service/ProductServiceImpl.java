@@ -42,7 +42,7 @@ public class ProductServiceImpl implements ProductService {
         product.setSupplierProductId(productRequest.getSupplierProductId());
         product.setHidden(false);
 
-        //TODO set stocks ids
+        product.setStockIds(new ArrayList<>());
 
         ResponseEntity<?> response = priceApiClient.save(new PriceRequest(
                 productRequest.getPurchasePrice(),
@@ -75,6 +75,7 @@ public class ProductServiceImpl implements ProductService {
                     .orElseThrow(() -> new ProductNotFoundException(invoiceItem.getProductId()));
 
             StockRequest stockRequest = new StockRequest();
+            stockRequest.setProductId(invoiceItem.getProductId());
             stockRequest.setQuantity(invoiceItem.getQuantity());
             stockRequest.setBranchId(invoiceUpdateRequest.getBranchId());
             stockRequest.setLocationId(invoiceUpdateRequest.getLocationId());
@@ -98,6 +99,32 @@ public class ProductServiceImpl implements ProductService {
             productRepository.save(product);
         }
 
+        return "Products updated successfully";
+    }
+
+    @Override
+    public String updateFromCustomerInvoice(InvoiceUpdateRequest invoiceUpdateRequest) {
+
+        List<SupplierInvoiceItem> invoiceItems = invoiceUpdateRequest.getInvoiceItems();
+
+        for (SupplierInvoiceItem invoiceItem : invoiceItems) {
+
+            Product product = productRepository.findById(invoiceItem.getProductId())
+                    .orElseThrow(() -> new ProductNotFoundException(invoiceItem.getProductId()));
+
+            Optional<StockResponse> stockResponse = stockAPIClient.getAllProductStocks(product.getStockIds()).stream()
+                    .filter(s -> s.getBranchId().equals(invoiceUpdateRequest.getBranchId()) && s.getLocationId().equals(invoiceUpdateRequest.getLocationId()))
+                    .findFirst();
+
+            if (stockResponse.isPresent()) {
+
+                StockRequest stockRequest = new StockRequest();
+                stockRequest.setProductId(invoiceItem.getProductId());
+                stockRequest.setQuantity(invoiceItem.getQuantity() * -1);
+                stockAPIClient.updateQuantity(stockResponse.get().getId(), stockRequest);
+            }
+            productRepository.save(product);
+        }
         return "Products updated successfully";
     }
 
@@ -148,6 +175,11 @@ public class ProductServiceImpl implements ProductService {
         products.addAll(productRepository.findAllByDescriptionContainingIgnoreCase(filter));
 
         return products.stream().map(this::toProductResponse).distinct().toList();
+    }
+
+    @Override
+    public List<ProductResponse> getAllByFilterAndSupplier(String filter, UUID supplierId) {
+        return this.getAllByFilter(filter).stream().filter(product -> product.getSupplierId().equals(supplierId)).toList();
     }
 
     @Override
@@ -298,6 +330,39 @@ public class ProductServiceImpl implements ProductService {
         }
 
         return UUID.fromString(idString);
+    }
+
+    @Override
+    public String importSupplierProducts(List<SupplierProductRequest> productList) {
+        int importedCount = 0;
+        int alreadyImportedCount = 0;
+
+        for (SupplierProductRequest request : productList) {
+
+            UUID brandId = this.getIdByName(request.getBrand(), BRAND_ENTITY);
+
+            if (productRepository.findByBrandIdAndAndModelAndDescriptionAndSupplierId(
+                    brandId, request.getModel(), request.getDescription(), request.getSupplierId()) == null) {
+
+                ProductRequest productRequest = new ProductRequest(request);
+                this.save(productRequest);
+                importedCount++;
+            } else {
+                alreadyImportedCount++;
+            }
+        }
+
+        String message = "Task completed successfully: ";
+        if (productList.isEmpty()) {
+            message = "Product list is empty";
+        }
+        if (importedCount > 0) {
+            message += " " + importedCount + " products imported";
+        }
+        if (alreadyImportedCount > 0) {
+            message += " " + alreadyImportedCount + " products already imported";
+        }
+        return message;
     }
 }
 

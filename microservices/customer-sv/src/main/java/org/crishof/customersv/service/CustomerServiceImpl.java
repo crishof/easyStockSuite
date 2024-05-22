@@ -1,11 +1,15 @@
 package org.crishof.customersv.service;
 
 import lombok.RequiredArgsConstructor;
+import org.crishof.customersv.apiClient.AddressAPIClient;
+import org.crishof.customersv.dto.CustomerRequest;
 import org.crishof.customersv.dto.CustomerResponse;
 import org.crishof.customersv.exception.CustomerNotFoundException;
 import org.crishof.customersv.model.Customer;
 import org.crishof.customersv.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,59 +20,106 @@ import java.util.UUID;
 public class CustomerServiceImpl implements CustomerService {
 
     private final CustomerRepository customerRepository;
+    private final AddressAPIClient addressAPIClient;
 
     @Override
     public List<CustomerResponse> getAll() {
-
-        List<Customer> customers = customerRepository.findAll();
-        return customers.stream().map(this::toCustomerResponse).toList();
+        return customerRepository.findAll().stream().map(this::toCustomerResponse).toList();
     }
 
     @Override
     public CustomerResponse getById(UUID id) {
-        return customerRepository.findById(id).map(this::toCustomerResponse).orElseThrow(() -> new CustomerNotFoundException("Customer with id: " + id + "does not exist"));
+        return customerRepository.findById(id).map(this::toCustomerResponse).orElseThrow(() -> new CustomerNotFoundException(id));
     }
 
     @Override
-    public List<Customer> getByName(String name) {
-        return customerRepository.findAll().stream().filter(customer -> customer.getName().equalsIgnoreCase(name)).toList();
+    public List<CustomerResponse> getAllByNameOrLastname(String name, String lastname) {
+        return customerRepository.findAllByNameAndLastname(name, lastname).stream().map(this::toCustomerResponse).toList();
     }
 
     @Override
-    public List<Customer> getByLastName(String lastName) {
-        return customerRepository.findAll().stream().filter(customer -> customer.getLastname().equalsIgnoreCase(lastName)).toList();
+    public List<CustomerResponse> getAllByFilter(String filter) {
+        return customerRepository.findAllByFilter(filter).stream().map(this::toCustomerResponse).toList();
     }
 
     @Override
-    public Customer getByDni(String dni) {
-        Customer customer = customerRepository.findByDni(dni);
-        if (customer == null) {
-            throw new CustomerNotFoundException("Customer with dni: " + dni + " does not exist");
+    public CustomerResponse getByEmail(String email) {
+        return this.toCustomerResponse(customerRepository.findByEmail(email));
+    }
+
+    @Override
+    public CustomerResponse getByDni(String dni) {
+        return this.toCustomerResponse(customerRepository.findByDni(dni));
+    }
+
+    @Override
+    public CustomerResponse update(UUID customerId, CustomerRequest customerRequest) {
+
+        Customer customer = customerRepository.findById(customerId).orElseThrow(() -> new CustomerNotFoundException(customerId));
+        customer.setName(customerRequest.getName());
+        customer.setLastname(customerRequest.getLastname());
+        customer.setEmail(customerRequest.getEmail());
+        customer.setDni(customerRequest.getDni());
+        customer.setTaxId(customerRequest.getTaxId());
+        customer.setPhone(customerRequest.getPhone());
+
+        return this.toCustomerResponse(customerRepository.save(customer));
+    }
+
+    @Override
+    public CustomerResponse save(CustomerRequest customerRequest) {
+
+        Customer customer = this.toCustomer(customerRequest);
+
+        if(customerRequest.getAddressRequest() != null) {
+
+            UUID addressId = addressAPIClient.createAndGetId(customerRequest.getAddressRequest()).getBody();
+
+            System.out.println("customerRequest = " + customerRequest.getAddressRequest());
+            System.out.println("addressId = " + addressId);
+
+            customer.setAddressId(addressId);
         }
-        return customer;
+        System.out.println("customer = " + customer.getAddressId());
+
+        return this.toCustomerResponse(customerRepository.save(customer));
     }
 
     @Override
-    public Customer update(UUID id, Customer customer) {
-        return null;
+    public String deleteById(UUID id) {
+
+        UUID addressId = this.getById(id).getAddressId();
+
+        ResponseEntity<String> response = addressAPIClient.delete(addressId);
+        if (response.getStatusCode() == HttpStatus.OK) {
+            customerRepository.deleteById(id);
+            return "Customer deleted successfully";
+        } else {
+            throw new IllegalArgumentException("Failed to delete Address, customer not deleted");
+        }
     }
 
-    @Override
-    public Customer save(String name, String lastName, String dni) {
-
-        Customer customer = new Customer();
-        customer.setName(name);
-        customer.setLastname(lastName);
-        customer.setDni(dni);
-
-        return customerRepository.save(customer);
+    private Customer toCustomer(CustomerRequest customerRequest) {
+        return Customer.builder()
+                .name(customerRequest.getName())
+                .lastname(customerRequest.getLastname())
+                .email(customerRequest.getEmail())
+                .dni(customerRequest.getDni())
+                .taxId(customerRequest.getTaxId())
+                .phone(customerRequest.getPhone())
+                .build();
     }
 
     private CustomerResponse toCustomerResponse(Customer customer) {
-        CustomerResponse response = new CustomerResponse();
-        response.setId(customer.getId());
-        response.setName(customer.getName());
-        response.setLastName(customer.getLastname());
-        return response;
+        return CustomerResponse.builder()
+                .id(customer.getId())
+                .name(customer.getName())
+                .lastname(customer.getLastname())
+                .email(customer.getEmail())
+                .dni(customer.getDni())
+                .taxId(customer.getTaxId())
+                .phone(customer.getPhone())
+                .addressId(customer.getAddressId())
+                .build();
     }
 }

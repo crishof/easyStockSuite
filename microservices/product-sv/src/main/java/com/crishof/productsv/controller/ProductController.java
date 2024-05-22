@@ -5,7 +5,6 @@ import com.crishof.productsv.dto.ProductRequest;
 import com.crishof.productsv.dto.ProductResponse;
 import com.crishof.productsv.dto.SupplierProductRequest;
 import com.crishof.productsv.exeption.ProductNotFoundException;
-import com.crishof.productsv.repository.ProductRepository;
 import com.crishof.productsv.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,7 +21,6 @@ import java.util.UUID;
 public class ProductController {
 
     private final ProductService productService;
-    private final ProductRepository productRepository;
 
     @Value("${server.port}")
     private int serverPort;
@@ -65,10 +63,13 @@ public class ProductController {
 
     @PutMapping("/invoice")
     public String updateProductStockAndPrices(@RequestBody InvoiceUpdateRequest invoiceUpdateRequest) {
-
-
-
         return productService.updateFromInvoice(invoiceUpdateRequest);
+    }
+
+    @PutMapping("/customerInvoice")
+    public String updateProductStock(@RequestBody InvoiceUpdateRequest invoiceUpdateRequest) {
+        System.out.println("invoiceUpdateRequest = " + invoiceUpdateRequest);
+        return productService.updateFromCustomerInvoice(invoiceUpdateRequest);
     }
 
     @DeleteMapping("/delete/{id}")
@@ -84,7 +85,11 @@ public class ProductController {
     }
 
     @GetMapping("/getAllByFilter")
-    public List<ProductResponse> getAllByFilter(@RequestParam String filter) {
+    public List<ProductResponse> getAllByFilter(@RequestParam String filter, @RequestParam(required = false) UUID supplierId) {
+
+        if (supplierId != null) {
+            return productService.getAllByFilterAndSupplier(filter, supplierId);
+        }
         return productService.getAllByFilter(filter);
     }
 
@@ -110,33 +115,7 @@ public class ProductController {
 
     @PostMapping("/importProducts")
     public ResponseEntity<String> importProduct(@RequestBody List<SupplierProductRequest> productList) {
-
-        int importedCount = 0;
-        int alreadyImportedCount = 0;
-
-        for (SupplierProductRequest request : productList) {
-
-
-            if (productRepository.findBySupplierProductId(request.getId()) == null) {
-                ProductRequest productRequest = new ProductRequest(request);
-                productService.save(productRequest);
-                importedCount++;
-            } else {
-                alreadyImportedCount++;
-            }
-        }
-
-        String message = "Task completed successfully: ";
-        if (productList.isEmpty()) {
-            message = "Product list is empty";
-        }
-        if (importedCount > 0) {
-            message += " " + importedCount + " products imported";
-        }
-        if (alreadyImportedCount > 0) {
-            message += " " + alreadyImportedCount + " products already imported";
-        }
-
+        String message = productService.importSupplierProducts(productList);
         return ResponseEntity.ok().body("{\"message\": \"" + message + "\"}");
     }
 }

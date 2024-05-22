@@ -21,6 +21,15 @@
           {{ supplier.name }}
         </option>
       </select>
+      <div
+        *ngIf="
+          invoiceForm.get('supplierId')?.invalid &&
+          invoiceForm.get('supplierId')?.touched
+        "
+        class="text-danger"
+      >
+        Supplier is required
+      </div>
     </div>
     <div class="col">
       <button type="submit" class="btn btn-outline-primary btn-sm">
@@ -81,6 +90,15 @@
                   <option [value]="'invoiceType B'">Factura B</option>
                   <option [value]="'invoiceType C'">Factura C</option>
                 </select>
+                <div
+                  *ngIf="
+                    invoiceForm.get('invoiceType')?.invalid &&
+                    invoiceForm.get('invoiceType')?.touched
+                  "
+                  class="text-danger"
+                >
+                  Invoice Type is required
+                </div>
               </div>
               <div class="mb-3">
                 <mat-form-field appearance="fill" class="dateInput">
@@ -96,6 +114,15 @@
                   ></mat-datepicker-toggle>
                   <mat-datepicker #picker1></mat-datepicker>
                 </mat-form-field>
+                <div
+                  *ngIf="
+                    invoiceForm.get('invoiceDate')?.invalid &&
+                    invoiceForm.get('invoiceDate')?.touched
+                  "
+                  class="text-danger"
+                >
+                  Date is required
+                </div>
                 <mat-form-field appearance="fill" class="dateInput">
                   <mat-label>Fecha de recibida</mat-label>
                   <input
@@ -141,6 +168,15 @@
                     {{ branch.name }}
                   </option>
                 </select>
+                <div
+                  *ngIf="
+                    invoiceForm.get('branchId')?.invalid &&
+                    invoiceForm.get('branchId')?.touched
+                  "
+                  class="text-danger"
+                >
+                  Branch is required
+                </div>
               </div>
               <div class="mb-3">
                 <select
@@ -158,6 +194,15 @@
                     {{ location.name }}
                   </option>
                 </select>
+                <div
+                  *ngIf="
+                    invoiceForm.get('locationId')?.invalid &&
+                    invoiceForm.get('locationId')?.touched
+                  "
+                  class="text-danger"
+                >
+                  Location is required
+                </div>
               </div>
               <div class="mb-3">
                 <label for="packingListPrefix" class="form-label"
@@ -205,6 +250,17 @@
                     placeholder="000001"
                   />
                 </div>
+              </div>
+              <div
+                *ngIf="
+                  invoiceForm.get('invoiceType')?.invalid &&
+                  invoiceForm.get('invoiceNumber')?.invalid &&
+                  invoiceForm.get('invoiceType')?.touched &&
+                  invoiceForm.get('invoiceNumber')?.touched
+                "
+                class="text-danger"
+              >
+                Both Invoice Prefix and Number are required
               </div>
             </div>
 
@@ -324,6 +380,7 @@
         @if(invoiceItems.length == 0 ){
         <div class="card bg-light">
           <h4>Add invoice products</h4>
+          <div class="text-danger">Item list cannot be empty</div>
         </div>
         }@else{
 
@@ -546,6 +603,8 @@
                   type="checkbox"
                   class="form-check-input"
                   id="thisSupplier"
+                  (ngModel)="(filterByThisSupplier)"
+                  (change)="onThisSupplierChange()"
                 />
                 <label class="form-check-label" for="thisSupplier"
                   >Solo este proveedor</label

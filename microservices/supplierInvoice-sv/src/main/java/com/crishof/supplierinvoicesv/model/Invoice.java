@@ -16,7 +16,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Data
 @Builder
-@Table(name = "tbl_invoice")
+@Table(name = "tbl_supplier_invoice")
 public class Invoice {
 
     @Id
