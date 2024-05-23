@@ -1,6 +1,7 @@
-package org.crishof.supplierpricelistsv.exception;
+package org.crishof.dimensionsv.exception;
 
 import jakarta.persistence.EntityNotFoundException;
+import org.crishof.dimensionsv.dto.ApiResponse;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,8 +11,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(InvoiceNotFoundException.class)
-    public ResponseEntity<ApiResponse<String>> handleInvoiceNotFoundException(InvoiceNotFoundException e) {
+    @ExceptionHandler(DimensionNotFoundException.class)
+    public ResponseEntity<ApiResponse<String>> handleDimensionNotFoundException(DimensionNotFoundException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse<>(e.getMessage()));
     }
 

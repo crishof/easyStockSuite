@@ -1,5 +1,6 @@
-package org.crishof.supplierpricelistsv.exception;
+package com.crishof.supplier.exception;
 
+import com.crishof.supplier.dto.ApiResponse;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -10,8 +11,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(InvoiceNotFoundException.class)
-    public ResponseEntity<ApiResponse<String>> handleInvoiceNotFoundException(InvoiceNotFoundException e) {
+    @ExceptionHandler(SupplierNotFoundException.class)
+    public ResponseEntity<ApiResponse<String>> handleSupplierNotFoundException(SupplierNotFoundException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse<>(e.getMessage()));
     }
 

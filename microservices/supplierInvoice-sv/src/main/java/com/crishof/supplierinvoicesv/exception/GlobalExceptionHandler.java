@@ -1,4 +1,4 @@
-package org.crishof.supplierpricelistsv.exception;
+package com.crishof.supplierinvoicesv.exception;
 
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
