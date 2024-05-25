@@ -8,6 +8,7 @@ import com.crishof.categorysv.exception.DuplicateNameException;
 import com.crishof.categorysv.model.Category;
 import com.crishof.categorysv.repository.CategoryRepository;
 import com.crishof.categorysv.service.CategoryService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,14 +21,12 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/category")
 //@CrossOrigin(origins = "http://localhost:4200")
+@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class CategoryController {
 
-    @Autowired
-    CategoryService categoryService;
-    @Autowired
-    CategoryRepository categoryRepository;
-    @Autowired
-    ImageAPIClient imageAPIClient;
+    private final CategoryService categoryService;
+    private final CategoryRepository categoryRepository;
+    private final ImageAPIClient imageAPIClient;
 
 
     @GetMapping("/getAll")
