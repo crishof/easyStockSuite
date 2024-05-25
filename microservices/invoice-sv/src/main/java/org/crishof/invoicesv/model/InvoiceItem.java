@@ -10,7 +10,7 @@ import java.util.UUID;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "tbl_invoice_item")
+@Table(name = "tbl_customer_invoice_item")
 @Builder
 public class InvoiceItem {
 
@@ -25,6 +25,6 @@ public class InvoiceItem {
     private Double discountRate;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "invoice_id")
+    @JoinColumn(name = "customer_invoice_id")
     private Invoice invoice;
 }
