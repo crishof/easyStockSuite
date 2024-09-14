@@ -23,6 +23,7 @@ import { CustomerInvoiceService } from '../../../services/customer-invoice.servi
 import { Subscription } from 'rxjs';
 import { ProductService } from '../../../services/product.service';
 import { BranchService } from '../../../services/branch.service';
+import { CustomerComponent } from '../customer/customer.component';
 
 @Component({
   selector: 'app-customer-invoice',
@@ -38,6 +39,7 @@ import { BranchService } from '../../../services/branch.service';
     ProductSearchComponent,
     ProductListComponent,
     InvoiceItemsComponent,
+    CustomerComponent,
     NgClass,
   ],
   templateUrl: './customer-invoice.component.html',
@@ -80,6 +82,22 @@ export class CustomerInvoiceComponent implements OnInit {
     this.invoiceForm = this.formBuilder.group({
       customerId: '',
 
+      customerRequest: {
+        name: 'Pepe',
+        lastname: 'Sanchez',
+        dni: '30123543',
+        taxId: '20-30123543-9',
+        email: 'pepe@mail.com',
+        phone: '666453456',
+        AddressRequest: {
+          street: 'Calle ancha',
+          houseNumber: '3',
+          city: 'Fuengirola',
+          state: 'Málaga',
+          postalCode: '44123',
+          country: 'España',
+        },
+      },
       branchId: ['', Validators.required],
       locationId: ['', Validators.required],
 
@@ -279,7 +297,7 @@ export class CustomerInvoiceComponent implements OnInit {
     if (this.invoiceForm.valid && this.invoiceItems.length > 0) {
       this._customerInvoiceService.saveInvoice(formData).subscribe(
         (response) => {
-          console.log(response.message);
+          console.log(response);
         },
         (error) => {
           console.error(error.message);
