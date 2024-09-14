@@ -56,6 +56,7 @@ public class CustomerServiceImpl implements CustomerService {
     public CustomerResponse update(UUID customerId, CustomerRequest customerRequest) {
 
         Customer customer = customerRepository.findById(customerId).orElseThrow(() -> new CustomerNotFoundException(customerId));
+
         customer.setName(customerRequest.getName());
         customer.setLastname(customerRequest.getLastname());
         customer.setEmail(customerRequest.getEmail());
@@ -71,16 +72,12 @@ public class CustomerServiceImpl implements CustomerService {
 
         Customer customer = this.toCustomer(customerRequest);
 
-        if(customerRequest.getAddressRequest() != null) {
+        if (customerRequest.getAddressRequest() != null) {
 
             UUID addressId = addressAPIClient.createAndGetId(customerRequest.getAddressRequest()).getBody();
 
-            System.out.println("customerRequest = " + customerRequest.getAddressRequest());
-            System.out.println("addressId = " + addressId);
-
             customer.setAddressId(addressId);
         }
-        System.out.println("customer = " + customer.getAddressId());
 
         return this.toCustomerResponse(customerRepository.save(customer));
     }

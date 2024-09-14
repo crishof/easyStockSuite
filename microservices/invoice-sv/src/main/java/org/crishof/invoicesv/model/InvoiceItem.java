@@ -25,6 +25,6 @@ public class InvoiceItem {
     private Double discountRate;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "customer_invoice_id")
+    @JoinColumn(name = "invoice_id")
     private Invoice invoice;
 }

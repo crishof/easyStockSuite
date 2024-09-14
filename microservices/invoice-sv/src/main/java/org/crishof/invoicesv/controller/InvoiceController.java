@@ -1,7 +1,6 @@
 package org.crishof.invoicesv.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.crishof.invoicesv.dto.ApiResponse;
 import org.crishof.invoicesv.dto.InvoiceRequest;
 import org.crishof.invoicesv.dto.InvoiceResponse;
 import org.crishof.invoicesv.service.InvoiceService;
@@ -25,16 +24,13 @@ public class InvoiceController {
     }
 
     @GetMapping("/getById/{id}")
-    public ResponseEntity<ApiResponse<InvoiceResponse>> getById(@PathVariable("id") UUID id) {
-        return ResponseEntity.ok(new ApiResponse<>(invoiceService.getById(id)));
+    public ResponseEntity<InvoiceResponse> getById(@PathVariable("id") UUID id) {
+        return ResponseEntity.ok(invoiceService.getById(id));
     }
 
     @PostMapping("/save")
-    public ResponseEntity<ApiResponse<InvoiceResponse>> savePurchaseInvoice(@RequestBody InvoiceRequest invoiceRequest) {
-
-        System.out.println("invoiceRequest = " + invoiceRequest);
-
-        return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse<>(invoiceService.save(invoiceRequest)));
+    public ResponseEntity<InvoiceResponse> savePurchaseInvoice(@RequestBody InvoiceRequest invoiceRequest) {
+        return ResponseEntity.status(HttpStatus.OK).body(invoiceService.save(invoiceRequest));
 
     }
 }
