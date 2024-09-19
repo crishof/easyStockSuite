@@ -15,6 +15,7 @@ import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { SupplierPriceListComponent } from './pages/supplier-price-list/supplier-price-list.component';
 import { ProductEditComponent } from './pages/product/product-edit/product-edit.component';
 import { CustomerInvoiceComponent } from './pages/customer/customer-invoice/customer-invoice.component';
+import { StatementOfAccountComponent } from './pages/supplier/statement-of-account/statement-of-account.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -33,5 +34,7 @@ export const routes: Routes = [
   { path: 'supplierInvoice', component: SupplierInvoiceComponent },
   { path: 'dashboard', component: DashboardComponent },
   { path: 'supplierPriceList', component: SupplierPriceListComponent },
+  { path: 'statementAccount', component: StatementOfAccountComponent },
+  { path: 'statementAccount/:id', component: StatementOfAccountComponent },
   { path: '**', redirectTo: '', pathMatch: 'full' },
 ];
