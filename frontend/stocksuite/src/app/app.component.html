@@ -31,7 +31,7 @@
         </li>
 
         <!-- Dashboard -->
-
+        
         <li class="nav-item">
           <a
             class="nav-link"
@@ -78,7 +78,13 @@
               >
 
               <ul class="dropdown-menu sub-menu">
-                <li><a class="dropdown-item" href="#">Factura</a></li>
+                <li><a
+                  class="dropdown-item"
+                  routerLink="customerInvoice"
+                  [ngClass]="{ active: menuOption == 'customerInvoice' }"
+                  (click)="onOption('customerInvoice')"
+                  >Invoice</a
+                ></li>
                 <li><a class="dropdown-item" href="#">Nota de crédito</a></li>
                 <li><a class="dropdown-item" href="#">Nota de Débito</a></li>
                 <li><a class="dropdown-item" href="#">Presupuesto</a></li>

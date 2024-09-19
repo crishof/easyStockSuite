@@ -6,6 +6,3 @@ eureka:
   client:
     register-with-eureka: false
     fetch-registry: false
-  #Solucion al error CLAIMING INSTANCES
-  instance:
-    lease-renewal-interval-in-seconds: 0

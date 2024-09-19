@@ -35,9 +35,6 @@ public class AddressController {
 
     @PostMapping("/save")
     public ResponseEntity<AddressResponse> save(@RequestBody AddressRequest addressRequest) {
-
-        System.out.println("addressRequest = " + addressRequest);
-
         return ResponseEntity.status(HttpStatus.CREATED).body(addressService.saveAddress(addressRequest));
     }
 

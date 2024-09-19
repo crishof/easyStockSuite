@@ -1,6 +1,7 @@
 package org.crishof.mailsendersv.controller;
 
 
+import lombok.RequiredArgsConstructor;
 import org.crishof.mailsendersv.model.MailStructure;
 import org.crishof.mailsendersv.service.MailService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,15 +9,13 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/mail")
+@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class MailController {
 
-    @Autowired
-    private MailService mailService;
+    private final MailService mailService;
 
     @PostMapping("/send/{mail}")
     public String sendMail(@PathVariable String mail, @RequestBody MailStructure mailStructure) {
-
-        System.out.println("mail = " + mail);
         mailService.sendMail(mail, mailStructure);
         return "success";
     }

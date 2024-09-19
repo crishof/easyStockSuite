@@ -19,29 +19,22 @@ import java.util.UUID;
 @Table(name = "tbl_supplier_invoice")
 public class Invoice {
 
+    @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL)
+    List<InvoiceItem> invoiceItems = new ArrayList<>();
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-
     private UUID supplierId;
-
     private String location;
-
     private UUID branchId;
     private UUID locationId;
-
     private LocalDate invoiceDate;
     private LocalDate dueDate;
     private LocalDate receptionDate;
     private LocalDate savedDate;
-
     private String invoiceType;
     private String invoiceNumber;
     private String packingListNumber;
-
-    @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL)
-    List<InvoiceItem> invoiceItems = new ArrayList<>();
-
     private boolean fixedAsset;
 
     private String observations;

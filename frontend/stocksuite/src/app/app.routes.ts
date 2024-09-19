@@ -14,12 +14,14 @@ import { BrandCreateComponent } from './pages/brand/brand-create/brand-create.co
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { SupplierPriceListComponent } from './pages/supplier-price-list/supplier-price-list.component';
 import { ProductEditComponent } from './pages/product/product-edit/product-edit.component';
+import { CustomerInvoiceComponent } from './pages/customer/customer-invoice/customer-invoice.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'products', component: ProductsComponent },
   { path: 'products/:id', component: ProductDetailsComponent },
   { path: 'products/:id/edit', component: ProductEditComponent },
+  { path: 'customerInvoice', component: CustomerInvoiceComponent },
   { path: 'brand', component: BrandComponent },
   { path: 'brand/create', component: BrandCreateComponent },
   { path: 'brand/:id', component: BrandDetailsComponent },

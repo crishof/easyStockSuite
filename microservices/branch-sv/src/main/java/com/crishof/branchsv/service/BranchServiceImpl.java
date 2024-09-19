@@ -4,6 +4,7 @@ import com.crishof.branchsv.dto.BranchRequest;
 import com.crishof.branchsv.dto.BranchResponse;
 import com.crishof.branchsv.dto.LocationResponse;
 import com.crishof.branchsv.exception.BranchNotFoundException;
+import com.crishof.branchsv.exception.DuplicateNameException;
 import com.crishof.branchsv.model.Branch;
 import com.crishof.branchsv.model.StockLocation;
 import com.crishof.branchsv.repository.BranchRepository;
@@ -11,15 +12,13 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
 public class BranchServiceImpl implements BranchService {
 
+    private static final String BRANCH_EMPTY = "Branch name cannot be empty";
     private static final String DEFAULT_LOCATION = "Main Showroom";
     private final BranchRepository branchRepository;
 
@@ -29,6 +28,14 @@ public class BranchServiceImpl implements BranchService {
         Branch branch = new Branch();
         branch.setName(branchRequest.getName());
 
+        if (branchRepository.findByNameIgnoreCase(branchRequest.getName()).isPresent()) {
+            throw new DuplicateNameException("Branch with name " + branchRequest.getName() + " already exists");
+        }
+
+        if (Objects.equals(branchRequest.getName(), "")) {
+            throw new IllegalArgumentException(BRANCH_EMPTY);
+        }
+
         List<StockLocation> stockLocations = new ArrayList<>();
         StockLocation stockLocation = new StockLocation();
         stockLocation.setBranch(branch);
@@ -37,6 +44,7 @@ public class BranchServiceImpl implements BranchService {
         branch.setLocations(stockLocations);
 
         return this.toBranchResponse(branchRepository.save(branch));
+
     }
 
     @Override
