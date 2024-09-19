@@ -31,7 +31,7 @@ public class BranchController {
 
     @PutMapping("/updateBranch/{branchId}")
     public ResponseEntity<BranchResponse> updateBranch(@PathVariable(name = "branchId") UUID branchId, @RequestBody BranchRequest branchRequest) throws BranchNotFoundException {
-            return ResponseEntity.status(HttpStatus.OK).body(branchService.updateBranchName(branchId, branchRequest));
+        return ResponseEntity.status(HttpStatus.OK).body(branchService.updateBranchName(branchId, branchRequest));
     }
 
     @PostMapping("/createLocation/{branchId}")
