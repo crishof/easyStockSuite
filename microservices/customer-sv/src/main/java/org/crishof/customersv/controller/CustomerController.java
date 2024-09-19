@@ -1,5 +1,6 @@
 package org.crishof.customersv.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.crishof.customersv.dto.CustomerRequest;
 import org.crishof.customersv.dto.CustomerResponse;
 import org.crishof.customersv.service.CustomerService;
@@ -13,11 +14,11 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/customer")
+@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 @CrossOrigin(origins = "http://localhost:4200")
 public class CustomerController {
 
-    @Autowired
-    CustomerService customerService;
+    private final CustomerService customerService;
 
     @GetMapping("/getAll")
     public ResponseEntity<List<CustomerResponse>> getAll() {
@@ -42,9 +43,6 @@ public class CustomerController {
 
     @PostMapping("/save")
     public ResponseEntity<CustomerResponse> save(@RequestBody CustomerRequest customerRequest) {
-
-        System.out.println("customerRequest = " + customerRequest);
-
         return ResponseEntity.status(HttpStatus.CREATED).body(customerService.save(customerRequest));
     }
 

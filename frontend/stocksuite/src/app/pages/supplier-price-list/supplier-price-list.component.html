@@ -35,7 +35,8 @@
 -->
 <div class="container">
   <div class="row">
-    <div class="col">
+    <div class="col card shadow m-3 p-3 ">
+      <h2>Search Products</h2>
       <form
         #brandForm="ngForm"
         (ngSubmit)="searchProducts()"
@@ -89,7 +90,8 @@
       </button>
     </div>
 
-    <div class="col">
+    <div class="col card shadow m-3 p-3 ">
+      <h2>Details</h2>
       <div class="row">
         <div class="row">
           @if(selectedBrand.length > 0){
@@ -115,7 +117,8 @@
       }
     </div>
 
-    <div class="col">
+    <div class="col card shadow m-3 p-3 ">
+      <h2>Upload Price List</h2>
       <form
         [formGroup]="fileForm"
         enctype="multipart/form-data"

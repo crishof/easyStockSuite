@@ -129,6 +129,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     private InvoiceResponse toInvoiceResponse(Invoice invoice) {
 
         return InvoiceResponse.builder()
+                .id(invoice.getId())
                 .customerResponse(customerApiClient.getById(
                         invoice.getCustomerId()).getBody())
                 .invoiceDate(invoice.getInvoiceDate())

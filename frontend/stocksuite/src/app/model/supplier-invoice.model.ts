@@ -1,5 +1,4 @@
 import { IInvoiceItem } from './invoice-item.model';
-import { IProduct } from './product.model';
 
 export interface ISupplierInvoice {
   supplierId: string;
