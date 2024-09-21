@@ -40,6 +40,7 @@
         <module>supplier-sv</module>
         <module>supplierPriceList-sv</module>
         <module>supplierInvoice-sv</module>
+        <module>transaction-sv</module>
         <module>user-sv</module>
 
 
