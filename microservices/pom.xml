@@ -42,6 +42,7 @@
         <module>supplierInvoice-sv</module>
         <module>transaction-sv</module>
         <module>user-sv</module>
+        <module>payment-sv</module>
 
 
     </modules>
