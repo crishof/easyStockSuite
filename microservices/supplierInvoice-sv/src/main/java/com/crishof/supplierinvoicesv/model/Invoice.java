@@ -36,6 +36,7 @@ public class Invoice {
     private String invoiceNumber;
     private String packingListNumber;
     private boolean fixedAsset;
+    private boolean taxSave;
 
     private String observations;
 

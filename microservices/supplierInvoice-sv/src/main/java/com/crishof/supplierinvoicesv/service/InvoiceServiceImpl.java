@@ -63,6 +63,11 @@ public class InvoiceServiceImpl implements InvoiceService {
         // TODO implement rollback
     }
 
+    @Override
+    public List<TransactionResponse> getAllTransactionsBySupplier(UUID supplierId) {
+        return invoiceRepository.findAllBySupplierId(supplierId).stream().map(this::toTransactionResponse).toList();
+    }
+
     private String formatInvoiceNumber(String prefix, String number) {
         String formatedPrefix = String.format("%03d", Integer.parseInt(prefix));
         String formatedNumber = String.format("%03d", Integer.parseInt(number));
@@ -77,6 +82,18 @@ public class InvoiceServiceImpl implements InvoiceService {
                         .stream()
                         .map(this::toInvoiceItem)
                         .toList())
+                .build();
+    }
+
+    private TransactionResponse toTransactionResponse(Invoice invoice) {
+        return TransactionResponse.builder()
+                .transactionId(invoice.getId())
+                .invoiceDate(invoice.getInvoiceDate())
+                .invoiceType(invoice.getInvoiceType())
+                .invoiceNumber(invoice.getInvoiceNumber())
+                .taxSave(invoice.isTaxSave())
+                .observations(invoice.getObservations())
+                .totalPrice(invoice.getTotalPrice())
                 .build();
     }
 
@@ -106,6 +123,7 @@ public class InvoiceServiceImpl implements InvoiceService {
                 .invoiceItems(invoiceRequest.getInvoiceItemsRequest().stream()
                         .map(this::toInvoiceItem).toList())
 
+                .taxSave(invoiceRequest.isTaxSave())
                 .fixedAsset(invoiceRequest.isFixedAsset())
                 .observations(invoiceRequest.getObservations())
                 .subtotal1(invoiceRequest.getSubtotal1())
