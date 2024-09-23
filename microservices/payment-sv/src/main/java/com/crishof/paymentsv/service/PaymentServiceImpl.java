@@ -24,7 +24,7 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public ResponseEntity<List<PaymentResponse>> getAllBySupplier(UUID supplierId){
+    public ResponseEntity<List<PaymentResponse>> getAllBySupplier(UUID supplierId) {
 
         return ResponseEntity.ok(paymentRepository.findAllBySupplierId(supplierId).stream()
                 .map(this::toPaymentResponse).toList());

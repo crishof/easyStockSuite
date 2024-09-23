@@ -11,5 +11,6 @@ import java.util.UUID;
 public interface PaymentService {
 
     ResponseEntity<PaymentResponse> savePayment(@RequestBody PaymentRequest paymentRequest);
+
     ResponseEntity<List<PaymentResponse>> getAllBySupplier(UUID supplierId);
 }
