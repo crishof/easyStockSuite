@@ -15,10 +15,12 @@ import java.util.UUID;
 public class TransactionResponse {
 
     private UUID transactionId;
-    private LocalDate invoiceDate;
-    private String invoiceType;
-    private String invoiceNumber;
+    private String type;
+    private LocalDate date;
+    private String transactionNumber;
+    private double amount;
     private boolean taxSave;
-    private String observations;
-    private double totalPrice;
+    private String description;
+
+
 }

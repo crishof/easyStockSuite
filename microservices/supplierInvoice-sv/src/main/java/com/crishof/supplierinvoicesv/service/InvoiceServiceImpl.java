@@ -88,12 +88,13 @@ public class InvoiceServiceImpl implements InvoiceService {
     private TransactionResponse toTransactionResponse(Invoice invoice) {
         return TransactionResponse.builder()
                 .transactionId(invoice.getId())
-                .invoiceDate(invoice.getInvoiceDate())
-                .invoiceType(invoice.getInvoiceType())
-                .invoiceNumber(invoice.getInvoiceNumber())
+                .date(invoice.getInvoiceDate())
+                .type(invoice.getInvoiceType())
+                .transactionNumber(invoice.getInvoiceNumber())
                 .taxSave(invoice.isTaxSave())
-                .observations(invoice.getObservations())
-                .totalPrice(invoice.getTotalPrice())
+                .description(invoice.getObservations())
+                .amount(invoice.getTotalPrice())
+                .description(invoice.getObservations())
                 .build();
     }
 
