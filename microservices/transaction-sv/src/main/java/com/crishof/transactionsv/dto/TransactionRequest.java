@@ -12,12 +12,13 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class TransactionResponse {
+public class TransactionRequest {
 
     private UUID transactionId;
     private String type;
     private LocalDate date;
     private String transactionNumber;
     private double amount;
+    private boolean taxSave;
     private String description;
 }

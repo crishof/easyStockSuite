@@ -1,6 +1,6 @@
-package com.crishof.transactionsv.apiClient;
+package com.crishof.transactionsv.apiclient;
 
-import com.crishof.transactionsv.dto.PaymentResponse;
+import com.crishof.transactionsv.dto.TransactionRequest;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +12,6 @@ import java.util.UUID;
 @FeignClient(name = "payment-sv", url = "http://localhost:9018")
 public interface PaymentAPIClient {
 
-    @GetMapping("/payment/getAllBySupplier/{supplierId}")
-    ResponseEntity<List<PaymentResponse>> getAllBySupplier(@PathVariable UUID supplierId);
+    @GetMapping("/payment/getAllTransactionsBySupplier/{supplierId}")
+    ResponseEntity<List<TransactionRequest>> getAllBySupplier(@PathVariable UUID supplierId);
 }

@@ -1,8 +1,8 @@
 package com.crishof.transactionsv.service;
 
-import com.crishof.transactionsv.apiClient.PaymentAPIClient;
-import com.crishof.transactionsv.apiClient.SupplierInvoiceAPIClient;
-import com.crishof.transactionsv.dto.PaymentResponse;
+import com.crishof.transactionsv.apiclient.PaymentAPIClient;
+import com.crishof.transactionsv.apiclient.SupplierInvoiceAPIClient;
+import com.crishof.transactionsv.dto.TransactionRequest;
 import com.crishof.transactionsv.dto.TransactionResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,32 +19,34 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public List<TransactionResponse> getAllTransactions(UUID supplierId) {
-        // Obtén las respuestas de facturas e ingresos
-        ResponseEntity<List<TransactionResponse>> invoiceResponses = supplierInvoiceAPIClient.getAllTransactionsBySupplier(supplierId);
-        ResponseEntity<List<PaymentResponse>> paymentResponses = paymentAPIClient.getAllBySupplier(supplierId);
 
-        // Mapea las respuestas de pagos a TransactionResponse
+        ResponseEntity<List<TransactionRequest>> invoiceResponses = supplierInvoiceAPIClient.getAllTransactionsBySupplier(supplierId);
+        ResponseEntity<List<TransactionRequest>> paymentResponses = paymentAPIClient.getAllBySupplier(supplierId);
+
         List<TransactionResponse> paymentTransactions = Objects.requireNonNull(paymentResponses.getBody()).stream()
-                .map(this::toTransactionResponse)
+                .map(payment -> toTransactionResponse(payment, "recipe"))  // Asigna "recipe" a las transacciones de pagos
                 .toList();
 
-        // Combina ambas listas (facturas y pagos)
-        List<TransactionResponse> allTransactions = new ArrayList<>(Objects.requireNonNull(invoiceResponses.getBody()));
+        List<TransactionResponse> invoiceTransactions = Objects.requireNonNull(invoiceResponses.getBody()).stream()
+                .map(invoice -> toTransactionResponse(invoice, "invoice"))  // Asigna "invoice" a las transacciones de facturas
+                .toList();
+
+        List<TransactionResponse> allTransactions = new ArrayList<>(invoiceTransactions);
         allTransactions.addAll(paymentTransactions);
 
-        // Ordena las transacciones por fecha
         return allTransactions.stream()
-                .sorted(Comparator.comparing(TransactionResponse::getInvoiceDate))  // Usa el método que retorna la fecha
+                .sorted(Comparator.comparing(TransactionResponse::getDate))
                 .toList();
     }
 
-    private TransactionResponse toTransactionResponse(PaymentResponse paymentResponse) {
+    private TransactionResponse toTransactionResponse(TransactionRequest transactionRequest, String type) {
         return TransactionResponse.builder()
-                .transactionId(paymentResponse.getPaymentId())
-                .invoiceDate(paymentResponse.getPaymentDate())
-                .invoiceType(paymentResponse.getDescription()) // o "Pago" si quieres especificar
-                .totalPrice(paymentResponse.getAmount())
-                .observations(paymentResponse.getRemarks())
+                .transactionId(transactionRequest.getTransactionId())
+                .type(type)
+                .date(transactionRequest.getDate())
+                .transactionNumber(transactionRequest.getTransactionNumber())
+                .amount(transactionRequest.getAmount())
+                .description(transactionRequest.getDescription())
                 .build();
     }
 }
