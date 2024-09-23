@@ -12,7 +12,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class PaymentResponse {
+public class PaymentRequest {
 
     private UUID paymentId;
     private LocalDate paymentDate;
