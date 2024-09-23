@@ -2,6 +2,7 @@ package com.crishof.paymentsv.service;
 
 import com.crishof.paymentsv.dto.PaymentRequest;
 import com.crishof.paymentsv.dto.PaymentResponse;
+import com.crishof.paymentsv.dto.TransactionResponse;
 import com.crishof.paymentsv.model.Payment;
 import com.crishof.paymentsv.repository.PaymentRepository;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,23 @@ public class PaymentServiceImpl implements PaymentService {
 
         return ResponseEntity.ok(paymentRepository.findAllBySupplierId(supplierId).stream()
                 .map(this::toPaymentResponse).toList());
+    }
+
+    @Override
+    public List<TransactionResponse> getAllTransactionsBySupplier(UUID supplierId) {
+        return paymentRepository.findAllBySupplierId(supplierId).stream().map(this::toTransactionResponse).toList();
+    }
+
+    private TransactionResponse toTransactionResponse(Payment payment) {
+        return TransactionResponse.builder()
+                .transactionId(payment.getPaymentId())
+                .date(payment.getPaymentDate())
+                .type("payment.getType()")
+                .transactionNumber(payment.getPaymentNumber())
+                .taxSave(payment.isTaxSave())
+                .description(payment.getDescription())
+                .amount(payment.getAmount())
+                .build();
     }
 
     private PaymentResponse toPaymentResponse(Payment payment) {

@@ -24,8 +24,10 @@ public class Payment {
     @GeneratedValue
     private UUID paymentId;
     private LocalDate paymentDate;
+    private String paymentNumber;
     private double amount;
     private String currency;
+    private boolean taxSave;
     private String paymentMethod;
     private String paymentReference;
     private String status;

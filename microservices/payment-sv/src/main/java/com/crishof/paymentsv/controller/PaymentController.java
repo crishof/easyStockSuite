@@ -2,8 +2,10 @@ package com.crishof.paymentsv.controller;
 
 import com.crishof.paymentsv.dto.PaymentRequest;
 import com.crishof.paymentsv.dto.PaymentResponse;
+import com.crishof.paymentsv.dto.TransactionResponse;
 import com.crishof.paymentsv.service.PaymentService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,8 +29,8 @@ public class PaymentController {
         return paymentService.getAllBySupplier(supplierId);
     }
 
-    @GetMapping("/test")
-    public String test() {
-        return "test OK";
+    @GetMapping("/getAllTransactionsBySupplier/{supplierId}")
+    public ResponseEntity<List<TransactionResponse>> getAllTransactionsBySupplier(@PathVariable UUID supplierId) {
+        return ResponseEntity.status(HttpStatus.OK).body(paymentService.getAllTransactionsBySupplier(supplierId));
     }
 }
