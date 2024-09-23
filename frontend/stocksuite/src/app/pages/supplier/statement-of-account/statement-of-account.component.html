@@ -1,0 +1,64 @@
+<p>Outstanding balance</p>
+<div class="container-fluid">
+  <div class="table-responsive" id="table-container">
+    <table class="table table-stripped table-hover align-middle table-sm">
+      <thead class="table-dark">
+        <tr>
+          <th scope="col">#Id</th>
+          <th scope="col">Date</th>
+          <th scope="col">Number</th>
+          <th scope="col">Type</th>
+          <th scope="col">Income</th>
+          <th scope="col">Expense</th>
+          <th scope="col">Description</th>
+          <th scope="col">Balance</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <!-- Inicializar balance acumulado -->
+        <tr
+          *ngFor="
+            let transaction of transactionList;
+            let i = index;
+            trackBy: trackByFn
+          "
+        >
+          <ng-container *ngIf="i === 0">
+            <script>
+              let balance = 0;
+            </script>
+          </ng-container>
+
+          <td id="id">{{ transaction.id }}</td>
+          <td>{{ transaction.date }}</td>
+          <td>{{ transaction.transactionNumber }}</td>
+          <td>{{ transaction.type }}</td>
+
+          <!-- Mostrar en Ingreso solo si el tipo es "invoice" -->
+          <td *ngIf="transaction.type === 'invoice'">
+            {{ transaction.amount | currency }}
+          </td>
+          <td *ngIf="transaction.type !== 'invoice'">-</td>
+          <!-- Si no es invoice, muestra un guion -->
+
+          <!-- Mostrar en Egreso solo si el tipo es "recipe" -->
+          <td *ngIf="transaction.type === 'recipe'">
+            {{ transaction.amount | currency }}
+          </td>
+          <td *ngIf="transaction.type !== 'recipe'">-</td>
+          <!-- Si no es recipe, muestra un guion -->
+
+          <td>{{ transaction.description }}</td>
+
+          <!-- Calcular el balance acumulado -->
+          @if(calculateBalance()[i] < 0){
+          <td style="color: red">{{ calculateBalance()[i] | currency }}</td>
+          }@else{
+          <td>{{ calculateBalance()[i] | currency }}</td>
+          }
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

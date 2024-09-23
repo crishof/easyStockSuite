@@ -1,6 +1,6 @@
 package com.crishof.brandsv.controller;
 
-import com.crishof.brandsv.apiClient.ImageAPIClient;
+import com.crishof.brandsv.apiclient.ImageAPIClient;
 import com.crishof.brandsv.dto.BrandRequest;
 import com.crishof.brandsv.dto.BrandResponse;
 import com.crishof.brandsv.exeption.BrandNotFoundException;
