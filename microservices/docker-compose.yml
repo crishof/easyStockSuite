@@ -125,3 +125,49 @@ volumes:
   mysql-volume:
   postgres-volume:
   pgadmin-data:
+
+#
+#  config-server:
+#    build: config-server
+#    deploy:
+#      resources:
+#        limits:
+#          memory: 512M
+#    ports:
+#      - "8081:8081"
+#    networks:
+#      - 'stockSuite-network'
+
+
+#  product-sv:
+#    build: product-sv
+#    deploy:
+#      resources:
+#        limits:
+#          memory: 512M
+#    ports:
+#      - "9001:9001"
+#    networks:
+#      - 'stockSuite-network'
+
+#  brand-sv:
+#    build: brand-sv
+#    deploy:
+#      resources:
+#        limits:
+#          memory: 512M
+#    ports:
+#      - "9002:9002"
+#    networks:
+#      - 'stockSuite-network'
+
+#  category-sv:
+#    build: category-sv
+#    deploy:
+#      resources:
+#        limits:
+#          memory: 512M
+#    ports:
+#      - "9003:9003"
+#    networks:
+#      - 'stockSuite-network'
