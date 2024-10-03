@@ -1,4 +1,4 @@
-package com.crishof.brandsv.exeption;
+package com.crishof.brandsv.exception;
 
 import com.crishof.brandsv.dto.ApiResponse;
 import jakarta.persistence.EntityNotFoundException;
