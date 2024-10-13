@@ -1,4 +1,4 @@
-package com.crishof.brandsv.exeption;
+package com.crishof.brandsv.exception;
 
 import java.io.Serial;
 

@@ -20,4 +20,5 @@ public class TransactionResponse {
     private String transactionNumber;
     private double amount;
     private String description;
+    private boolean taxSave;
 }

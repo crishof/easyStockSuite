@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
 import { ConfirmDialogComponent } from '../utils/confirm-dialog/confirm-dialog.component';
 import { CategoryEditComponent } from '../pages/category/category-edit/category-edit.component';
+import { ITransaction } from '../model/transaction.model';
 
 @Injectable({
   providedIn: 'root',
@@ -23,4 +24,8 @@ export class ModalDialogService {
     });
     return dialogRef.afterClosed();
   }
+
+  openCreateTransactionModal() {}
+  openEditTransactionModal(transaction: ITransaction) {}
+  openDeleteTransactionModal(transaction: ITransaction) {}
 }
