@@ -1,10 +1,6 @@
 <app-supplier-navbar></app-supplier-navbar>
 
-<div
-  class="btn-group btn-group-sm"
-  role="group"
-  aria-label="Basic outlined example"
->
+<fieldset class="btn-group btn-group-sm" aria-label="Basic outlined example">
   <button
     type="button"
     class="btn btn-outline-secondary"
@@ -37,14 +33,13 @@
   >
     Numeros Inscripciones
   </button>
-  
-</div>
+</fieldset>
 
 <div class="container" id="tag-container">
   <ng-container [ngSwitch]="selectedComponent">
     <app-supplier-details
       *ngSwitchCase="'supplier'"
-      [supplier]="selectedSupplier"
+      [supplier]="currentSupplier"
     ></app-supplier-details>
     <div *ngSwitchCase="'margenes'">
       <p>Margenes</p>
@@ -61,10 +56,7 @@
 
 <div class="container">
   <div class="row">
-    <form
-      (ngSubmit)="onFormSubmit()"
-      class="row mb-3 text-center col-md-8"
-    >
+    <form (ngSubmit)="onFormSubmit()" class="row mb-3 text-center col-md-8">
       <div class="col-md-8">
         <input
           type="text"

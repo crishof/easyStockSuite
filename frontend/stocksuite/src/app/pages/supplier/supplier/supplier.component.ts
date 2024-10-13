@@ -24,18 +24,20 @@ import { Subscription } from 'rxjs';
 })
 export class SupplierComponent implements OnInit {
   supplierList: ISupplier[] = [];
-  private _supplierService = inject(SupplierService);
-  private _router = inject(Router);
+  readonly _supplierService = inject(SupplierService);
+  readonly _router = inject(Router);
 
   private subscription?: Subscription;
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.selectedSupplier = null;
+  }
 
   searchTerm: string = '';
   isFormSubmitted: boolean = false;
   selectedComponent: string = 'supplier';
   selectedSupplier: ISupplier | null = null;
-  selectedSupplierId: string = '';
+  currentSupplier: ISupplier | null = null;
 
   onKeyUp(event: KeyboardEvent) {
     if (event.key === 'Enter') {
@@ -44,13 +46,17 @@ export class SupplierComponent implements OnInit {
   }
 
   onFormSubmit() {
+    this.searchSuppliers();
+    /*
     this.isFormSubmitted = true;
     if (this.searchTerm.length > 0) {
       this.searchSuppliers();
     } else {
       this.supplierList = [];
     }
+      */
   }
+
   searchSuppliers(): void {
     if (this.subscription) {
       this.subscription.unsubscribe();
@@ -62,8 +68,9 @@ export class SupplierComponent implements OnInit {
       });
   }
 
-  selectSupplier(supplier: ISupplier): void {
-    this.selectedSupplier = supplier;
+  selectSupplier(supplier: ISupplier) {
+    this._supplierService.setSelectedSupplier(supplier);
+    this.currentSupplier = supplier;
   }
 
   navegate(id: string): void {

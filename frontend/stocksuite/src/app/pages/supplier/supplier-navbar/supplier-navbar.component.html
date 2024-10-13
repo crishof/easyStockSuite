@@ -94,7 +94,15 @@
 
           <ul class="dropdown-menu">
             <li>
-              <a class="dropdown-item" routerLink="/statementAccount">Statement of Account</a>
+              @if(selectedSupplier){
+              <a
+                class="dropdown-item"
+                (click)="toStatementAccount(selectedSupplier.id)"
+                >Statement of Account</a
+              >
+              }@else{
+              <a class="dropdown-item">Statement of Account</a>
+              }
             </li>
             <li>
               <a class="dropdown-item" href="#"
@@ -171,7 +179,9 @@
               <a class="dropdown-item" href="#">Pedidos al proveedor</a>
             </li>
             <li>
-              <a class="dropdown-item" routerLink="/supplierInvoice">Ingreso de comprobantes</a>
+              <a class="dropdown-item" routerLink="/supplierInvoice"
+                >Ingreso de comprobantes</a
+              >
             </li>
             <li>
               <a class="dropdown-item" href="#"

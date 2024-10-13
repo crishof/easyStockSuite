@@ -1,7 +1,37 @@
-<p>Outstanding balance</p>
+<h3>Outstanding balance</h3>
+
+<!-- Botones de acción -->
+<div>
+  <button class="btn btn-sm btn-success" (click)="openCreateModal()">
+    Create
+  </button>
+  <button
+    class="btn btn-sm btn-warning"
+    [disabled]="!currentTransaction"
+    (click)="openEditModal()"
+  >
+    Edit
+  </button>
+  <button
+    class="btn btn-sm btn-danger"
+    [disabled]="!currentTransaction"
+    (click)="openDeleteModal()"
+  >
+    Delete
+  </button>
+</div>
+
+<!-- Totales -->
+<div class="totals">
+  <p>Total B {{ totals.totalB | currency }}</p>
+  <p>Total N {{ totals.totalN | currency }}</p>
+  <p>Total Balance: {{ totals.totalBalance | currency }}</p>
+</div>
+
+<!-- Tabla de transacciones -->
 <div class="container-fluid">
   <div class="table-responsive" id="table-container">
-    <table class="table table-stripped table-hover align-middle table-sm">
+    <table class="table table-striped table-hover align-middle table-sm">
       <thead class="table-dark">
         <tr>
           <th scope="col">#Id</th>
@@ -16,47 +46,40 @@
       </thead>
 
       <tbody>
-        <!-- Inicializar balance acumulado -->
         <tr
           *ngFor="
             let transaction of transactionList;
             let i = index;
             trackBy: trackByFn
           "
+          (click)="selectTransaction(transaction)"
+          (Keyup)="selectTransaction(transaction)"
+          [class.selected]="transaction === currentTransaction"
         >
-          <ng-container *ngIf="i === 0">
-            <script>
-              let balance = 0;
-            </script>
-          </ng-container>
-
-          <td id="id">{{ transaction.id }}</td>
-          <td>{{ transaction.date }}</td>
+          <td>{{ transaction.transactionId }}</td>
+          <td>{{ transaction.date | date: 'dd-MM-yyyy'}}</td>
           <td>{{ transaction.transactionNumber }}</td>
           <td>{{ transaction.type }}</td>
 
-          <!-- Mostrar en Ingreso solo si el tipo es "invoice" -->
+          <!-- Ingresos -->
           <td *ngIf="transaction.type === 'invoice'">
             {{ transaction.amount | currency }}
           </td>
           <td *ngIf="transaction.type !== 'invoice'">-</td>
-          <!-- Si no es invoice, muestra un guion -->
 
-          <!-- Mostrar en Egreso solo si el tipo es "recipe" -->
+          <!-- Egresos -->
           <td *ngIf="transaction.type === 'recipe'">
             {{ transaction.amount | currency }}
           </td>
           <td *ngIf="transaction.type !== 'recipe'">-</td>
-          <!-- Si no es recipe, muestra un guion -->
 
           <td>{{ transaction.description }}</td>
 
-          <!-- Calcular el balance acumulado -->
-          @if(calculateBalance()[i] < 0){
-          <td style="color: red">{{ calculateBalance()[i] | currency }}</td>
-          }@else{
-          <td>{{ calculateBalance()[i] | currency }}</td>
-          }
+          <!-- Calcular balance acumulado -->
+
+          <td [style.color]="calculateBalance()[i] < 0 ? 'red' : 'black'">
+            {{ calculateBalance()[i] | currency }}
+          </td>
         </tr>
       </tbody>
     </table>
