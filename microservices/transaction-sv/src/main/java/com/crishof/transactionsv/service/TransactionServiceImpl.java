@@ -85,6 +85,7 @@ public class TransactionServiceImpl implements TransactionService {
                 .transactionNumber(transactionRequest.getTransactionNumber())
                 .amount(transactionRequest.getAmount())
                 .description(transactionRequest.getDescription())
+                .taxSave(transactionRequest.isTaxSave())
                 .build();
     }
 
@@ -96,6 +97,7 @@ public class TransactionServiceImpl implements TransactionService {
                 .amount(transactionRequest.getAmount())
                 .description(transactionRequest.getDescription())
                 .supplierId(transactionRequest.getSupplierId())
+                .taxSave(transactionRequest.isTaxSave())
                 .build();
     }
 
@@ -107,6 +109,7 @@ public class TransactionServiceImpl implements TransactionService {
                 .transactionNumber(transaction.getTransactionNumber())
                 .amount(transaction.getAmount())
                 .description(transaction.getDescription())
+                .taxSave(transaction.isTaxSave())
                 .build();
     }
 }

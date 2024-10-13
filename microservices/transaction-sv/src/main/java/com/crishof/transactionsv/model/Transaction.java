@@ -27,4 +27,5 @@ public class Transaction {
     private double amount;
     private String description;
     private UUID supplierId;
+    private boolean taxSave;
 }
