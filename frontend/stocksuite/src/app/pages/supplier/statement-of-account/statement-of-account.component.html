@@ -1,31 +1,36 @@
 <h3>Outstanding balance</h3>
 
-<!-- Botones de acción -->
-<div>
-  <button class="btn btn-sm btn-success" (click)="openCreateModal()">
-    Create
-  </button>
-  <button
-    class="btn btn-sm btn-warning"
-    [disabled]="!currentTransaction"
-    (click)="openEditModal()"
-  >
-    Edit
-  </button>
-  <button
-    class="btn btn-sm btn-danger"
-    [disabled]="!currentTransaction"
-    (click)="openDeleteModal()"
-  >
-    Delete
-  </button>
-</div>
-
-<!-- Totales -->
-<div class="totals">
-  <p>Total B {{ totals.totalB | currency }}</p>
-  <p>Total N {{ totals.totalN | currency }}</p>
-  <p>Total Balance: {{ totals.totalBalance | currency }}</p>
+<div class="container">
+  <div class="row">
+    <div class="col card shadow m-3 p-3">
+      <!-- Botones de acción -->
+      <button class="btn btn-sm btn-success" (click)="openCreateModal()">
+        Create
+      </button>
+      <button
+        class="btn btn-sm btn-warning"
+        [disabled]="!currentTransaction"
+        (click)="openEditModal()"
+      >
+        Edit
+      </button>
+      <button
+        class="btn btn-sm btn-danger"
+        [disabled]="!currentTransaction"
+        (click)="openDeleteModal()"
+      >
+        Delete
+      </button>
+    </div>
+    <div class="col card shadow m-3 p-3">
+      <div class="totals">
+        <!-- Totales -->
+        <p>Total B {{ totals.totalB | currency }}</p>
+        <p>Total N {{ totals.totalN | currency }}</p>
+        <p>Total Balance: {{ totals.totalBalance | currency }}</p>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- Tabla de transacciones -->
@@ -57,7 +62,7 @@
           [class.selected]="transaction === currentTransaction"
         >
           <td>{{ transaction.transactionId }}</td>
-          <td>{{ transaction.date | date: 'dd-MM-yyyy'}}</td>
+          <td>{{ transaction.date | date : "dd-MM-yyyy" }}</td>
           <td>{{ transaction.transactionNumber }}</td>
           <td>{{ transaction.type }}</td>
 
