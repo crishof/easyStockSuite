@@ -1,12 +1,12 @@
 package com.crishof.brandsv.service;
 
-import com.crishof.brandsv.apiClient.ImageAPIClient;
-import com.crishof.brandsv.apiClient.ProductApiClient;
+import com.crishof.brandsv.apiclient.ImageAPIClient;
+import com.crishof.brandsv.apiclient.ProductApiClient;
 import com.crishof.brandsv.dto.BrandRequest;
 import com.crishof.brandsv.dto.BrandResponse;
-import com.crishof.brandsv.exeption.BrandNotFoundException;
-import com.crishof.brandsv.exeption.DuplicateNameException;
-import com.crishof.brandsv.exeption.ProductsAssociatedException;
+import com.crishof.brandsv.exception.BrandNotFoundException;
+import com.crishof.brandsv.exception.DuplicateNameException;
+import com.crishof.brandsv.exception.ProductsAssociatedException;
 import com.crishof.brandsv.model.Brand;
 import com.crishof.brandsv.repository.BrandRepository;
 import com.crishof.brandsv.utils.BrandMapper;

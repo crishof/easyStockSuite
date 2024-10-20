@@ -1,15 +1,15 @@
 import { Injectable, inject } from '@angular/core';
 import { ISupplier } from '../model/supplier.model';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SupplierService {
-  private _http = inject(HttpClient);
+  readonly _http = inject(HttpClient);
 
-  private _urlBase = 'http://localhost:443/supplier-sv/supplier';
+  readonly _urlBase = 'http://localhost:443/supplier-sv/supplier';
 
   getAllByFilter(filter: string): Observable<ISupplier[]> {
     const params = new HttpParams().set('filter', filter);
@@ -27,5 +27,12 @@ export class SupplierService {
 
   getSupplier(id: string): Observable<ISupplier> {
     return this._http.get<ISupplier>(`${this._urlBase}/getById/${id}`);
+  }
+
+  readonly supplierSource = new BehaviorSubject<ISupplier | null>(null);
+  selectedSupplier$ = this.supplierSource.asObservable();
+
+  setSelectedSupplier(supplier: ISupplier) {
+    this.supplierSource.next(supplier);
   }
 }

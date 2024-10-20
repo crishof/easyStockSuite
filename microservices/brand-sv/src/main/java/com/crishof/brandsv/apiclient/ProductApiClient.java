@@ -1,4 +1,4 @@
-package com.crishof.brandsv.apiClient;
+package com.crishof.brandsv.apiclient;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;

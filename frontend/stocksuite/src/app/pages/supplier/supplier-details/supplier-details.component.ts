@@ -1,5 +1,4 @@
 import { Component, Input, OnInit, inject } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 
 import { CommonModule } from '@angular/common';
 import { SupplierService } from '../../../services/supplier.service';
@@ -14,23 +13,13 @@ import { ISupplier } from '../../../model/supplier.model';
 })
 export class SupplierDetailsComponent implements OnInit {
   @Input() supplier: ISupplier | null = null;
-  /*
-  loading: boolean = true;
-
-  private _route = inject(ActivatedRoute);
-  private _supplierService = inject(SupplierService);
-  */
+  selectedSupplier: ISupplier | null = null;
+  readonly _supplierService = inject(SupplierService);
 
   ngOnInit(): void {
-    /*
-    this._route.params.subscribe((params) => {
-      this._supplierService
-        .getSupplier(params['id'])
-        .subscribe((data: ISupplier) => {
-          this.supplier = data;
-          this.loading = false;
-        });
+    this._supplierService.selectedSupplier$.subscribe((supplier) => {
+      this.selectedSupplier = supplier;
     });
-    */
+    console.log('Supplier: ' + this.selectedSupplier?.name);
   }
 }

@@ -1,4 +1,4 @@
-package com.crishof.brandsv.exeption;
+package com.crishof.brandsv.exception;
 
 public class DuplicateNameException extends RuntimeException {
 

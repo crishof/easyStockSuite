@@ -1,10 +1,10 @@
 package com.crishof.brandsv.controller;
 
-import com.crishof.brandsv.apiClient.ImageAPIClient;
+import com.crishof.brandsv.apiclient.ImageAPIClient;
 import com.crishof.brandsv.dto.BrandRequest;
 import com.crishof.brandsv.dto.BrandResponse;
-import com.crishof.brandsv.exeption.BrandNotFoundException;
-import com.crishof.brandsv.exeption.DuplicateNameException;
+import com.crishof.brandsv.exception.BrandNotFoundException;
+import com.crishof.brandsv.exception.DuplicateNameException;
 import com.crishof.brandsv.model.Brand;
 import com.crishof.brandsv.service.BrandService;
 import io.swagger.v3.oas.annotations.Operation;
