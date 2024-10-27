@@ -5,10 +5,10 @@
     <parent>
         <groupId>com.crishof</groupId>
         <artifactId>microservices</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>0.0.1</version>
     </parent>
     <artifactId>address-sv</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1</version>
     <name>address-sv</name>
     <description>address-sv</description>
     <properties>
@@ -82,9 +82,11 @@
             <version>2.4.5</version>
         </dependency>
         <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-openfeign</artifactId>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <scope>test</scope>
         </dependency>
+
     </dependencies>
 
     <build>
