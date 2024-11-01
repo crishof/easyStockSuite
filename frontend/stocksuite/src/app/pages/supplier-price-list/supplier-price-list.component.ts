@@ -105,22 +105,25 @@ export class SupplierPriceListComponent implements OnInit {
   }
 
   toggleSelection(event: any, product: ISupplierProduct) {
-    if (event.target.checked) {
-      // Agregar el producto a la lista de productos seleccionados
-      this.selectedProducts.push(product);
-    } else {
-      // Eliminar el producto de la lista de productos seleccionados
+    // Evita la propagación del clic desde el checkbox a la fila
+    if (event) {
+      event.stopPropagation();
+    }
+  
+    if (this.isSelected(product)) {
+      // Elimina el producto si ya estaba seleccionado
       const index = this.selectedProducts.indexOf(product);
       if (index !== -1) {
         this.selectedProducts.splice(index, 1);
       }
+    } else {
+      // Agrega el producto si no estaba seleccionado
+      this.selectedProducts.push(product);
     }
   }
-
-  isSelected(product: any): boolean {
-    return this.selectedProducts.some(
-      (selectedProduct) => selectedProduct.id === product.id
-    );
+  
+  isSelected(product: ISupplierProduct): boolean {
+    return this.selectedProducts.includes(product);
   }
 
   importSelectedProducts(): void {
@@ -203,5 +206,9 @@ export class SupplierPriceListComponent implements OnInit {
       .subscribe((data: ISupplierProduct[]) => {
         this.productList = data;
       });
+  }
+
+  selectRow(product: ISupplierProduct): void {
+    this.toggleSelection(null, product);
   }
 }

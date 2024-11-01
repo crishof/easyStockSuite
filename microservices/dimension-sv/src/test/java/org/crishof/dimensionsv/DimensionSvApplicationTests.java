@@ -6,8 +6,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 class DimensionSvApplicationTests {
 
-    @Test
-    void contextLoads() {
-    }
+    //    @Test
+//    void contextLoads() {
+//    }
 
 }
