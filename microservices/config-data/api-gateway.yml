@@ -1,0 +1,30 @@
+server.port: 443
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+#      routes:
+#        - id: brand-sv
+#          uri: http://localhost:9002
+#          predicates:
+#            - Path=/brand-sv/v3/api-docs/**
+#          filters:
+#            - RewritePath=/brand-sv/v3/api-docs/(?<segment>.*), /v3/api-docs/$\{segment}
+eureka:
+  client:
+    service-url:
+#      defaultZone: http://eureka-sv:8761/eureka
+      defaultZone: http://localhost:8761/eureka
+  #Solucion al error CLAIMING INSTANCES
+  instance:
+    lease-renewal-interval-in-seconds: 0
+#springdoc:
+#  api-docs:
+#    path: /api-docs
+#  swagger-ui:
+#    path:  /swagger.ui.html
