@@ -24,7 +24,7 @@ import { ModalDialogService } from '../../../services/modal-dialog.service';
   styleUrl: './statement-of-account.component.css',
 })
 export class StatementOfAccountComponent implements OnInit {
-  private route = inject(ActivatedRoute);
+  readonly route = inject(ActivatedRoute);
   @Input() supplier: ISupplier | null = null;
   transactionList: ITransaction[] = [];
   selectedTransaction: ITransaction | null = null;
@@ -37,8 +37,8 @@ export class StatementOfAccountComponent implements OnInit {
 
   currentTransaction: ITransaction | null = null;
 
-  private modalDialogService = inject(ModalDialogService);
-  private _transactionService = inject(TransactionService);
+  readonly modalDialogService = inject(ModalDialogService);
+  readonly _transactionService = inject(TransactionService);
 
   ngOnInit(): void {
     this.route.paramMap.subscribe((params) => {
@@ -72,7 +72,7 @@ export class StatementOfAccountComponent implements OnInit {
     return balanceList;
   }
 
-  getTotalBalance(){
+  getTotalBalance() {
     const balanceList = this.calculateBalance();
     return balanceList.length > 0 ? balanceList[balanceList.length - 1] : 0;
   }
@@ -80,20 +80,21 @@ export class StatementOfAccountComponent implements OnInit {
   totals = {
     totalB: 10,
     totalN: 20,
-    totalBalance: 30
+    totalBalance: 30,
   };
-  
+
   calculateTotals() {
     let balance = 0;
     let totalB = 0;
     let totalN = 0;
-  
-    this.transactionList.forEach(transaction => {
+
+    this.transactionList.forEach((transaction) => {
       // Cálculo del balance acumulado
-      balance += transaction.type === 'invoice'
-        ? transaction.amount
-        : -transaction.amount;
-  
+      balance +=
+        transaction.type === 'invoice'
+          ? transaction.amount
+          : -transaction.amount;
+
       // Cálculo de Total B (saveTax=true)
       if (transaction.taxSave) {
         totalB += transaction.amount;
@@ -102,7 +103,7 @@ export class StatementOfAccountComponent implements OnInit {
         totalN += transaction.amount;
       }
     });
-  
+
     // Asignar los resultados a las propiedades de 'totals'
     this.totals.totalB = totalB;
     this.totals.totalN = totalN;
@@ -115,23 +116,7 @@ export class StatementOfAccountComponent implements OnInit {
     this.currentTransaction = { ...transaction };
   }
 
-  openCreateModal() {
-    this.modalDialogService.openCreateTransactionModal();
-  }
-
-  openEditModal() {
-    if (this.selectedTransaction) {
-      this.modalDialogService.openEditTransactionModal(
-        this.selectedTransaction
-      );
-    }
-  }
-
-  openDeleteModal() {
-    if (this.selectedTransaction) {
-      this.modalDialogService.openDeleteTransactionModal(
-        this.selectedTransaction
-      );
-    }
-  }
+  openCreateModal() {}
+  openEditModal() {}
+  openDeleteModal() {}
 }

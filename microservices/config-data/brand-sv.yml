@@ -1,0 +1,10 @@
+#spring:
+#  application:
+#    name: brand-sv
+#  config:
+#    import: optional:config-server:http://localhost:8081
+#
+#logging:
+#  level:
+#    org.springframework.web: DEBUG
+#    org.springframework.cloud: DEBUG

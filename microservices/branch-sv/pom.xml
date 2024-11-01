@@ -5,10 +5,10 @@
 	<parent>
 		<groupId>com.crishof</groupId>
 		<artifactId>microservices</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>0.0.1</version>
 	</parent>
 	<artifactId>branch-sv</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1</version>
 	<name>branch-sv</name>
 	<description>branch-sv</description>
 	<properties>
