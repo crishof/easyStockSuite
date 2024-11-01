@@ -1,4 +1,4 @@
-package com.crishof.productsv.apiClient;
+package com.crishof.productsv.apiclient;
 
 import com.crishof.productsv.dto.BrandRequest;
 import org.springframework.cloud.openfeign.FeignClient;

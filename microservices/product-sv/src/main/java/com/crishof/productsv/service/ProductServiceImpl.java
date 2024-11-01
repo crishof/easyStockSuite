@@ -1,6 +1,6 @@
 package com.crishof.productsv.service;
 
-import com.crishof.productsv.apiClient.*;
+import com.crishof.productsv.apiclient.*;
 import com.crishof.productsv.dto.*;
 import com.crishof.productsv.exeption.ProductNotFoundException;
 import com.crishof.productsv.model.Product;

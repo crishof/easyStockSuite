@@ -22,6 +22,7 @@ spring:
         native:
           search-locations: classpath:/configurations
         git:
+          force-pull: true
           uri: https://github.com/crishof/easyStockSuite.git
 #          search-paths: /microservices/config-data
           username: ${GIT_USER}
