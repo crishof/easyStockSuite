@@ -1,10 +1,19 @@
-#spring:
-#  application:
-#    name: brand-sv
-#  config:
-#    import: optional:config-server:http://localhost:8081
-#
-#logging:
-#  level:
-#    org.springframework.web: DEBUG
-#    org.springframework.cloud: DEBUG
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+  instance:
+    lease-renewal-interval-in-seconds: 0
+server:
+  port: 9002
+spring:
+  application:
+    name: brand-sv
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      connection-timeout: 60000
+      idle-timeout: 300000
+      max-lifetime: 1800000
+      maximum-pool-size: 20
+      minimum-idle: 5
