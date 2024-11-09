@@ -1,0 +1,30 @@
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+  instance:
+    lease-renewal-interval-in-seconds: 0
+server:
+  port: 9013
+spring:
+  application:
+    name: mailSender-sv
+  jpa:
+    database: postgresql
+  mail:
+    host: smtp.gmail.com
+    password: ${EMAIL_PASSWORD}
+    username: ${EMAIL_ADDRESS}
+    port: 587
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+  servlet:
+    multipart:
+      max-file-size: 10MB
+  sql:
+    init:
+      platform: postgres

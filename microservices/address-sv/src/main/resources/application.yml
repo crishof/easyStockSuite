@@ -5,10 +5,10 @@ eureka:
   instance:
     lease-renewal-interval-in-seconds: 0
 server:
-  port: 9002
+  port: 9010
 spring:
   application:
-    name: brand-sv
+    name: address-sv
   datasource:
     driver-class-name: org.postgresql.Driver
     hikari:
