@@ -65,6 +65,7 @@ services:
       - mysql-volume:/var/lib/mysql
 
   eureka-sv:
+    container_name: eureka-sv
     build: eureka-sv
     mem_limit: 512m
     ports:
@@ -73,8 +74,9 @@ services:
       - 'stockSuite-network'
 
   api-gateway:
+    container_name: api-gateway
     build: api-gateway
-#    network_mode: host
+    #    network_mode: host
     mem_limit: 512m
     ports:
       - "443:443"

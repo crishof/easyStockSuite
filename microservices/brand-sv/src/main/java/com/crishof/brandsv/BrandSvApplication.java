@@ -13,5 +13,4 @@ public class BrandSvApplication {
     public static void main(String[] args) {
         SpringApplication.run(BrandSvApplication.class, args);
     }
-
 }
