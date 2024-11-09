@@ -109,7 +109,7 @@ export class SupplierPriceListComponent implements OnInit {
     if (event) {
       event.stopPropagation();
     }
-  
+
     if (this.isSelected(product)) {
       // Elimina el producto si ya estaba seleccionado
       const index = this.selectedProducts.indexOf(product);
@@ -121,7 +121,7 @@ export class SupplierPriceListComponent implements OnInit {
       this.selectedProducts.push(product);
     }
   }
-  
+
   isSelected(product: ISupplierProduct): boolean {
     return this.selectedProducts.includes(product);
   }

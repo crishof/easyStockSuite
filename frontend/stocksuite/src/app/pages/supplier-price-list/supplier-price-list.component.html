@@ -155,8 +155,10 @@
       </thead>
 
       <tbody>
-        <tr *ngFor="let product of productList; let i = index"
-        (click) = "selectRow(product)">
+        <tr
+          *ngFor="let product of productList; let i = index"
+          (click)="selectRow(product)"
+        >
           <td>
             <input
               type="checkbox"
