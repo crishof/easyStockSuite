@@ -1,4 +1,11 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  OnInit,
+  input,
+} from '@angular/core';
 import { CommonModule, NgClass } from '@angular/common';
 import { IBrand } from '../../../model/brand.model';
 import { inject } from '@angular/core';
@@ -47,11 +54,15 @@ export class BrandEditComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.brandId = this.route.snapshot.paramMap.get('id') ?? '';
+    if (this.brand) {
+      this.brandId = this.brand?.id;
+    }
   }
 
   updateBrand(event: Event) {
     event.preventDefault();
+
+    console.log('updateBrand, id: ' + this.brandForm.get('brandId'));
 
     const brandName = this.brandForm.get('brandName')?.value;
 
