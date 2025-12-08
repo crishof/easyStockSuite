@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { IBrand } from '../model/brand.model';
 import { Observable } from 'rxjs';
+import { IBrand } from '../model/brand.model';
 
 @Injectable({
   providedIn: 'root',
@@ -19,6 +19,7 @@ export class BrandService {
   }
 
   updateBrand(id: string, formData: FormData): Observable<IBrand> {
+    console.log('updateBrand, id: ' + id);
     return this._http.put<IBrand>(`${this._urlBase}/update/${id}`, formData);
   }
 

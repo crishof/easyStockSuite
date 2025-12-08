@@ -52,7 +52,13 @@ export class BrandCreateComponent {
     );
   }
 
+  /*
   toList(): void {
+    this._router.navigate(['/brand']);
+  }
+    */
+  toList(): void {
+    this.onCancel.emit();
     this._router.navigate(['/brand']);
   }
 

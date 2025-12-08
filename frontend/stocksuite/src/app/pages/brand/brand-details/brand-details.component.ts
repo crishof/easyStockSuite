@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, Input, OnInit, SimpleChanges, inject } from '@angular/core';
 import { IBrand } from '../../../model/brand.model';
 import { BrandService } from '../../../services/brand.service';
 import { CommonModule } from '@angular/common';
@@ -18,7 +18,7 @@ import { ProductService } from '../../../services/product.service';
 })
 export class BrandDetailsComponent implements OnInit {
   loading: boolean = true;
-  public brand?: IBrand;
+
   editingMode: boolean = false;
 
   private _route = inject(ActivatedRoute);
@@ -36,23 +36,45 @@ export class BrandDetailsComponent implements OnInit {
 
   private brandUpdatedSubject: Subject<IBrand> = new Subject<IBrand>();
 
-  ngOnInit(): void {
-    this._route.params.subscribe((params) => {
-      this._brandService.getBrand(params['id']).subscribe((data: IBrand) => {
-        this.brand = data;
-        this.loading = false;
-        if (this.brand?.id) {
-          this.getBrandProductsQuantity();
-        }
-      });
-    });
+  @Input() brand: IBrand | null | undefined;
 
+  ngOnInit(): void {
+    if (!this.brand) {
+    } else {
+      console.log(this.productsQuantity);
+      // Suscribirse a los parámetros de la ruta para obtener el 'id' de la marca siempre
+      this._route.params.subscribe((params) => {
+        this.loading = true;
+
+        // Llama al servicio para obtener los datos de la marca
+        this._brandService.getBrand(params['id']).subscribe(
+          (data: IBrand) => {
+            this.brand = data;
+            this.getBrandProductsQuantity(); // Llama a la función después de asignar la marca
+            this.loading = false;
+          },
+          (error) => {
+            console.error('Error getting brand data:', error);
+            this.loading = false;
+          }
+        );
+      });
+    }
+
+    // Suscripción a los cambios en la marca
     this.brandUpdatedSubject.subscribe((updatedBrand) => {
       if (updatedBrand) {
         this.brand = updatedBrand;
-        this.getBrandProductsQuantity();
+        this.getBrandProductsQuantity(); // Llama a la función si la marca se actualiza
       }
     });
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['brand'] && this.brand) {
+      this.getBrandProductsQuantity();
+      this.editingMode = false;
+    }
   }
 
   getImageUrl(image: any): any {
@@ -118,5 +140,6 @@ export class BrandDetailsComponent implements OnInit {
         console.error('Error getting products quantity:', error);
       }
     );
+    console.log(this.productsQuantity);
   }
 }

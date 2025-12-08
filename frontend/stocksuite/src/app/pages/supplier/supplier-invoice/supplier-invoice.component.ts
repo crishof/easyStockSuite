@@ -24,7 +24,6 @@ import { SupplierService } from '../../../services/supplier.service';
 import { ISupplierInvoice } from '../../../model/supplier-invoice.model';
 import { IInvoiceItem } from '../../../model/invoice-item.model';
 import { SupplierInvoiceService } from '../../../services/supplier-invoice.service';
-import { error } from 'console';
 import { BranchService } from '../../../services/branch.service';
 import { ILocation } from '../../../model/location.model';
 import { IBranch } from '../../../model/branch.model';
@@ -50,8 +49,8 @@ import { IBranch } from '../../../model/branch.model';
 })
 export class SupplierInvoiceComponent implements OnInit {
   private subscription?: Subscription;
-  private _productService = inject(ProductService);
-  private _supplierService = inject(SupplierService);
+  readonly _productService = inject(ProductService);
+  readonly _supplierService = inject(SupplierService);
   dateControl = new FormControl(new Date());
 
   @Input() invoice: ISupplierInvoice | undefined;

@@ -12,3 +12,11 @@ backend/.DS_Store
 postgres/
 light-bootstrap-dashboard-angular2-master.zip
 /light-bootstrap-dashboard-angular2-master
+
+pricesLists/
+
+logos/
+
+.DS_Store
+
+.idea/
